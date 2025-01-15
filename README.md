@@ -21,3 +21,19 @@ reference while the cake is being assembled. Once assembly is complete, there is
 a date to share the picture with the requester. Setting a date to share the picture ensures that if the final result of the cake is a 
 surprise, the requester won't see the picture until after their event.
 
+```mermaid
+flowchart TD
+ subgraph PresentationLayer["UI Layer (ThymeLeaf)"]
+        Baker["Baker Interface"]
+        Requester["Requester Interface"]
+  end
+ subgraph BusinessLogicLayer["Business Logic (Springboot)"]
+        Server["MVC Server"]
+  end
+ subgraph DataLayer["Data Layer (Hibernate)"]
+        Database["Database"]
+  end
+    Baker --> Server
+    Requester --> Server
+    Server --> Database
+```
