@@ -21,6 +21,7 @@ reference while the cake is being assembled. Once assembly is complete, there is
 a date to share the picture with the requester. Setting a date to share the picture ensures that if the final result of the cake is a 
 surprise, the requester won't see the picture until after their event.
 
+Three Tiered Architecture
 ```mermaid
 flowchart TD
  subgraph PresentationLayer["UI Layer (ThymeLeaf)"]
@@ -37,3 +38,46 @@ flowchart TD
     Requester --> Server
     Server --> Database
 ```
+ERD
+```mermaid
+erDiagram
+    User {
+        int UserID
+        string Name
+        string Email
+        string Password
+    }
+    CakeRequest {
+        int RequestID
+        int RequesterID
+        int BakerID
+        string RequesterNotes
+        enum Status
+        int CakeRecipeID
+        int FillingRecipeID
+        int FrostingRecipeID
+    }
+    Recipe {
+        int RecipeID
+        string FlavorName
+        string Instructions
+    }
+    RecipeIngredients {
+        int RecipeID
+        int IngredientID
+        int Quantity
+        enum MeasurementUnit
+    }
+    Ingredient {
+        int IngredientID
+        string Name
+    }
+ 
+
+    User ||--o{ CakeRequest : requests
+    CakeRequest ||--|| User : bakes
+    CakeRequest }|--o{ Recipe : references
+    Recipe }|--|{ RecipeIngredients : contains
+    RecipeIngredients }|--|{ Ingredient : is
+```
+
