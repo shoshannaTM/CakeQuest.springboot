@@ -43,15 +43,15 @@ ERD
 erDiagram
     User {
         int UserID
-        string Name
-        string Email
-        string Password
+        varchar(45) Name
+        varchar(100) Email
+        varchar(255) Password
     }
     CakeRequest {
         int RequestID
-        int RequesterID
-        int BakerID
-        string RequesterNotes
+        int RequesterUserID
+        int BakerUserID
+        text RequesterNotes
         enum Status
         int CakeRecipeID
         int FillingRecipeID
@@ -59,10 +59,10 @@ erDiagram
     }
     Recipe {
         int RecipeID
-        string FlavorName
-        string Instructions
+        varchar(255) FlavorName
+        text Instructions
     }
-    RecipeIngredients {
+    RecipeIngredient {
         int RecipeID
         int IngredientID
         int Quantity
@@ -70,7 +70,7 @@ erDiagram
     }
     Ingredient {
         int IngredientID
-        string Name
+        varchar(255) Name
     }
  
 
