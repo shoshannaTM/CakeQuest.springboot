@@ -77,7 +77,7 @@ erDiagram
     User ||--o{ CakeRequest : requests
     CakeRequest ||--|| User : bakes
     CakeRequest }|--o{ Recipe : references
-    Recipe }|--|{ RecipeIngredients : contains
-    RecipeIngredients }|--|{ Ingredient : is
+    Recipe }|--|{ RecipeIngredient : contains
+    RecipeIngredient }|--|{ Ingredient : is
 ```
 
