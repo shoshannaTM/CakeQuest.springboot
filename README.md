@@ -41,43 +41,44 @@ flowchart TD
 ERD
 ```mermaid
 erDiagram
-    User {
-        int UserID
-        varchar(45) Name
-        varchar(100) Email
-        varchar(255) Password
+    app_user {
+        int user_id
+        varchar(255) name
+        varchar(255) email
+        varchar(255) password
     }
-    CakeRequest {
-        int RequestID
-        int RequesterUserID
-        int BakerUserID
-        text RequesterNotes
-        enum Status
-        int CakeRecipeID
-        int FillingRecipeID
-        int FrostingRecipeID
+    cake_request {
+        int request_id
+        int requester_user_id
+        int baker_user_id
+        text requester_notes
+        enum status
+        int cake_recipe_id
+        int filling_recipe_id
+        int frosting_recipe_id
     }
-    Recipe {
-        int RecipeID
-        varchar(255) FlavorName
-        text Instructions
+    recipe {
+        int recipe_id
+        enum recipe_type
+        varchar(255) flavor_name
+        text instructions
     }
-    RecipeIngredient {
-        int RecipeID
-        int IngredientID
-        int Quantity
-        enum MeasurementUnit
+    recipe_ingredient {
+        int recipe_id
+        int ingredient_id
+        int quantity
+        enum measurement_unit
     }
-    Ingredient {
-        int IngredientID
-        varchar(255) Name
+    ingredient {
+        int ingredient_id
+        varchar(255) name
     }
  
 
-    User ||--o{ CakeRequest : requests
-    CakeRequest ||--|| User : bakes
-    CakeRequest }|--o{ Recipe : references
-    Recipe }|--|{ RecipeIngredient : contains
-    RecipeIngredient }|--|{ Ingredient : is
+    app_user ||--o{ cake_request : requests
+    cake_request ||--|| app_user : bakes
+    cake_request }|--o{ recipe : references
+    recipe }|--|{ recipe_ingredient : contains
+    recipe_ingredient }|--|{ ingredient : is
 ```
 
