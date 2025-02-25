@@ -71,7 +71,7 @@ erDiagram
     }
     ingredient {
         int ingredient_id
-        varchar(255) name
+        varchar(255) ingredient_name
     }
  
 
