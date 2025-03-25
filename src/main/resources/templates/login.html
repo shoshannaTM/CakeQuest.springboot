@@ -4,12 +4,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>Cake Planner</title>
+    <meta charset="UTF-8">
+    <title>Log In</title>
 </head>
 <body>
 <section layout:fragment="content">
     <h1 th:text="${message}">Default Message</h1>
-    <a th:href="@{/login}" class="btn btn-primary">Go to Log In</a>
+    <a th:href="@{/}" class="btn btn-primary">Go to Home</a>
 </section>
 </body>
 </html>

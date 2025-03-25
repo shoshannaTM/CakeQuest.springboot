@@ -5,12 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HomeController {
+public class AuthController {
 
-    @GetMapping("/")
+    @GetMapping("/login")
     public String home(Model model){
-            model.addAttribute("message", "Welcome to Cake Planner!");
-            return "home"; // Spring will look for home.html in your templates folder
+        model.addAttribute("message", "Go Home");
+        return "login"; // Spring will look for login.html in your templates folder
     }
 
 
