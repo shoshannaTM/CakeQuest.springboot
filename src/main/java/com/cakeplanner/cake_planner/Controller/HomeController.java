@@ -9,7 +9,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model){
-            model.addAttribute("message", "Welcome to Cake Planner!");
+            //model.addAttribute("message", "Welcome to Cake Planner!");
             return "home"; // Spring will look for home.html in your templates folder
     }
 
