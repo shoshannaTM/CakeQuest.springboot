@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Log In</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1 th:text="${message}">Default Message</h1>
+    <a th:href="@{/}" class="btn btn-primary">Go to Home</a>
+</section>
+</body>
+</html>

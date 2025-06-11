@@ -1,0 +1,327 @@
+/* styles.css — CakeQuest base styling */
+
+/* Global Reset & Typography */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background-color: #fff8f9;
+  color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Georgia', serif;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin: 0.5rem 0;
+}
+
+/* Layout Structure */
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-left-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #e26d8f;
+}
+
+/* Show desktop by default, hide mobile */
+.top-nav {
+  display: flex;
+}
+
+.bottom-nav {
+  display: none;
+}
+
+/* On small screens, switch */
+@media (max-width: 768px) {
+  .top-nav {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border-top: 1px solid #eee;
+    padding: 0.5rem 0;
+    z-index: 1000;
+  }
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bottom-nav .icon {
+    font-size: 1.4rem;
+  }
+
+  .bottom-nav a:hover {
+    color: #e26d8f;
+  }
+}
+
+.logo {
+  font-size: 2rem;
+  font-family: 'Playfair Display', serif;
+  color: #e26d8f;
+  text-decoration: none;
+}
+
+/* Reusable UI Elements */
+.card {
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+}
+
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cake-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.cake-card-content {
+  flex: 1;
+}
+
+.cake-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.due-date {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.flavors {
+  margin-bottom: 0.75rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-bar-bg {
+  background-color: #eee;
+  border-radius: 8px;
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background-color: #e26d8f;
+  height: 100%;
+  width: 30%; /* default, will be overridden by inline style */
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.card-arrow a {
+  font-size: 1.5rem;
+  color: #999;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.card-arrow a:hover {
+  color: #e26d8f;
+}
+
+.btn {
+  background-color: #e26d8f;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #cc5a7d;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+/* Profile Icon */
+.profile-icon {
+  font-size: 1.2rem;
+  background: #f3f3f3;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Home page centered header */
+.home-header-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.home-header-centered img {
+  max-width: 200px;
+  height: auto;
+}
+
+.home-header-centered .welcome-text h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.home-header-centered .tagline {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+/* Forms & Inputs */
+input[type="text"],
+input[type="search"],
+select,
+textarea {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* Utility */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #999;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+
+/* Checkbox Styling */
+input[type="checkbox"] {
+  accent-color: #e26d8f;
+  transform: scale(1.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav a {
+    margin-bottom: 0.5rem;
+  }
+
+  .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .header-image img {
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+}
+

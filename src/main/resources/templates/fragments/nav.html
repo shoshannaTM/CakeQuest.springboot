@@ -1,0 +1,33 @@
+<div th:fragment="main-nav" xmlns:th="http://www.thymeleaf.org">
+
+    <!-- Desktop Nav -->
+    <nav class="main-nav top-nav">
+        <div class="nav-left-wrapper">
+            <a th:href="@{/'/'}" class="logo">CakeQuest</a>
+            <div class="nav-links">
+                <a th:href="@{/cakes}">Cakes</a>
+                <a th:href="@{/recipes}">Recipes</a>
+                <a th:href="@{/shopping}">Shopping</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <a th:href="@{/profile}" class="profile-icon">👤</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="main-nav bottom-nav">
+        <a th:href="@{/cakes}">
+            <span class="icon">🎂</span>
+        </a>
+        <a th:href="@{/recipes}">
+            <span class="icon">📖</span>
+        </a>
+        <a th:href="@{/shopping}">
+            <span class="icon">🛒</span>
+        </a>
+        <a th:href="@{/profile}">
+            <span class="icon">👤</span>
+        </a>
+    </nav>
+</div>
