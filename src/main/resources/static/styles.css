@@ -1,6 +1,6 @@
 /* styles.css — CakeQuest base styling */
 
-/* 1. Global Reset & Typography */
+/* Global Reset & Typography */
 body {
   margin: 0;
   font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
@@ -17,7 +17,7 @@ p {
   margin: 0.5rem 0;
 }
 
-/* 2. Layout Structure */
+/* Layout Structure */
 main {
   max-width: 1200px;
   margin: 2rem auto;
@@ -109,7 +109,7 @@ main {
   text-decoration: none;
 }
 
-/* 3. Reusable UI Elements */
+/* Reusable UI Elements */
 .card {
   background-color: #fff;
   border: none;
@@ -211,7 +211,7 @@ main {
   background-color: #cc5a7d;
 }
 
-/* 4. Grid Layout (e.g., for Home) */
+/* Grid Layout */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -220,7 +220,7 @@ main {
   align-items: start;
 }
 
-/* 5. Profile Icon */
+/* Profile Icon */
 .profile-icon {
   font-size: 1.2rem;
   background: #f3f3f3;
@@ -232,7 +232,6 @@ main {
   justify-content: center;
 }
 
-/* 6. Home Page Header */
 /* Home page centered header */
 .home-header-centered {
   display: flex;
@@ -258,44 +257,8 @@ main {
   color: #666;
   margin-bottom: 1rem;
 }
-/*
-.home-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3rem;
-  gap: 2rem;
-}
 
-.welcome-text h2 {
-  font-size: 1.75rem;
-  margin-bottom: 0.25rem;
-}
-
-.tagline {
-  font-size: 1rem;
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-.new-cake-btn {
-  margin-top: 0.5rem;
-}
-
-.header-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.header-image img {
-  max-width: 200px;
-  height: auto;
-  display: block;
-}*/
-
-/* 7. Forms & Inputs */
+/* Forms & Inputs */
 input[type="text"],
 input[type="search"],
 select,
@@ -314,7 +277,7 @@ label {
   margin-bottom: 0.25rem;
 }
 
-/* 8. Utility */
+/* Utility */
 .text-center {
   text-align: center;
 }
@@ -329,13 +292,13 @@ label {
   margin-top: 2rem;
 }
 
-/* 9. Checkbox Styling */
+/* Checkbox Styling */
 input[type="checkbox"] {
   accent-color: #e26d8f;
   transform: scale(1.2);
 }
 
-/* 10. Responsive Adjustments */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
