@@ -1,32 +1,40 @@
 # CakeQuest.springboot
-This is a server-side rendered Spring Boot cake request and baking application.
+CakeQuest is a server side rendered Spring Boot web application that helps bakers organize and track their custom cake projects from start to finish.
+With this application a baker is able to:
+Create and manage custom cake projects
 
-This application has two interfaces, one for the baker and one for the requester. The requester uses the application to request a cake.
-There is an option for the requester to select the cake flavor, filling flavor, and frosting flavor from a list of flavors that are held
-in a database. Additionally, there is an option in each section to request a new flavor (with or without a recipe). If the requester has
-a specific recipe in mind, they are able to input it and have it added to the database. If the requester has a more general request, for 
-example, "Orange Filling," they are able to leave the recipe blank and allow the baker to add their own recipe later. Next, there is the 
-option for the requester to select from a list of common dietary restrictions. Finally, the requester has the option to add design requests 
-in the form of a text box input and upload an inspiration picture.
 
-The baker's interface notifies the baker when there has been a request and shows what the request is. If the flavors that have been selected
-are associated with recipes, there is an ingredients list generated for each component. This list allows the baker to check off ingredients
-that they already have in their pantry. If there is a flavor request that doesn't already have a recipe associated with it, the baker must
-upload a recipe for that component. Once the pantry check is complete, the ingredient list will be consolidated into "store mode." For
-example, if the baker needs 1 cup of cocoa powder for the frosting and 1.5 cups of cocoa powder for the cake, the consolidated "store mode"
-list simply states to shop for 2.5 cups of cocoa powder. Once shopping is complete, the recipes are shown on different pages with the option
-to toggle between the three recipes so they can be worked on simultaneously if needed. There is an option to mark "complete" for each 
-component. Once all components are complete, the app shows the design notes and inspiration picture from the requester for the baker to 
-reference while the cake is being assembled. Once assembly is complete, there is an option to take a picture of the completed cake and set
-a date to share the picture with the requester. Setting a date to share the picture ensures that if the final result of the cake is a 
-surprise, the requester won't see the picture until after their event.
+• Save a database of recipes, either imported via URL or created in app
 
-Three Tiered Architecture
+
+• Select flavors for the cake, filling, and frosting from recipes they’ve saved
+
+
+• View auto generated consolidated shopping lists for a cake project that merges quantities across all components
+
+
+• Shop their pantry to update the auto generated shopping list and avoid duplicate purchases
+
+
+• See a consolidated "store mode" shopping list that accounts for pantry stock
+
+
+• Manage and customize cake baking timelines and receive notifications of task due dates
+
+
+• Mark each component as complete
+
+
+• Mark the cake as fully assembled and optionally upload a final photo
+
+
+• Access a history of all cakes they’ve made
+
+# Three Tiered Architecture
 ```mermaid
 flowchart TD
  subgraph PresentationLayer["UI Layer (ThymeLeaf)"]
         Baker["Baker Interface"]
-        Requester["Requester Interface"]
   end
  subgraph BusinessLogicLayer["Business Logic (Springboot)"]
         Server["MVC Server"]
@@ -35,10 +43,9 @@ flowchart TD
         Database["Database"]
   end
     Baker --> Server
-    Requester --> Server
     Server --> Database
 ```
-ERD
+# ERD
 ```mermaid
 erDiagram
     app_user {
@@ -47,20 +54,20 @@ erDiagram
         varchar(255) email
         varchar(255) password
     }
-    cake_request {
-        int request_id
-        int requester_user_id
-        int baker_user_id
-        text requester_notes
+    cake_order {
+        int cake_id
+        int user_id
+        text notes
         enum status
         int cake_recipe_id
         int filling_recipe_id
         int frosting_recipe_id
+        datetime due_date
     }
     recipe {
         int recipe_id
+        varchar(255) recipe_name
         enum recipe_type
-        varchar(255) flavor_name
         text instructions
     }
     recipe_ingredient {
@@ -75,10 +82,8 @@ erDiagram
     }
  
 
-    app_user ||--o{ cake_request : requests
-    cake_request ||--|| app_user : bakes
-    cake_request }|--o{ recipe : references
+    app_user ||--o{ cake_order : creates
+    cake_order }|--o{ recipe : references
     recipe }|--|{ recipe_ingredient : contains
     recipe_ingredient }|--|{ ingredient : is
 ```
-
