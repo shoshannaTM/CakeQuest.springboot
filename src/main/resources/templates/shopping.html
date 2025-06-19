@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Shopping</title>
+</head>
+<body>
+<main layout:fragment="content">
+
+    <!-- Centered Welcome Header -->
+    <div class="shopping-header-grid">
+        <div class="shopping-header-left-column">
+            <h1>Shopping Lists</h1>
+            <p class="tagline">Shop your pantry, then head to the store!</p>
+        </div>
+        <div class="shopping-header-right-column">
+            <img src="/images/—Pngtree—cute girl with shopping cart.png" alt="Cute girl shopping drawing" />
+        </div>
+    </div>
+    <!-- Shopping list Grid Below -->
+    <div class="shopping-page-content">
+        <div class="shopping-left-column">
+            <h2 class="section-title">Create a Custom List</h2>
+            <p class="tagline">Select cakes, get one shopping list.</p>
+            <div class="shopping-cards">
+                <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+            </div>
+            <div class="shopping-btn-wrapper center">
+                <a href="#" class="btn shopping-btn">+ Create Custom Shopping List</a>
+            </div>
+        </div>
+
+        <div class="shopping-right-column">
+            <h2 class="section-title">Upcoming Shopping</h2>
+            <p class="tagline">Start shopping for your next cake</p>
+            <div class="shopping-cards">
+                <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div class="card"><h3>Make Frosting</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div class="card"><h3>Assemble & Decorate</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

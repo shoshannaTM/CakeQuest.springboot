@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <!-- Recipe Header -->
+    <div class="recipe-header-grid">
+        <div class="recipe-header-left-column">
+            <h1>Saved Recipes</h1>
+            <p>Sorted By Category</p>
+            <a href="#" class="btn new-cake-btn">+ New Recipe</a>
+        </div>
+        <div class="recipe-header-right-column">
+            <form th:action="@{/recipes}" method="get">
+                <div class="input-group">
+                    <input type="text" name="query" class="form-control" placeholder="Search recipes by name...">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="recipe-filter">
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" href="?type=cake">Cakes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?type=filling">Fillings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?type=frosting">Frostings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?type=other" tabindex="-1" >Other</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="recipe-list-grid">
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+
+    </div>
+</main>
+</body>
+</html>

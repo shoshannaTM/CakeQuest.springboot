@@ -3,25 +3,23 @@ package com.cakeplanner.cake_planner.Entities;
 import com.cakeplanner.cake_planner.Entities.Enums.Status;
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
-@Table(name = "cake_request")
-public class CakeRequest {
+@Table(name = "cake_order")
+public class CakeOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "request_id")
-    private int requestId;
+    @Column(name = "cake_id")
+    private int cakeId;
 
     @ManyToOne
-    @JoinColumn(name = "requester_user_id", nullable = false)
-    private User requester;
-
-    @ManyToOne
-    @JoinColumn(name = "baker_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User baker;
 
-    @Column(name = "requester_notes", columnDefinition = "TEXT")
-    private String requesterNotes;
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -39,36 +37,32 @@ public class CakeRequest {
     @JoinColumn(name = "frosting_recipe_id")
     private Recipe frostingRecipe;
 
-    public CakeRequest() {
+    @Column(name = "due_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dueDate;
+
+    public CakeOrder() {
     }
 
-    public CakeRequest(User requester, User baker,
-                       String requesterNotes, Status status,
-                       Recipe cakeRecipe, Recipe fillingRecipe,
-                       Recipe frostingRecipe) {
-        this.requester = requester;
+    public CakeOrder(User baker, String notes,
+                     Status status, Recipe cakeRecipe,
+                     Recipe fillingRecipe, Recipe frostingRecipe,
+                     Date dueDate) {
         this.baker = baker;
-        this.requesterNotes = requesterNotes;
+        this.notes = notes;
         this.status = status;
         this.cakeRecipe = cakeRecipe;
         this.fillingRecipe = fillingRecipe;
         this.frostingRecipe = frostingRecipe;
+        this.dueDate = dueDate;
     }
 
-    public int getRequestId() {
-        return requestId;
+    public int getCakeId() {
+        return cakeId;
     }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
-    }
-
-    public User getRequester() {
-        return requester;
-    }
-
-    public void setRequester(User requester) {
-        this.requester = requester;
+    public void setCakeId(int cakeId) {
+        this.cakeId = cakeId;
     }
 
     public User getBaker() {
@@ -79,12 +73,12 @@ public class CakeRequest {
         this.baker = baker;
     }
 
-    public String getRequesterNotes() {
-        return requesterNotes;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setRequesterNotes(String requesterNotes) {
-        this.requesterNotes = requesterNotes;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Status getStatus() {
@@ -117,5 +111,13 @@ public class CakeRequest {
 
     public void setFrostingRecipe(Recipe frostingRecipe) {
         this.frostingRecipe = frostingRecipe;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
 }

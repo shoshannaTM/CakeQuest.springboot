@@ -4,24 +4,25 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>Cake Planner</title>
+    <title>CakeQuest</title>
 </head>
 <body>
 <main layout:fragment="content">
 
     <!-- Centered Welcome Header -->
-    <div class="home-header-centered">
-        <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
-        <div class="welcome-text">
-            <h2>Welcome back, FirstName!</h2>
+    <div class="home-header-grid">
+        <div class="home-header-left-column">
+            <h1>Welcome back, FirstName!</h1>
             <p class="tagline">Let's bake something sweet!</p>
             <a href="#" class="btn new-cake-btn">+ New Cake</a>
         </div>
+    <div class="home-header-right-column">
+        <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
     </div>
-
+    </div>
     <!-- Dashboard Grid Below -->
     <div class="dashboard-grid">
-        <div class="left-column">
+        <div class="dashboard-left-column">
             <h2 class="section-title">Today's Baking</h2>
             <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
             <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
@@ -29,7 +30,7 @@
             <div class="card"><h3>Assemble & Decorate</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
         </div>
 
-        <div class="right-column">
+        <div class="dashboard-right-column">
             <h2 class="section-title">All Cakes</h2>
             <div th:replace="fragments/cakeCard :: cakeCard('Cake One', 'MM/DD/YYYY @ HH:mm', 'Vanilla - Jam - Buttercream', 30, '/cakes/1')"></div>
             <div th:replace="fragments/cakeCard :: cakeCard('Cake Two', 'MM/DD/YYYY @ HH:mm', 'Chocolate - Mousse - Ganache', 50, '/cakes/2')"></div>
