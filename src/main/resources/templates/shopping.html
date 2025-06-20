@@ -25,8 +25,8 @@
             <h2 class="section-title">Create a Custom List</h2>
             <p class="tagline">Select cakes, get one shopping list.</p>
             <div class="shopping-cards">
-                <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-                <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div th:replace="fragments/checkBoxCard :: checkBoxCard('true', 'Cake A', 'Vanilla - Jam - Buttercream', ${cake?.date ?: 'MM/DD/YYYY'})"></div>
+                <div th:replace="fragments/checkBoxCard :: checkBoxCard('false', 'Cake B', 'Chocolate - Mousse - Buttercream', ${cake?.date ?: 'MM/DD/YYYY'})"></div>
             </div>
             <div class="shopping-btn-wrapper center">
                 <a href="#" class="btn shopping-btn">+ Create Custom Shopping List</a>
@@ -37,10 +37,8 @@
             <h2 class="section-title">Upcoming Shopping</h2>
             <p class="tagline">Start shopping for your next cake</p>
             <div class="shopping-cards">
-                <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-                <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-                <div class="card"><h3>Make Frosting</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-                <div class="card"><h3>Assemble & Decorate</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+                <div th:replace="fragments/arrowCard :: arrowCard('Start Shopping', 'for Cake A', 'List Created', ${list?.date ?: 'MM/DD/YYYY'}, '/shoppingLists/1')"></div>
+                <div th:replace="fragments/arrowCard :: arrowCard('Start Shopping', 'for Cake A', 'List Created', ${list?.date ?: 'MM/DD/YYYY'}, '/shoppingLists/1')"></div>
             </div>
         </div>
     </div>

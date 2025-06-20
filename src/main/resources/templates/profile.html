@@ -4,10 +4,32 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>Profile</title>
 </head>
 <body>
+<main layout:fragment="content" class="profile-container">
+    <div class="profile-header">
+        <!-- Dynamic profile image with fallback -->
+        <img th:src="${user?.profileImageUrl} ?: '/images/ProfilePlaceholder.png'"
+             alt="Profile Picture"
+             class="profile-img" />
 
+        <!-- Dynamic name with fallbacks -->
+        <h1 class="profile-name"
+            th:text="(${user?.firstName} ?: 'First') + ' ' + (${user?.lastName} ?: 'Last')">
+            First Last
+        </h1>
+    </div>
+
+    <div class="profile-details">
+        <p><strong>Email:</strong> <span th:text="${user?.email} ?: 'email@example.com'">email@example.com</span></p>
+        <p><strong>Username:</strong> <span th:text="${user?.username} ?: 'username'">username</span></p>
+    </div>
+
+    <div class="profile-actions">
+        <a href="#" class="btn">Update Info</a>
+        <a href="#" class="btn">Change Password</a>
+    </div>
+</main>
 </body>
 </html>

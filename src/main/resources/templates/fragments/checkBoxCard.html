@@ -1,0 +1,16 @@
+<div th:fragment="checkBoxCard(checked, title, subtitle, due)" xmlns:th="http://www.thymeleaf.org">
+  <div class="card check-box-card">
+
+    <!-- NEW FLEX WRAPPER -->
+    <div class="check-box-header-row">
+      <input type="checkbox" th:checked="${checked}" aria-label="Select [[${title}]]">
+      <h3 th:text="${title}">Cake Name</h3>
+    </div>
+
+    <div class="check-box-card-content">
+      <p class="subtitle" th:text="'Flavors: ' + ${subtitle}">Cake - Filling - Frosting</p>
+      <p class="date" th:text="'Due: ' + ${due}">Due: MM/DD/YYYY</p>
+    </div>
+
+  </div>
+</div>

@@ -24,17 +24,16 @@
     <div class="dashboard-grid">
         <div class="dashboard-left-column">
             <h2 class="section-title">Today's Baking</h2>
-            <div class="card"><h3>Complete Shopping</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-            <div class="card"><h3>Bake Cake</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-            <div class="card"><h3>Make Frosting</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
-            <div class="card"><h3>Assemble & Decorate</h3><p>For Cake Name</p><p class="text-muted">Task Due: MM/DD/YYYY</p></div>
+            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, '/cakes/1')"></div>
+            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, '/cakes/1')"></div>
+
         </div>
 
         <div class="dashboard-right-column">
             <h2 class="section-title">All Cakes</h2>
-            <div th:replace="fragments/cakeCard :: cakeCard('Cake One', 'MM/DD/YYYY @ HH:mm', 'Vanilla - Jam - Buttercream', 30, '/cakes/1')"></div>
-            <div th:replace="fragments/cakeCard :: cakeCard('Cake Two', 'MM/DD/YYYY @ HH:mm', 'Chocolate - Mousse - Ganache', 50, '/cakes/2')"></div>
-            <div th:replace="fragments/cakeCard :: cakeCard('Cake Three', 'MM/DD/YYYY @ HH:mm', 'Red Velvet - Cream Cheese - Fondant', 90, '/cakes/3')"></div>
+            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake One', 'MM/DD/YYYY @ HH:mm', 'Vanilla - Jam - Buttercream', 30, '/cakes/1')"></div>
+            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake Two', 'MM/DD/YYYY @ HH:mm', 'Chocolate - Mousse - Ganache', 50, '/cakes/2')"></div>
+            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake Three', 'MM/DD/YYYY @ HH:mm', 'Red Velvet - Cream Cheese - Fondant', 90, '/cakes/3')"></div>
         </div>
     </div>
 

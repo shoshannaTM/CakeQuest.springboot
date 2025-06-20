@@ -46,14 +46,14 @@
     </div>
 
     <div class="recipe-list-grid">
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
-        <div th:replace="fragments/recipeCard :: recipeCard('Recipe Name', 'recipeType', 'MM/DD/YYYY', '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
+        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
 
     </div>
 </main>
