@@ -13,5 +13,12 @@ public class HomeController {
             return "home"; // Spring will look for home.html in your templates folder
     }
 
+    @GetMapping("/cakes/cakeForm")
+    public String showUpdateForm(Model model) {
+        // Optionally add a user object here
+        // model.addAttribute("user", new User());
+        return "cakeForm";
+    }
+
 
 }

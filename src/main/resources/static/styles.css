@@ -60,11 +60,47 @@ main {
 /* Forms & Inputs */
 .form-control {
   border-radius: 30px;
+  color: #585C5F;
+  padding: .5rem 1rem;
+}
+
+.form-label{
+    margin-bottom: 0rem;
 }
 
 input[type="checkbox"] {
   accent-color: #e26d8f;
   transform: scale(1.5);
+}
+
+/* select drop down styled with custom arrow and positioning */
+.mb-3 {
+  position: relative;
+  width: 100%; /* or fixed width if preferred */
+}
+
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  border-radius: 30px;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  font-size: 1rem;
+  color: #585C5F;
+  display: block;
+}
+
+/* use FA icon instead of browser drop down arrow */
+.custom-select-icon {
+    position: absolute;
+    right: 1rem;
+    transform: translateY(-200%);
+    pointer-events: none;
+    color: #666;
+    font-size: 0.9rem;
 }
 
 /* Profile Icon */
@@ -325,7 +361,7 @@ input[type="checkbox"] {
    Profile Page
 ---------------------------------- */
   /* Profile Page Layout */
-  .profile-container {
+  .container {
     max-width: 600px;
     margin: 4rem auto;
     padding: 2rem;
@@ -361,7 +397,33 @@ input[type="checkbox"] {
     margin: 15px;
 }
   /* Actions List */
+/* ----------------------------------
+   User Form
+---------------------------------- */
+.saveBtn{
+    justify-self: center;
+}
 
+.userFormPage .btn,
+.cakeFormPage .btn {
+    width: 200px;
+}
+
+.userFormPage .container,
+.cakeFormPage .container {
+    text-align: left;
+}
+
+.title {
+    text-align: center;
+}
+
+/* ----------------------------------
+   New Cake Form
+---------------------------------- */
+.title {
+    margin-bottom: 2rem;
+}
 
 /* ----------------------------------
    Card Components

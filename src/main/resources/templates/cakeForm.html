@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Cake Form</title>
+</head>
+<body class="cakeFormPage">
+<main layout:fragment="content">
+    <div class="container">
+        <div class="title">
+            <h1>New Cake Project</h1>
+        </div>
+        <form>
+            <div class="mb-3">
+                <label for="cakeNameInput">What would you like to name this cake?</label>
+                <input type="text" class="form-control" id="cakeNameInput" placeholder="Sister's Super Awesome Birthday Cake?" required>
+            </div>
+            <div class="mb-3">
+                <label for="dueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" name="dueDate">
+            </div>
+            <div class="mb-3">
+                <label for="sizeSelect">What size cake will this be?</label>
+                <select class="custom-select" id="sizeSelect">
+                    <option selected>Select a size... </option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="cakeFlavorSelect">What flavor cake?</label>
+                <select class="custom-select" id="cakeFlavorSelect">
+                    <option selected>Select a cake flavor... </option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="fillingFlavorSelect">What flavor filling?</label>
+                <select class="custom-select" id="fillingFlavorSelect">
+                    <option selected>Select a filling flavor... </option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="frostingFlavorSelect">What flavor frosting?</label>
+                <select class="custom-select" id="frostingFlavorSelect">
+                    <option selected>Select a frosting flavor... </option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="dietaryRestrictionInput" class="form-label">Any dietary restrictions? (Optional)</label>
+                <textarea class="form-control" id="dietaryRestrictionInput" name="dietaryRestrictionInput" rows="4"
+                          placeholder="Please note any dietary needs for this cake (i.e. Gluten Free, Vegan, Nut Allergy, Halal, etc.)"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="notesInput" class="form-label">Decoration notes? (Optional)</label>
+                <textarea class="form-control" id="notesInput" name="notesInput" rows="4"
+                          placeholder="Add any special requests for this cake here (i.e. Frosting color,  style, etc.)"></textarea>
+            </div>
+
+            <div class="saveBtn">
+                <a href="#" class="btn">Save</a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>
