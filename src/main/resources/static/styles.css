@@ -22,7 +22,7 @@ p {
 main {
   max-width: 1200px;
   margin: 2rem auto;
-  /*padding: 0 2rem;FIXME*/
+  padding: 0 1rem 50px;
 }
 
 /* Utility */
@@ -170,49 +170,6 @@ input[type="checkbox"] {
   display: none;
 }
 
-@media (max-width: 768px) {
-  .top-nav {
-    display: none;
-  }
-
-  .bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    border-top: 1px solid #eee;
-    padding: 0.5rem 0;
-    z-index: 1000;
-  }
-
-  .bottom-nav a {
-    text-decoration: none;
-    color: #333;
-    font-size: 1.75rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .bottom-nav a:hover,
-  .bottom-nav a.active {
-    color: #e26d8f;
-  }
-
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .nav a {
-    margin-bottom: 0.5rem;
-  }
-}
-
 /* ----------------------------------
    Header Grids
 ---------------------------------- */
@@ -252,27 +209,7 @@ input[type="checkbox"] {
     row-gap: 1rem;
 }
 
-@media (max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .home-header-grid,
-  .shopping-header-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .home-header-right-column,
-  .shopping-header-right-column {
-    display: none;
-  }
-
-  .home-header-left-column,
-  .shopping-header-left-column {
-    width: 100%;
-  }
-}
 
 /* ----------------------------------
    Recipes Page
@@ -320,13 +257,7 @@ input[type="checkbox"] {
   align-items: start;
 }
 
-@media (max-width: 768px) {
-  .recipe-header-grid,
-  .recipe-list-grid {
-     grid-template-columns: 1fr;
-     text-align: center;
-  }
-}
+
 
 /* ----------------------------------
    Shopping Page
@@ -428,12 +359,16 @@ input[type="checkbox"] {
    Cake Info
 ---------------------------------- */
 .cakeInfoPage .btn {
-    width: -webkit-fill-available;
+    width: 100%;
     margin: 0.25rem 0rem;
 }
 
 .delete {
     color: #e26d8f;
+}
+
+.delete:hover {
+    color: #cc5a7d;
 }
 
 .cakeInfoPage .container {
@@ -568,4 +503,74 @@ input[type="checkbox"] {
 
 .fa-arrow-right:hover {
   color: #e26d8f;
+}
+
+/* ----------------------------------
+Mobile
+---------------------------------- */
+@media (max-width: 768px) {
+  .top-nav {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border-top: 1px solid #eee;
+    padding: 0.5rem 0;
+    height: 50px;
+    z-index: 1000;
+  }
+
+  .bottom-nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bottom-nav a:hover,
+  .bottom-nav a.active {
+    color: #e26d8f;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav a {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Shared 1-column grid & center text */
+  .recipe-header-grid,
+  .recipe-list-grid,
+  .dashboard-grid,
+  .shopping-page-content,
+  .home-header-grid,
+  .shopping-header-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  /* Hide right columns */
+  .home-header-right-column,
+  .shopping-header-right-column {
+    display: none;
+  }
+
+  /* Full-width left columns */
+  .home-header-left-column,
+  .shopping-header-left-column {
+    width: 100%;
+  }
 }

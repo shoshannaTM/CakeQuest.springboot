@@ -79,7 +79,7 @@ public class HomeController {
 
 
         model.addAttribute("cake", cake);
-        return "cakeInfo";
+        return "cakeDetails";
     }
 
 
