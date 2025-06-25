@@ -22,7 +22,7 @@ p {
 main {
   max-width: 1200px;
   margin: 2rem auto;
-  padding: 0 2rem;
+  /*padding: 0 2rem;FIXME*/
 }
 
 /* Utility */
@@ -363,7 +363,6 @@ input[type="checkbox"] {
   /* Profile Page Layout */
   .container {
     max-width: 600px;
-    margin: 4rem auto;
     padding: 2rem;
     background-color: white;
     border-radius: 12px;
@@ -426,6 +425,33 @@ input[type="checkbox"] {
 }
 
 /* ----------------------------------
+   Cake Info
+---------------------------------- */
+.cakeInfoPage .btn {
+    width: -webkit-fill-available;
+    margin: 0.25rem 0rem;
+}
+
+.delete {
+    color: #e26d8f;
+}
+
+.cakeInfoPage .container {
+    max-width: fit-content;
+}
+
+.cake-details-list {
+    list-style-type: none;
+    line-height: 2rem;
+}
+
+.info {
+    text-align: left;
+    line-height: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* ----------------------------------
    Card Components
 ---------------------------------- */
 
@@ -442,6 +468,9 @@ input[type="checkbox"] {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
+.cardLink {
+    text-decoration: none;
+}
 /* Arrow Card Layout */
 .arrow-card {
   display: flex;
@@ -529,7 +558,7 @@ input[type="checkbox"] {
 }
 
 /* Arrow Icon */
-.card-arrow a {
+.fa-arrow-right {
   font-size: 1.5rem;
   color: #999;
   text-decoration: none;
@@ -537,6 +566,6 @@ input[type="checkbox"] {
   align-items: center;
 }
 
-.card-arrow a:hover {
+.fa-arrow-right:hover {
   color: #e26d8f;
 }

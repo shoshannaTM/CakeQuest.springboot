@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${cake != null} ? ${cake.name} : 'Cake Details'">Cake Details</title>
+</head>
+<body class="cakeInfoPage">
+<main layout:fragment="content">
+    <div class="container">
+        <div class="title">
+            <h1 th:text="${cake != null} ? ${cake.name} : 'Cake Details'">Cake Details</h1>
+        </div>
+
+        <div class="info">
+            <ul class="cake-details-list">
+                <li><strong>Due Date:</strong> <span th:text="${cake != null} ? ${cake.dueDate} : 'MMMM dd, yyyy'">MMMM dd, yyyy</span></li>
+
+                <!--/* FIXME
+                <li><strong>Size:</strong> <span th:text="${cake != null} ? ${cake.size} : 'Cake Size'">Cake Size</span></li>
+                */-->
+
+                <li><strong>Cake Flavor:</strong> <span th:text="${cake != null} ? ${cake.cakeFlavor} : 'Cake Flavor'">Cake Flavor</span></li>
+                <li><strong>Filling Flavor:</strong> <span th:text="${cake != null} ? ${cake.fillingFlavor} : 'Filling Flavor'">Filling Flavor</span></li>
+                <li><strong>Frosting Flavor:</strong> <span th:text="${cake != null} ? ${cake.frostingFlavor} : 'Frosting Flavor'">Frosting Flavor</span></li>
+
+                <!--/* FIXME
+                <li><strong>Dietary Restrictions:</strong> <span th:text="${cake != null} ? ${cake.dietaryRestrictions} : 'None'">None</span></li>
+                <li><strong>Decoration Notes:</strong> <span th:text="${cake != null} ? ${cake.notes} : 'No notes provided.'">No notes provided.</span></li>
+                */-->
+            </ul>
+        </div>
+
+
+        <div>
+            <a th:href="@{/cakes/cakeForm}" class="btn">Edit Cake</a>
+        </div>
+        <div>
+            <a href="#" class="delete" >Delete Cake</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

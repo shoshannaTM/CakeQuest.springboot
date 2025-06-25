@@ -31,12 +31,18 @@
 
         <div class="dashboard-right-column">
             <h2 class="section-title">All Cakes</h2>
-            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake One', 'MM/DD/YYYY @ HH:mm', 'Vanilla - Jam - Buttercream', 30, '/cakes/1')"></div>
-            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake Two', 'MM/DD/YYYY @ HH:mm', 'Chocolate - Mousse - Ganache', 50, '/cakes/2')"></div>
-            <div th:replace="fragments/progressBarCard :: progressBarCard('Cake Three', 'MM/DD/YYYY @ HH:mm', 'Red Velvet - Cream Cheese - Fondant', 90, '/cakes/3')"></div>
+
+            <div th:each="cake : ${cakes}">
+                <div th:replace="fragments/progressBarCard :: progressBarCard(
+         ${cake.name},
+         ${cake.cakeFlavor + ' - ' + cake.fillingFlavor + ' - ' + cake.frostingFlavor},
+         ${cake.dueDate},
+         ${cake.progress},
+         '/cakes/' + ${cake.id})">
+                </div>
+            </div>
         </div>
     </div>
-
 </main>
 </body>
 </html>
