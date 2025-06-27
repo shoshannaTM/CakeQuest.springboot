@@ -14,7 +14,7 @@
         <div class="home-header-left-column">
             <h1>Welcome back, FirstName!</h1>
             <p class="tagline">Let's bake something sweet!</p>
-            <a th:href="@{/cakes/cakeForm}" class="btn new-cake-btn">+ New Cake</a>
+            <a th:href="@{/cakeForm}" class="btn new-cake-btn">+ New Cake</a>
         </div>
     <div class="home-header-right-column">
         <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
@@ -24,8 +24,8 @@
     <div class="dashboard-grid">
         <div class="dashboard-left-column">
             <h2 class="section-title">Today's Baking</h2>
-            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, '/cakes/1')"></div>
-            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, '/cakes/1')"></div>
+            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/1')"></div>
+            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/1')"></div>
 
         </div>
 
@@ -38,7 +38,7 @@
          ${cake.cakeFlavor + ' - ' + cake.fillingFlavor + ' - ' + cake.frostingFlavor},
          ${cake.dueDate},
          ${cake.progress},
-         '/cakes/' + ${cake.id})">
+         'cakes/' + ${cake.id})">
                 </div>
             </div>
         </div>

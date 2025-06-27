@@ -5,11 +5,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class RecipeController {
+public class ShoppingController {
+
 
     //FIXME
-    @GetMapping("/recipes/1")
+    @GetMapping("/shopping/1")
     public String showUpdateForm(Model model) {
-        return "recipeDetails";
+        return "shoppingList";
     }
 }
+

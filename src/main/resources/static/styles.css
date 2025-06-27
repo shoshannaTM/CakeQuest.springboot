@@ -57,6 +57,28 @@ main {
   background-color: #cc5a7d;
 }
 
+.btn-outline-secondary {
+    width: fit-content;
+}
+
+.shopping-btn-wrapper {
+  margin-top: 1rem;
+}
+
+.shopping-btn-wrapper.center {
+  display: flex;
+  justify-content: center;
+}
+
+.saveBtn{
+    justify-self: center;
+}
+
+.userFormPage .btn,
+.cakeFormPage .btn {
+    width: 200px;
+}
+
 /* Forms & Inputs */
 .form-control {
   border-radius: 30px;
@@ -71,6 +93,11 @@ main {
 input[type="checkbox"] {
   accent-color: #e26d8f;
   transform: scale(1.5);
+  margin: .25rem;
+}
+
+.shoppingListPage .details-list {
+    list-style: none;
 }
 
 /* select drop down styled with custom arrow and positioning */
@@ -275,18 +302,12 @@ input[type="checkbox"] {
     row-gap: 1rem;
 }
 
-.shopping-btn-wrapper {
-  margin-top: 1rem;
-}
-
-.shopping-btn-wrapper.center {
-  display: flex;
-  justify-content: center;
-}
 
 .shopping-header-right-column img {
     max-width: 300px;
 }
+
+
 
 /* ----------------------------------
    Profile Page
@@ -299,6 +320,7 @@ input[type="checkbox"] {
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     text-align: center;
+    margin-bottom:inherit;
   }
 
   .profile-header {
@@ -330,14 +352,9 @@ input[type="checkbox"] {
 /* ----------------------------------
    User Form
 ---------------------------------- */
-.saveBtn{
-    justify-self: center;
-}
 
-.userFormPage .btn,
-.cakeFormPage .btn {
-    width: 200px;
-}
+
+
 
 .userFormPage .container,
 .cakeFormPage .container {
@@ -375,9 +392,12 @@ input[type="checkbox"] {
     max-width: fit-content;
 }
 
-.cake-details-list {
-    list-style-type: none;
+.details-list {
     line-height: 2rem;
+}
+
+.cakeInfoPage .details-list {
+list-style-type: none;
 }
 
 .info {
@@ -385,6 +405,17 @@ input[type="checkbox"] {
     line-height: 1rem;
     margin-bottom: 2rem;
 }
+
+
+.recipe-item{
+    line-height: 1rem;
+    margin-bottom:1.5rem;
+}
+
+.recipe-section-title{
+    margin-bottom: .75rem;
+}
+
 
 /* ----------------------------------
    Card Components

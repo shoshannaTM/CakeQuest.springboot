@@ -17,7 +17,7 @@ public class HomeController {
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
     //FIXME
-    @GetMapping("/")
+   /* @GetMapping("/")
     public String showCakes(Model model) {
         List<DummyCakes> cakes = new ArrayList<>();
 
@@ -54,9 +54,9 @@ public class HomeController {
         model.addAttribute("cakes", cakes);
         return "home";
     }
+*/
 
-
-    @GetMapping("/cakes/cakeForm")
+    @GetMapping("/cakeForm")
     public String showUpdateForm(Model model) {
         // Optionally add a user object here
         // model.addAttribute("user", new User());
@@ -64,7 +64,7 @@ public class HomeController {
     }
 
     //FIXME
-    @GetMapping("/cakes/{id}")
+    @GetMapping("cakes/{id}")
     public String viewCakeDetails(@PathVariable int id, Model model) {
         // Recreate the dummy cake with the matching ID
         DummyCakes cake = null;

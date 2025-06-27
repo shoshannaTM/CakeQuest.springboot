@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping List</title>
+</head>
+<body class="shoppingListPage">
+<main layout:fragment="content">
+  <div class="title">
+    <h1 >Shop Your Pantry For CakeName(s)</h1>
+    <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0. </p>
+  </div>
+  <div class="container">
+    <div class="info">
+      <h2 class="recipe-section-title">Ingredients</h2>
+
+      <ul class="details-list">
+          <li class="recipe-item">
+            <label>
+              <input type="checkbox" />
+              Ingredient
+            </label>
+          </li>
+          <li class="recipe-item">
+            <label>
+              <input type="checkbox" />
+              Ingredient
+            </label>
+          </li>
+          <li class="recipe-item">
+            <label>
+              <input type="checkbox" />
+              Ingredient
+            </label>
+          </li>
+        <li class="recipe-item">
+          <label>
+            <input type="checkbox" />
+            Ingredient
+          </label>
+        </li>
+        <li class="recipe-item">
+          <label>
+            <input type="checkbox" />
+            Ingredient
+          </label>
+        </li>
+        <li class="recipe-item">
+          <label>
+            <input type="checkbox" />
+            Ingredient
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="shopping-btn-wrapper center">
+    <a href="#" class="btn shopping-btn">Mark As Complete</a>
+  </div>
+</main>
+</body>
+</html>

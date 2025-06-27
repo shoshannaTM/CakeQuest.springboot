@@ -15,7 +15,7 @@
         </div>
 
         <div class="info">
-            <ul class="cake-details-list">
+            <ul class="details-list">
                 <li><strong>Due Date:</strong> <span th:text="${cake != null} ? ${cake.dueDate} : 'MMMM dd, yyyy'">MMMM dd, yyyy</span></li>
 
                 <!--/* FIXME
@@ -35,7 +35,7 @@
 
 
         <div>
-            <a th:href="@{/cakes/cakeForm}" class="btn">Edit Cake</a>
+            <a th:href="@{/cakeForm}" class="btn">Edit Cake</a>
         </div>
         <div>
             <a href="#" class="delete" >Delete Cake</a>
