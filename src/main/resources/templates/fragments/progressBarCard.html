@@ -1,7 +1,7 @@
 <div th:fragment="progressBarCard(title, subtitle, due, progress, arrowLink)" xmlns:th="http://www.thymeleaf.org">
 
   <a th:href="@{${arrowLink}}" aria-label="View Details" class="cardLink">
-  <div class="card arrow-card progress-bar-card">
+  <div class="card arrow-card progress-bar-card flex-row">
     <div class="progress-bar-card-content">
       <div class="card-header">
         <h3 th:text="${title}">Cake Name</h3>

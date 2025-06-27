@@ -307,7 +307,16 @@ input[type="checkbox"] {
     max-width: 300px;
 }
 
+.pantry-cards{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
 
+.pantry-card {
+    width: fit-content;
+    justify-self: center;
+}
 
 /* ----------------------------------
    Profile Page
@@ -348,14 +357,10 @@ input[type="checkbox"] {
 .list-group-flush {
     margin: 15px;
 }
-  /* Actions List */
+
 /* ----------------------------------
    User Form
 ---------------------------------- */
-
-
-
-
 .userFormPage .container,
 .cakeFormPage .container {
     text-align: left;
@@ -435,15 +440,19 @@ list-style-type: none;
 }
 
 .cardLink {
-    text-decoration: none;
+  text-decoration: none;
 }
+
+/* Flex Utility */
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 /* Arrow Card Layout */
 .arrow-card {
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
 }
 
 /* Progress Bar Card Specific Layout */
@@ -452,28 +461,32 @@ list-style-type: none;
 }
 
 /* Check Box Card */
-.check-box-header-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
 
 .check-box-header-row h3 {
   font-family: 'Georgia', serif;
   margin: 0;
 }
 
-
 .check-box-card-content {
+  /* Remove this unless you’re sure a parent sets padding-left */
   padding-left: inherit;
 }
 
+/* Pantry Card */
+.ingredient-card-label {
+    text-wrap-mode: nowrap;
+}
 
-/* Header Layout */
+.pantry-card-content .form-control {
+    width: 175px;
+}
+
+/* Card Header Layout */
 .card-header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /*FIXME */
   background-color: transparent;
   border-bottom: none;
 }

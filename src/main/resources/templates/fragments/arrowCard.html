@@ -1,7 +1,7 @@
 <div th:fragment="arrowCard(title, subtitle, datePrefix, dateValue, arrowLink)" xmlns:th="http://www.thymeleaf.org">
 
   <a th:href="@{${arrowLink}}" aria-label="View Details" class="cardLink">
-  <div class="card arrow-card">
+  <div class="card arrow-card flex-row">
     <div class="arrow-card-content">
       <div class="card-header">
         <h3 th:text="${title}">Card Title</h3>
