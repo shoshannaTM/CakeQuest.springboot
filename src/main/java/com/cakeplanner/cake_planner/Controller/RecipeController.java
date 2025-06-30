@@ -12,4 +12,9 @@ public class RecipeController {
     public String showUpdateForm(Model model) {
         return "recipeDetails";
     }
+
+    @GetMapping("/recipes/new")
+    public String showNewForm(Model model) {
+        return "newRecipe";
+    }
 }

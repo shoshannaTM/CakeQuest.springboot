@@ -100,6 +100,19 @@ input[type="checkbox"] {
     list-style: none;
 }
 
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.ingredient-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 /* select drop down styled with custom arrow and positioning */
 .mb-3 {
   position: relative;
@@ -616,5 +629,25 @@ Mobile
   .home-header-left-column,
   .shopping-header-left-column {
     width: 100%;
+  }
+
+  .input-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .ingredient-inputs {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pantry-card-content .form-control {
+    width: 100%;
+  }
+
+  .ingredient-card-label {
+    margin-bottom: 0.25rem;
   }
 }

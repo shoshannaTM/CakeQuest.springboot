@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>New Recipe</title>
+</head>
+<body class="newRecipePage">
+<main layout:fragment="content">
+    <div class="title">
+        <h1>Import New Recipe</h1>
+    </div>
+
+    <form>
+    <div class="mb-3">
+        <label for="urlInput">Simply paste in the URL of your favorite online recipe and we will do the rest.</label>
+        <input type="text" class="form-control" id="urlInput" placeholder="URL" required>
+    </div>
+        <div class="mb-3">
+            <label for="recipeTypeSelect">Recipe Type: </label>
+            <select class="custom-select" id="recipeTypeSelect">
+                <option selected>Select Type... </option>
+                <option value="1">Cake</option>
+                <option value="2">Frosting</option>
+                <option value="3">Filling</option>
+                <option value="4">Other</option>
+            </select>
+            <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+        </div>
+        <div class="saveBtn">
+            <a href="#" class="btn">Save</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

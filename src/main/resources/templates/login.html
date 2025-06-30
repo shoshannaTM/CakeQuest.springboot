@@ -8,9 +8,20 @@
     <title>Log In</title>
 </head>
 <body>
-<section layout:fragment="content">
-    <h1 th:text="${message}">Default Message</h1>
-    <a th:href="@{/}" class="btn btn-primary">Go to Home</a>
-</section>
+<main layout:fragment="content">
+    <div class="title">
+        <h1>Welcome to CakeQuest!</h1>
+        <p class="tagline">Let's bake something sweet!</p>
+    </div>
+
+    <div>
+        <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
+    </div>
+
+    <div>
+        <a th:href="@{/profile/update}" class="btn">Sign Up</a>
+        <a href="#" class="btn">Log In</a>
+    </div>
+</main>
 </body>
 </html>

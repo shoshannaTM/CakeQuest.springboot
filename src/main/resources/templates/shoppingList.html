@@ -8,22 +8,25 @@
     <title>Shopping List</title>
 </head>
 <body class="shoppingListPage">
-<main layout:fragment="content">
-  <div class="title">
-    <h1 >Shop Your Pantry For CakeName(s)</h1>
-    <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0. </p>
-  </div>
-    <div class="pantry-cards">
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg' )"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg' )"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg' )"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg' )"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg' )"></div>
-      </div>
 
-  <div class="shopping-btn-wrapper center">
-    <a href="#" class="btn shopping-btn">Mark As Complete</a>
-  </div>
+<main layout:fragment="content">
+    <div class="title">
+        <h1>Shop Your Pantry For CakeName(s)</h1>
+        <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0.</p>
+    </div>
+
+    <div class="pantry-cards">
+        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+    </div>
+
+    <div class="shopping-btn-wrapper center">
+        <a href="#" class="btn shopping-btn">Mark As Complete</a>
+    </div>
 </main>
+
 </body>
 </html>

@@ -14,6 +14,13 @@ public class ProfileController {
         return "userForm";
     }
 
+    @GetMapping("/login")
+    public String showloginPage(Model model) {
+        // Optionally add a user object here
+        // model.addAttribute("user", new User());
+        return "login";
+    }
+
     //example of manipulating the model based on where it was clicked into from. FIXME
    /* @GetMapping("/update-info")
     public String showUpdateForm(Model model) {
