@@ -1,6 +1,6 @@
-package com.cakeplanner.cake_planner.Entities;
+package com.cakeplanner.cake_planner.Model.Entities;
 
-import com.cakeplanner.cake_planner.Entities.Enums.RecipeType;
+import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import jakarta.persistence.*;
 
 @Entity

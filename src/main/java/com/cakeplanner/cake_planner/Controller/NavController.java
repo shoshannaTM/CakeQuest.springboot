@@ -1,5 +1,5 @@
 package com.cakeplanner.cake_planner.Controller;
-import com.cakeplanner.cake_planner.Entities.DummyCakes;
+import com.cakeplanner.cake_planner.Model.Entities.DummyCakes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

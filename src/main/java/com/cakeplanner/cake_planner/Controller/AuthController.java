@@ -9,7 +9,6 @@ public class AuthController {
 
     @GetMapping("/login")
     public String home(Model model){
-        model.addAttribute("message", "Go Home");
         return "login";
     }
 

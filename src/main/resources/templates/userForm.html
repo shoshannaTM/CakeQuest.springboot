@@ -14,25 +14,25 @@
     <h1>User Info</h1>
     <p th:if="${showMessage}" th:text="${message}">Sign up below to start turning sweet ideas into cake!</p>
   </div>
-    <form>
+    <form th:action="@{/signup}" th:object="${user}" method="post">
             <div class="mb-3">
                 <label for="firstNameInput">First name</label>
-                <input type="text" class="form-control" id="firstNameInput" placeholder="First name" required>
+                <input type="text" th:field="*{firstName}" class="form-control" id="firstNameInput" placeholder="First name" required>
             </div>
             <div class="mb-3">
                 <label for="lastNameInput">Last name</label>
-                <input type="text" class="form-control" id="lastNameInput" placeholder="Last name" required>
+                <input type="text" th:field="*{lastName}" class="form-control" id="lastNameInput" placeholder="Last name" required>
             </div>
             <div class="mb-3">
             <label for="inputEmail" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="inputEmail" placeholder="name@example.com">
+            <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="name@example.com">
         </div>
             <div class="mb-3">
             <label for="inputPassword" class="form-label">Password</label>
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+            <input type="password" th:field="*{password}" class="form-control" id="inputPassword" placeholder="Password">
         </div>
         <div class="saveBtn">
-        <a href="#" class="btn">Save</a>
+            <button type="submit" class="btn">Save</button>
         </div>
     </form>
     </div>

@@ -1,6 +1,6 @@
-package com.cakeplanner.cake_planner.Entities;
+package com.cakeplanner.cake_planner.Model.Entities;
 
-import com.cakeplanner.cake_planner.Entities.Enums.Status;
+import com.cakeplanner.cake_planner.Model.Entities.Enums.Status;
 import jakarta.persistence.*;
 
 import java.util.Date;

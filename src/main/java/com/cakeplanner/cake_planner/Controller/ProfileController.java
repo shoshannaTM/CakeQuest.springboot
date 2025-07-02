@@ -14,28 +14,18 @@ public class ProfileController {
         return "userForm";
     }
 
-    @GetMapping("/login")
-    public String showloginPage(Model model) {
-        // Optionally add a user object here
-        // model.addAttribute("user", new User());
-        return "login";
-    }
+    //example of manipulating the model based on where it was clicked into from. FIXME SIGN UP WHUAGJGZD
+   /* @GetMapping("/signup")
+public String showSignupForm(Model model) {
+    model.addAttribute("user", new User()); // Must match th:object
+    return "userForm"; // must match your .html file name (no .html extension)
+}
 
-    //example of manipulating the model based on where it was clicked into from. FIXME
-   /* @GetMapping("/update-info")
-    public String showUpdateForm(Model model) {
-        model.addAttribute("formTitle", "Update Your Info");
-        model.addAttribute("buttonLabel", "Save Changes");
-        // add existing user to pre-fill the form
-        model.addAttribute("user", currentUser);
-        return "userForm";
-    }
+@PostMapping("/signup")
+public String handleSignup(@ModelAttribute("user") User user) {
+    userService.save(user); // your service layer logic
+    return "redirect:/login"; // or another success page
+}
 
-    @GetMapping("/sign-up")
-    public String showSignUpForm(Model model) {
-        model.addAttribute("formTitle", "Create a New Account");
-        model.addAttribute("buttonLabel", "Sign Up");
-        model.addAttribute("user", new User()); // empty form
-        return "userForm";
     }*/
 }

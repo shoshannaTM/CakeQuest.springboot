@@ -79,6 +79,13 @@ main {
     width: 200px;
 }
 
+.login-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
 /* Forms & Inputs */
 .form-control {
   border-radius: 30px;
@@ -432,6 +439,16 @@ list-style-type: none;
 
 .recipe-section-title{
     margin-bottom: .75rem;
+}
+
+/* ----------------------------------
+   Login Page
+---------------------------------- */
+.login-img{
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    justify-self: center;
 }
 
 

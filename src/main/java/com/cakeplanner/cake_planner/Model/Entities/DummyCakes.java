@@ -1,4 +1,4 @@
-package com.cakeplanner.cake_planner.Entities;
+package com.cakeplanner.cake_planner.Model.Entities;
 
 
 public class DummyCakes {
