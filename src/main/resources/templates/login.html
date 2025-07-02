@@ -5,21 +5,28 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
+    <title>Login</title>
 </head>
 <body>
 <main layout:fragment="content">
-    <div class="title">
-        <h1>Welcome to CakeQuest!</h1>
-        <p class="tagline">Let's bake something sweet!</p>
+<div class="container">
+  <div class="title">
+    <h1>Log In</h1>
+  </div>
+  <form th:action="@{/login}" th:object="${user}" method="post">
+    <div class="mb-3">
+      <label for="inputEmail" class="form-label">Email address</label>
+      <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="name@example.com" required>
     </div>
-    <div class="login-img">
-        <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
-        <div class="login-btn">
-            <a th:href="@{/profile/update}" class="btn">Sign Up</a>
-            <a href="#" class="btn">Log In</a>
-        </div>
+    <div class="mb-3">
+      <label for="inputPassword" class="form-label">Password</label>
+      <input type="password" th:field="*{password}" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
+    <div class="saveBtn">
+      <button type="submit" class="btn">Log In</button>
+    </div>
+  </form>
+</div>
 </main>
 </body>
 </html>

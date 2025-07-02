@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Login or Sign Up</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="title">
+        <h1>Welcome to CakeQuest!</h1>
+        <p class="tagline">Let's bake something sweet!</p>
+    </div>
+    <div class="login-img">
+        <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
+        <div class="login-btn">
+            <a th:href="@{/signup}" class="btn">Sign Up</a>
+            <a th:href="@{/login}" class="btn">Log In</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

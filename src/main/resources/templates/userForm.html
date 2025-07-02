@@ -12,9 +12,12 @@
     <div class="container">
     <div class="title">
     <h1>User Info</h1>
-    <p th:if="${showMessage}" th:text="${message}">Sign up below to start turning sweet ideas into cake!</p>
+        <p th:if="${mode == 'signup'}">Sign up below to start turning sweet ideas into cake!</p>
+        <p th:if="${mode == 'update'}">Update your info below and hit save!</p>
   </div>
-    <form th:action="@{/signup}" th:object="${user}" method="post">
+    <form th:action="${#strings.equals(mode, 'update') ? '/profile/update' : '/signup'}"
+          th:object="${user}"
+          method="post">
             <div class="mb-3">
                 <label for="firstNameInput">First name</label>
                 <input type="text" th:field="*{firstName}" class="form-control" id="firstNameInput" placeholder="First name" required>
@@ -25,11 +28,13 @@
             </div>
             <div class="mb-3">
             <label for="inputEmail" class="form-label">Email address</label>
-            <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="name@example.com">
+            <input type="email" th:field="*{email}" class="form-control" id="inputEmail"
+                   placeholder="name@example.com" autocomplete="off" required>
         </div>
             <div class="mb-3">
             <label for="inputPassword" class="form-label">Password</label>
-            <input type="password" th:field="*{password}" class="form-control" id="inputPassword" placeholder="Password">
+            <input type="password" th:field="*{password}" class="form-control" id="inputPassword"
+                   placeholder="Password" autocomplete="new-password" required>
         </div>
         <div class="saveBtn">
             <button type="submit" class="btn">Save</button>
@@ -37,6 +42,5 @@
     </form>
     </div>
 </main>
-
 </body>
 </html>

@@ -10,10 +10,10 @@
 <main layout:fragment="content">
     <div  class="container">
     <div class="profile-header">
-        <!-- Dynamic profile image with fallback -->
+        <!-- Dynamic profile image with fallback FIXME
         <img th:src="${user?.profileImageUrl} ?: '/images/ProfilePlaceholder.png'"
              alt="Profile Picture"
-             class="profile-img" />
+             class="profile-img" /> -->
 
         <!-- Dynamic name with fallbacks -->
         <h1 class="profile-name"
@@ -24,12 +24,11 @@
 
     <div class="profile-details">
         <p><strong>Email:</strong> <span th:text="${user?.email} ?: 'email@example.com'">email@example.com</span></p>
-        <p><strong>Username:</strong> <span th:text="${user?.username} ?: 'username'">username</span></p>
     </div>
 
     <div class="profile-actions">
         <a th:href="@{/profile/update}" class="btn">Update Info</a>
-        <a th:href="@{/login}" class="btn">Log Out</a>
+        <a th:href="@{/welcome}" class="btn">Log Out</a>
     </div>
     </div>
 </main>

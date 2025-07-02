@@ -12,7 +12,7 @@
     <!-- Centered Welcome Header -->
     <div class="home-header-grid">
         <div class="home-header-left-column">
-            <h1>Welcome back, FirstName!</h1>
+            <h1 th:text="'Hi '+ ${user.firstName} + '!'">Welcome back, FirstName!</h1>
             <p class="tagline">Let's bake something sweet!</p>
             <a th:href="@{/cakeForm}" class="btn new-cake-btn">+ New Cake</a>
         </div>
