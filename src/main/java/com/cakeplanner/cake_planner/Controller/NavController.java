@@ -4,6 +4,7 @@ import com.cakeplanner.cake_planner.Model.Entities.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
@@ -13,17 +14,13 @@ import java.util.List;
 
 @Controller
 public class NavController {
+
     @GetMapping("/")
     public String showCakes(Model model, HttpSession session) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
         List<DummyCakes> cakes = new ArrayList<>();
 
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-
-        if (loggedInUser != null) {
-            // logged in
-            model.addAttribute("user", loggedInUser);
             cakes.add(new DummyCakes(
                     "Sophie's Unicorn Cake",
                     "Vanilla",
@@ -56,46 +53,14 @@ public class NavController {
 
             model.addAttribute("cakes", cakes);
             return "home";
-        } else {
-            // not logged in
-            return "redirect:/welcome";
-        }
     }
 
     @GetMapping("/recipes")
-    public String recipes(Model model, HttpSession session){
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-
-        if (loggedInUser != null) {
-            return "recipes";
-        } else {
-            // not logged in
-            return "redirect:/welcome";
-        }
-    }
+    public String recipes(){return "recipes";}
 
     @GetMapping("/shopping")
-    public String shopping(Model model, HttpSession session){
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-
-        if (loggedInUser != null) {
-            return "shopping";
-        } else {
-            // not logged in
-            return "redirect:/welcome";
-        }
-    }
+    public String shopping(){return "shopping";}
 
     @GetMapping("/profile")
-    public String profile(Model model, HttpSession session){
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-
-        if (loggedInUser != null) {
-            model.addAttribute("user", loggedInUser);
-            return "profile";
-        } else {
-            // not logged in
-            return "redirect:/welcome";
-        }
-    }
+    public String profile(){return "profile";}
 }

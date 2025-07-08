@@ -13,14 +13,14 @@
   <div class="title">
     <h1>Log In</h1>
   </div>
-  <form th:action="@{/login}" th:object="${user}" method="post">
+  <form th:action="@{/login}" method="post">
     <div class="mb-3">
       <label for="inputEmail" class="form-label">Email address</label>
-      <input type="email" th:field="*{email}" class="form-control" id="inputEmail" placeholder="name@example.com" required>
+      <input type="email" name="username" class="form-control" id="inputEmail" placeholder="name@example.com" required>
     </div>
     <div class="mb-3">
       <label for="inputPassword" class="form-label">Password</label>
-      <input type="password" th:field="*{password}" class="form-control" id="inputPassword" placeholder="Password" required>
+      <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
     <div class="saveBtn">
       <button type="submit" class="btn">Log In</button>

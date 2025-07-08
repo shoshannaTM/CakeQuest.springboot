@@ -15,8 +15,6 @@ public class HomeController {
 
     @GetMapping("/cakeForm")
     public String showUpdateForm(Model model) {
-        // Optionally add a user object here
-        // model.addAttribute("user", new User());
         return "cakeForm";
     }
 
