@@ -13,7 +13,6 @@ import java.security.Principal;
 
 @ControllerAdvice
 public class GlobalModelAttributeAdvice {
-
 @Autowired
     private UserService userService;
     @ModelAttribute("user")

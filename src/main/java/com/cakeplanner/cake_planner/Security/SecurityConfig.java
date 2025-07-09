@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -16,6 +17,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signup", "/login", "/welcome", "/styles.css", "/images/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                //redirects unauthenticated users to welcome instead of default login
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/welcome"))
                 )
                 .formLogin(form -> form
                         .loginPage("/login") // use your custom login page

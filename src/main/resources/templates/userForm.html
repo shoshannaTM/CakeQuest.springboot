@@ -16,7 +16,7 @@
         <p th:if="${mode == 'update'}">Update your info below and hit save!</p>
   </div>
     <form th:action="${#strings.equals(mode, 'update') ? '/profile/update' : '/signup'}"
-          th:object="${user}"
+          th:object="${formObject}"
           method="post">
             <div class="mb-3">
                 <label for="firstNameInput">First name</label>
