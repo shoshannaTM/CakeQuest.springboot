@@ -4,6 +4,7 @@ import com.cakeplanner.cake_planner.Model.DTO.SignUpDTO;
 import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,13 +33,16 @@ public class UserController {
         return "redirect:/welcome";
     }
 
-    /* FIXME
     @GetMapping("/profile/update")
-    public String showUpdateForm(@ModelAttribute("formObject") User user, Model model){
-        model.addAttribute("formObject", user);
+    public String showUpdateForm(Model model) {
+        // reuse current user
+        model.addAttribute("formObject", model.getAttribute("user"));
         model.addAttribute("mode", "update");
         return "userForm";
-    }*/
+    }
+
+    //FIXME add update post
+
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -49,12 +53,13 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String handleSignup(@ModelAttribute("formObject") SignUpDTO signUpDTO, BindingResult result) {
+    public String handleSignup(@Valid @ModelAttribute("formObject") SignUpDTO signUpDTO, BindingResult result, Model model) {
 
         //FIXME error printing
         if (result.hasErrors()) {
+            //FIXME remove
             System.out.println("Binding error on sign up");
-            return "/signup";
+            return "userForm";
         }
 
         User user = new User();
@@ -64,9 +69,11 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(signUpDTO.getPassword()));
         userService.save(user);
 
+        //FIXME remove
         System.out.println(user.getEmail());
-        //Success, go to home page
-        return "redirect:/";
+        //Success, go to login
+        model.addAttribute("mode", "signup");
+        return "login";
     }
 
     @GetMapping("/login")

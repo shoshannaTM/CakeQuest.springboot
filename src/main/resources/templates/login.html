@@ -12,6 +12,7 @@
 <div class="container">
   <div class="title">
     <h1>Log In</h1>
+    <p th:if="${mode == 'signup'}">Sign up successful! Go ahead and log in.</p>
   </div>
   <form th:action="@{/login}" method="post">
     <div class="mb-3">
