@@ -51,6 +51,7 @@ main {
   font-weight: bold;
   border: none;
   cursor: pointer;
+  margin-top: 0.5rem;
 }
 
 .btn:hover {

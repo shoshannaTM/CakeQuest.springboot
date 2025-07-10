@@ -19,4 +19,9 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         return user;
     }
+
+    public User findByUserId(Integer userId) {
+        User user = userRepository.findByUserId(userId);
+        return user;
+    }
 }

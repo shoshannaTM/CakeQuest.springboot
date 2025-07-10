@@ -1,6 +1,8 @@
 package com.cakeplanner.cake_planner.Controller;
 
+import com.cakeplanner.cake_planner.Model.DTO.PasswordDTO;
 import com.cakeplanner.cake_planner.Model.DTO.SignUpDTO;
+import com.cakeplanner.cake_planner.Model.DTO.UpdateDTO;
 import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Services.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -41,7 +43,57 @@ public class UserController {
         return "userForm";
     }
 
-    //FIXME add update post
+    @PostMapping("/profile/update")
+    public String handleUpdate(@Valid @ModelAttribute("formObject") UpdateDTO updateDTO,
+                               BindingResult result, Model model,  @ModelAttribute("user") User user) {
+        if (result.hasErrors()) {
+            //FIXME remove
+            System.out.println("Binding error on update:");
+            result.getAllErrors().forEach(error -> {
+                System.out.println(error.toString());
+            });
+            model.addAttribute("formObject", updateDTO);
+            model.addAttribute("mode", "update");
+            return "userForm";
+        }
+
+        user.setEmail(updateDTO.getEmail());
+        user.setFirstName(updateDTO.getFirstName());
+        user.setLastName(updateDTO.getLastName());
+        userService.save(user);
+        return "profile";
+    }
+
+    @GetMapping("/profile/update-password")
+    public String showPasswordForm(Model model){
+        model.addAttribute("passwordFormObject", new PasswordDTO());
+        return "passwordForm";
+    }
+
+    @PostMapping("/profile/update-password")
+    public String handlePasswordChange(@Valid @ModelAttribute("passwordFormObject") PasswordDTO passwordDTO,
+                                       BindingResult result, Model model, @ModelAttribute("user") User user) {
+        if (result.hasErrors()) {
+            //FIXME remove
+            System.out.println("Binding error on password change");
+            return "passwordForm";
+        }
+
+        if (passwordEncoder.matches(passwordDTO.getCurrentPassword(), user.getPassword()) &&
+                passwordDTO.getEmail().equals(user.getEmail())) {
+
+            user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+            userService.save(user); // <- Save updated password!
+
+            model.addAttribute("mode", "newPassword");
+            return "login";
+        }
+
+
+        model.addAttribute("error", "Current password or email is incorrect.");
+        return "passwordForm";
+    }
+
 
 
     @GetMapping("/signup")
@@ -81,5 +133,4 @@ public class UserController {
         model.addAttribute("user", new User()); // form needs empty user
         return "login";
     }
-
 }

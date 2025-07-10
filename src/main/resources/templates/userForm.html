@@ -31,7 +31,7 @@
             <input type="email" th:field="*{email}" class="form-control" id="inputEmail"
                    placeholder="name@example.com" autocomplete="off" required>
         </div>
-            <div class="mb-3">
+        <div class="mb-3" th:if="${mode == 'signup'}">
             <label for="inputPassword" class="form-label">Password</label>
             <input type="password" th:field="*{password}" class="form-control" id="inputPassword"
                    placeholder="Password" autocomplete="new-password" required>
