@@ -21,7 +21,6 @@ public class RecipeController {
 
     @GetMapping("/recipes/new")
     public String showNewForm(Model model) throws IOException {
-        recipeScraperService.scrapeRecipe();
         return "newRecipe";
     }
 }

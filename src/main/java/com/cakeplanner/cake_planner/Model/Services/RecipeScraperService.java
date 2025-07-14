@@ -13,11 +13,7 @@ import java.io.IOException;
 
 @Service
 public class RecipeScraperService {
-        //FIXME finish json scraping using jsoup
-
-        public void scrapeRecipe() throws IOException {
-                //FIXME eventually pass url to method as string from newRecipe form
-                String url = "https://www.allrecipes.com/recipe/174347/quick-and-almost-professional-buttercream-icing/";
+        public void scrapeRecipe(String url) throws IOException {
                 //get document from url
                 Document document = Jsoup.connect(url).get();
 
@@ -30,48 +26,71 @@ public class RecipeScraperService {
                         showIngredients(jsonObject);
                         showInstructions(jsonObject);
                 }else{
-                        System.out.println("Json object not found, possibly in array of Json objects");
+                        System.out.println("Json object null");
                 }
 
         }
+    public JSONObject filterRecipeData(Elements scripts) {
+        for (Element script : scripts) {
+            String json = script.data();
 
-                public JSONObject filterRecipeData(Elements scripts) {
-                        //for every element in the scripts, check to see if it is of type "Recipe"
-                        for (Element script : scripts) {
-                                //extract html from inside the script
-                                String json = script.html();
-                                //skip if it isn't recipe data
-                                if (!json.contains("\"@type\":\"Recipe\"")) {
-                                        continue;
-                                }
+            // Skip if no "Recipe" anywhere in the string
+            if (!json.contains("Recipe")) continue;
 
-        Object rawJson = new org.json.JSONTokener(json).nextValue();
+            try {
+                Object rawJson = new org.json.JSONTokener(json).nextValue();
 
-        // If it's already a recipe object
-        if (rawJson instanceof JSONObject jsonObject) {
-            // Handle @graph array
-            if (jsonObject.has("@graph")) {
-                JSONArray graph = jsonObject.getJSONArray("@graph");
-                for (int i = 0; i < graph.length(); i++) {
-                    JSONObject node = graph.getJSONObject(i);
-                    if ("Recipe".equals(node.optString("@type"))) {
-                        return node;
+                // 1. If it's an array (like on AllRecipes)
+                if (rawJson instanceof JSONArray array) {
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject node = array.getJSONObject(i);
+                        if (isRecipeType(node)) return node;
                     }
-                        }
-            }
-
-            // Fallback if this is directly a recipe
-            if ("Recipe".equals(jsonObject.optString("@type"))) {
-                        return jsonObject;
                 }
+
+                // 2. If it's a single object (or a @graph container)
+                if (rawJson instanceof JSONObject jsonObject) {
+                    // Look inside @graph if present
+                    if (jsonObject.has("@graph")) {
+                        JSONArray graph = jsonObject.getJSONArray("@graph");
+                        for (int i = 0; i < graph.length(); i++) {
+                            JSONObject node = graph.getJSONObject(i);
+                            if (isRecipeType(node)) return node;
+                        }
+                    }
+
+                    // Fallback: check top-level object
+                    if (isRecipeType(jsonObject)) return jsonObject;
+                }
+            } catch (Exception e) {
+                System.out.println("Error parsing script JSON: " + e.getMessage());
+            }
         }
+
+        return null; // no match found
     }
 
-    return null; // Nothing found
-}
+    private boolean isRecipeType(JSONObject node) {
+        Object type = node.opt("@type");
+
+        if (type instanceof String) {
+            return "Recipe".equals(type);
+        }
+
+        if (type instanceof JSONArray typeArray) {
+            for (int j = 0; j < typeArray.length(); j++) {
+                if ("Recipe".equals(typeArray.optString(j))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 
-                public void showIngredients(JSONObject jsonObject){
+
+    public void showIngredients(JSONObject jsonObject){
                         JSONArray ingredients = jsonObject.optJSONArray("recipeIngredient");
                         if (ingredients != null) {
                                 System.out.println("Ingredients:");

@@ -111,7 +111,10 @@ public class UserController {
         if (result.hasErrors()) {
             //FIXME remove
             System.out.println("Binding error on sign up");
-            return "userForm";
+            result.getAllErrors().forEach(error -> {
+                System.out.println(error.toString());
+            });
+            return "welcome";
         }
 
         User user = new User();
