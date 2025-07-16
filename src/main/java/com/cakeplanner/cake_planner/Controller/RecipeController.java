@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
@@ -22,5 +24,14 @@ public class RecipeController {
     @GetMapping("/recipes/new")
     public String showNewForm(Model model) throws IOException {
         return "newRecipe";
+    }
+
+    @PostMapping("/recipes/new")
+    public String handleNewRecipe(@RequestParam("recipeUrl") String recipeUrl,
+                                @RequestParam("recipeType") String recipeType) throws IOException {
+        recipeScraperService.scrapeRecipe(recipeUrl);
+        System.out.println(recipeType);
+
+        return "recipeDetails";
     }
 }

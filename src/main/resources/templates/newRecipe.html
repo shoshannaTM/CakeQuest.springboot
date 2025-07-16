@@ -13,14 +13,14 @@
         <h1>Import New Recipe</h1>
     </div>
 
-    <form>
+    <form method="post" th:action="@{/recipes/new}">
     <div class="mb-3">
         <label for="urlInput">Simply paste in the URL of your favorite online recipe and we will do the rest.</label>
-        <input type="text" class="form-control" id="urlInput" placeholder="URL" required>
+        <input type="text" class="form-control" id="urlInput" name="recipeUrl" placeholder="URL" required>
     </div>
         <div class="mb-3">
             <label for="recipeTypeSelect">Recipe Type: </label>
-            <select class="custom-select" id="recipeTypeSelect">
+            <select class="custom-select" name="recipeType"  id="recipeTypeSelect">
                 <option selected>Select Type... </option>
                 <option value="1">Cake</option>
                 <option value="2">Frosting</option>
@@ -30,7 +30,7 @@
             <i class="fa-solid fa-chevron-down custom-select-icon"></i>
         </div>
         <div class="saveBtn">
-            <a href="/recipe/1" class="btn">Save</a>
+            <button type="submit" class="btn">Save</button>
         </div>
     </form>
 </main>
