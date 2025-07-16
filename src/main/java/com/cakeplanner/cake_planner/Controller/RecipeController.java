@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Controller;
 
+import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.RecipeScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,9 @@ public class RecipeController {
     @Autowired
     private RecipeScraperService recipeScraperService;
 
+    @Autowired
+    private RecipeRepository recipeRepository;
+
     //FIXME
     @GetMapping("/recipes/1")
     public String showUpdateForm(Model model) {
@@ -29,8 +33,6 @@ public class RecipeController {
     @PostMapping("/recipes/new")
     public String handleNewRecipe(@RequestParam("recipeUrl") String recipeUrl,
                                 @RequestParam("recipeType") String recipeType) throws IOException {
-        recipeScraperService.scrapeRecipe(recipeUrl);
-        System.out.println(recipeType);
 
         return "recipeDetails";
     }

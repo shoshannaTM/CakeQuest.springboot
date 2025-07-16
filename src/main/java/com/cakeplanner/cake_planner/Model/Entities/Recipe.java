@@ -16,19 +16,23 @@ public class Recipe {
     @Column(name = "recipe_type", nullable = false)
     private RecipeType recipeType;
 
-    @Column(name = "flavor_name", nullable = false)
-    private String flavorName;
+    @Column(name = "recipe_name", nullable = false)
+    private String recipeName;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String instructions;
 
+    @Column(name = "recipe_url", nullable = false, unique = true)
+    private String recipeUrl;
+
     public Recipe() {
     }
 
-    public Recipe(RecipeType recipeType, String flavorName, String instructions) {
+    public Recipe(RecipeType recipeType, String recipeName, String instructions, String recipeUrl) {
         this.recipeType = recipeType;
-        this.flavorName = flavorName;
+        this.recipeName = recipeName;
         this.instructions = instructions;
+        this.recipeUrl = recipeUrl;
     }
 
     public int getRecipeId() {
@@ -47,12 +51,12 @@ public class Recipe {
         this.recipeType = recipeType;
     }
 
-    public String getFlavorName() {
-        return flavorName;
+    public String getRecipeName() {
+        return recipeName;
     }
 
-    public void setFlavorName(String flavorName) {
-        this.flavorName = flavorName;
+    public void setRecipeName(String recipeName) {
+        this.recipeName = recipeName;
     }
 
     public String getInstructions() {
@@ -62,4 +66,8 @@ public class Recipe {
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
+
+    public String getRecipeUrl() { return recipeUrl; }
+
+    public void setRecipeUrl(String recipeUrl) { this.recipeUrl = recipeUrl; }
 }
