@@ -1,15 +1,17 @@
 package com.cakeplanner.cake_planner.Model.DTO;
 
+import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
+
 import java.util.List;
 
 public class RecipeDTO {
     private String recipeName;
     private String recipeUrl;
     private String instructions;
-    private String recipeType;
+    private RecipeType recipeType;
     private List<IngredientDTO> ingredients;
 
-    public RecipeDTO(String recipeName, String recipeUrl, String instructions, String recipeType, List<IngredientDTO> ingredients) {
+    public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients) {
         this.recipeName = recipeName;
         this.recipeUrl = recipeUrl;
         this.instructions = instructions;
@@ -41,11 +43,11 @@ public class RecipeDTO {
         this.instructions = instructions;
     }
 
-    public String getRecipeType() {
+    public RecipeType getRecipeType() {
         return recipeType;
     }
 
-    public void setRecipeType(String recipeType) {
+    public void setRecipeType(RecipeType recipeType) {
         this.recipeType = recipeType;
     }
 

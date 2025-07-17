@@ -2,6 +2,7 @@ package com.cakeplanner.cake_planner.Model.Services;
 
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
+import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
@@ -28,9 +29,12 @@ public class RecipeScraperService {
 
     @Autowired
     private SpoonacularService spoonacularService;
-    public RecipeDTO scrapeRecipe(String url, String recipeType) throws IOException {
-        //get document from url
-        Document document = Jsoup.connect(url).get();
+    public RecipeDTO scrapeRecipe(String url, RecipeType recipeType) throws IOException {
+        //get document from url FIXME
+        Document document = Jsoup
+                .connect(url)
+                .ignoreHttpErrors(true)  // this line lets Jsoup tolerate 103
+                .get();
 
         //get json scripts from document and store them in a jsoup Elements object, by querying the css using .select method from jsoup
         //(Elements is a jsoup object that represents a list of jsoup Element objects, an Element = an HTML tag)
@@ -108,8 +112,6 @@ public class RecipeScraperService {
 
         return false;
     }
-
-
 
     public List<IngredientDTO> extractIngredientsList(JSONObject jsonObject){
         JSONArray ingredients = jsonObject.optJSONArray("recipeIngredient");

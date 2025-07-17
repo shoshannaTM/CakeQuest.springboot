@@ -11,7 +11,6 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_id")
     private int recipeId;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "recipe_type", nullable = false)
     private RecipeType recipeType;

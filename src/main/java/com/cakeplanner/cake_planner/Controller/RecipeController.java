@@ -1,7 +1,10 @@
 package com.cakeplanner.cake_planner.Controller;
 
+import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
+import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.RecipeScraperService;
+import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,8 @@ public class RecipeController {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private RecipeService recipeService;
     //FIXME
     @GetMapping("/recipes/1")
     public String showUpdateForm(Model model) {
@@ -27,13 +32,15 @@ public class RecipeController {
 
     @GetMapping("/recipes/new")
     public String showNewForm(Model model) throws IOException {
+        model.addAttribute("recipeTypes", RecipeType.values());
         return "newRecipe";
     }
 
     @PostMapping("/recipes/new")
     public String handleNewRecipe(@RequestParam("recipeUrl") String recipeUrl,
-                                @RequestParam("recipeType") String recipeType) throws IOException {
-
+                                @RequestParam("recipeType") RecipeType recipeType, Model model) throws IOException {
+        RecipeDTO displayRecipe = recipeService.processRecipeForDisplay(recipeUrl, recipeType);
+        model.addAttribute("recipe", displayRecipe);
         return "recipeDetails";
     }
 }

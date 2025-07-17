@@ -20,12 +20,11 @@
     </div>
         <div class="mb-3">
             <label for="recipeTypeSelect">Recipe Type: </label>
-            <select class="custom-select" name="recipeType"  id="recipeTypeSelect">
-                <option selected>Select Type... </option>
-                <option value="1">Cake</option>
-                <option value="2">Frosting</option>
-                <option value="3">Filling</option>
-                <option value="4">Other</option>
+            <select class="custom-select" name="recipeType" id="recipeTypeSelect">
+                <option disabled selected>Select Type... </option>
+                <option th:each="type : ${recipeTypes}"
+                        th:value="${type}"
+                        th:text="${type}"></option>
             </select>
             <i class="fa-solid fa-chevron-down custom-select-icon"></i>
         </div>
