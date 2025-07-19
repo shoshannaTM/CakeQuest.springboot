@@ -62,6 +62,11 @@ main {
     width: fit-content;
 }
 
+
+.search {
+  margin-top: 0;
+}
+
 .shopping-btn-wrapper {
   margin-top: 1rem;
 }
@@ -274,6 +279,7 @@ input[type="checkbox"] {
 
 .recipe-header-right-column {
   align-self: end;
+  min-width: 300px;
 }
 
 /* Filters */
@@ -349,7 +355,7 @@ input[type="checkbox"] {
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    text-align: center;
+    text-align: left;
     margin-bottom:inherit;
   }
 
@@ -382,10 +388,6 @@ input[type="checkbox"] {
 /* ----------------------------------
    User Form
 ---------------------------------- */
-.userFormPage .container,
-.cakeFormPage .container {
-    text-align: left;
-}
 
 .title {
     text-align: center;

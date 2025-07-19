@@ -6,12 +6,14 @@ import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
+import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class RecipeService {
     @Autowired
     IngredientRepository ingredientRepository;
     @Transactional
-    public RecipeDTO processRecipeForDisplay(String recipeUrl, RecipeType recipeType) throws IOException {
+    public RecipeDTO processRecipeForDisplay(String recipeUrl, RecipeType recipeType, User user) throws IOException {
         // Use url to check if recipe exists in table before scraping
 
         if(recipeRepository.findRecipeByRecipeUrl(recipeUrl).isPresent()) {
@@ -50,14 +52,14 @@ public class RecipeService {
             return recipeDTO;
         } else {
             RecipeDTO recipeDTO = recipeScraperService.scrapeRecipe(recipeUrl, recipeType);
-            saveRecipe(recipeDTO);
+            saveRecipe(recipeDTO, user);
             saveIngredients(recipeDTO);
             return recipeDTO;
         }
 
     }
 
-    private List<IngredientDTO> recipeIngredientsToDTO(List<RecipeIngredient> recipeIngredients) {
+    public List<IngredientDTO> recipeIngredientsToDTO(List<RecipeIngredient> recipeIngredients) {
         List<IngredientDTO> dtoList = new ArrayList<>();
         for (RecipeIngredient recipeIngredient : recipeIngredients) {
             IngredientDTO dto = new IngredientDTO(
@@ -70,9 +72,10 @@ public class RecipeService {
         return dtoList;
     }
 
-    public boolean saveRecipe (RecipeDTO recipeDTO){
+    public boolean saveRecipe (RecipeDTO recipeDTO, User user){
             Recipe recipe = new Recipe(recipeDTO.getRecipeType(), recipeDTO.getRecipeName(),
                     recipeDTO.getInstructions(), recipeDTO.getRecipeUrl());
+            recipe.setUser(user);
             recipeRepository.save(recipe);
             return (recipe.getRecipeId() > 0);
         }

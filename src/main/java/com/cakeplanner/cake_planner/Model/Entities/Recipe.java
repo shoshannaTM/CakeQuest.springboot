@@ -24,6 +24,10 @@ public class Recipe {
     @Column(name = "recipe_url", nullable = false, unique = true)
     private String recipeUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Recipe() {
     }
 
@@ -69,4 +73,12 @@ public class Recipe {
     public String getRecipeUrl() { return recipeUrl; }
 
     public void setRecipeUrl(String recipeUrl) { this.recipeUrl = recipeUrl; }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -18,9 +18,12 @@
         </div>
         <div class="recipe-header-right-column">
             <form th:action="@{/recipes}" method="get">
+                <input type="hidden" name="type" th:value="${selectedType}">
                 <div class="input-group">
-                    <input type="text" name="query" class="form-control" placeholder="Search recipes by name...">
-                    <button class="btn btn-outline-secondary" type="submit">
+                    <input type="text" name="query" class="form-control"
+                           placeholder="Search recipes by name..."
+                           th:value="${query}">
+                    <button class="btn btn-outline-secondary search" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
@@ -31,31 +34,34 @@
     <div class="recipe-filter">
         <ul class="nav nav-pills nav-fill">
             <li class="nav-item">
-                <a class="nav-link active" href="?type=cake">Cakes</a>
+                <a class="nav-link" th:classappend="${selectedType == 'all'} ? 'active'" href="?type=all">All</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?type=filling">Fillings</a>
+                <a class="nav-link" th:classappend="${selectedType == 'cake'} ? 'active'" href="?type=cake">Cakes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?type=frosting">Frostings</a>
+                <a class="nav-link" th:classappend="${selectedType == 'filling'} ? 'active'" href="?type=filling">Fillings</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?type=other" tabindex="-1" >Other</a>
+                <a class="nav-link" th:classappend="${selectedType == 'frosting'} ? 'active'" href="?type=frosting">Frostings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${selectedType == 'other'} ? 'active'" href="?type=other">Other</a>
             </li>
         </ul>
     </div>
 
     <div class="recipe-list-grid">
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-        <div th:replace="fragments/arrowCard :: arrowCard('Recipe Name', 'recipeType', 'Saved', ${recipe?.date ?: 'MM/DD/YYYY'}, '/recipes/1')"></div>
-
+        <div th:each="recipe : ${recipes}">
+            <div th:replace="fragments/arrowCard :: arrowCard(
+            ${recipe.recipeName},
+            ${recipe.recipeType},
+            'Saved',
+            'N/A',
+            ${'/recipes/' + recipe.recipeId})"></div>
+        </div>
     </div>
+
 </main>
 </body>
 </html>

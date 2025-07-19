@@ -11,6 +11,17 @@ public class RecipeDTO {
     private RecipeType recipeType;
     private List<IngredientDTO> ingredients;
 
+    private int recipeId;
+
+    public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients, int recipeId) {
+        this.recipeName = recipeName;
+        this.recipeUrl = recipeUrl;
+        this.instructions = instructions;
+        this.recipeType = recipeType;
+        this.ingredients = ingredients;
+        this.recipeId = recipeId;
+    }
+
     public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients) {
         this.recipeName = recipeName;
         this.recipeUrl = recipeUrl;
@@ -57,5 +68,13 @@ public class RecipeDTO {
 
     public void setIngredients(List<IngredientDTO> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 }
