@@ -27,7 +27,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<UserRecipe> userRecipes;
 
     public User() {
     }
@@ -80,11 +80,11 @@ public class User {
         this.password = password;
     }
 
-    public List<Recipe> getRecipes() {
-        return recipes;
+    public List<UserRecipe> getUserRecipes() {
+        return userRecipes;
     }
 
-    public void setRecipes(List<Recipe> recipes) {
-        this.recipes = recipes;
+    public void setUserRecipes(List<UserRecipe> userRecipes) {
+        this.userRecipes = userRecipes;
     }
 }

@@ -7,9 +7,12 @@ import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
 import com.cakeplanner.cake_planner.Model.Entities.User;
+import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
+import com.cakeplanner.cake_planner.Model.Entities.UserRecipeId;
 import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 //check if recipe already exists by url, adds info to recipe table, ingredients table, and recipeIngredient table
 //Return a recipeDTO object (with ingredientDTO included) to controller to display recipe in UI
@@ -30,34 +34,39 @@ public class RecipeService {
     RecipeRepository recipeRepository;
 
     @Autowired
+    private UserRecipeRepository userRecipeRepository;
+
+    @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
     IngredientRepository ingredientRepository;
+
     @Transactional
     public RecipeDTO processRecipeForDisplay(String recipeUrl, RecipeType recipeType, User user) throws IOException {
-        // Use url to check if recipe exists in table before scraping
+        Optional<Recipe> optionalRecipe = recipeRepository.findRecipeByRecipeUrl(recipeUrl);
 
-        if(recipeRepository.findRecipeByRecipeUrl(recipeUrl).isPresent()) {
-            //FIXME error handling
-            System.out.println("Recipe already in table");
-            int recipeId = recipeRepository.findRecipeIdByRecipeUrl(recipeUrl);
-            Recipe recipe = recipeRepository.findRecipeByRecipeId(recipeId);
-            List<RecipeIngredient> recipeIngredientsList = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
-            List <IngredientDTO> ingredientDTOList = recipeIngredientsToDTO(recipeIngredientsList);
-
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(),recipe.getInstructions(),
-                                                recipe.getRecipeType(), ingredientDTOList);
-
-            return recipeDTO;
+        Recipe recipe;
+        if (optionalRecipe.isPresent()) {
+            recipe = optionalRecipe.get();
+            // If user hasn't saved this recipe yet, create UserRecipe link
+            if (!userRecipeRepository.existsByUserAndRecipe(user, recipe)) {
+                userRecipeRepository.save(new UserRecipe(new UserRecipeId(recipe.getRecipeId(), user.getUserId()), recipe, user));
+            }
         } else {
             RecipeDTO recipeDTO = recipeScraperService.scrapeRecipe(recipeUrl, recipeType);
-            saveRecipe(recipeDTO, user);
-            saveIngredients(recipeDTO);
-            return recipeDTO;
+            recipe = new Recipe(recipeDTO.getRecipeType(), recipeDTO.getRecipeName(), recipeDTO.getInstructions(), recipeDTO.getRecipeUrl());
+            recipeRepository.save(recipe);
+            saveIngredients(recipe, recipeDTO); // pass the recipe object directly
+            userRecipeRepository.save(new UserRecipe(new UserRecipeId(recipe.getRecipeId(), user.getUserId()), recipe, user));
         }
 
+        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
+        List<IngredientDTO> ingredientDTOList = recipeIngredientsToDTO(recipeIngredients);
+
+        return new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(), recipe.getRecipeType(), ingredientDTOList);
     }
+
 
     public List<IngredientDTO> recipeIngredientsToDTO(List<RecipeIngredient> recipeIngredients) {
         List<IngredientDTO> dtoList = new ArrayList<>();
@@ -75,23 +84,18 @@ public class RecipeService {
     public boolean saveRecipe (RecipeDTO recipeDTO, User user){
             Recipe recipe = new Recipe(recipeDTO.getRecipeType(), recipeDTO.getRecipeName(),
                     recipeDTO.getInstructions(), recipeDTO.getRecipeUrl());
-            recipe.setUser(user);
             recipeRepository.save(recipe);
             return (recipe.getRecipeId() > 0);
         }
 
 
-        public void saveIngredients (RecipeDTO recipeDTO){
-            int recipeId = recipeRepository.findRecipeIdByRecipeUrl(recipeDTO.getRecipeUrl());
-            Recipe recipe = recipeRepository.findRecipeByRecipeId(recipeId);
-            for (int i = 0; i < recipeDTO.getIngredients().size(); i++) {
-                IngredientDTO ingredientDTO = recipeDTO.getIngredients().get(i);
-              Ingredient ingredient = ingredientRepository
-                        .findByIngredientNameIgnoreCase(ingredientDTO.getName())
-                        .orElseGet(() -> ingredientRepository.save(new Ingredient(ingredientDTO.getName())));
-                RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, ingredient, ingredientDTO.getAmount(),
-                        ingredientDTO.getUnit());
-                recipeIngredientRepository.save(recipeIngredient);
-            }
+    public void saveIngredients(Recipe recipe, RecipeDTO recipeDTO) {
+        for (IngredientDTO dto : recipeDTO.getIngredients()) {
+            Ingredient ingredient = ingredientRepository
+                    .findByIngredientNameIgnoreCase(dto.getName())
+                    .orElseGet(() -> ingredientRepository.save(new Ingredient(dto.getName())));
+            RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, ingredient, dto.getAmount(), dto.getUnit());
+            recipeIngredientRepository.save(recipeIngredient);
         }
+    }
 }

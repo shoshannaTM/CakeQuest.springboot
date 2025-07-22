@@ -1,13 +1,11 @@
 package com.cakeplanner.cake_planner.Controller;
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
-import com.cakeplanner.cake_planner.Model.Entities.DummyCakes;
+import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Entities.Recipe;
-import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
-import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,11 @@ public class NavController {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
+    private UserRecipeRepository userRecipeRepository;
+
+    @Autowired
     private RecipeService recipeService;
+
     @GetMapping("/")
     public String showCakes(Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
@@ -78,32 +80,31 @@ public class NavController {
                           @RequestParam(name = "query", required = false) String query,
                           @ModelAttribute("user") User user,
                           Model model) {
-        List<Recipe> recipes;
-        // if search bar has input
+
+    List<UserRecipe> userRecipes;
+
         if (query != null && !query.isBlank()) {
-                type = "all";
-                recipes = recipeRepository.findByRecipeNameContainingIgnoreCaseAndUser(query, user);
-        } else {
-            // No search, just filter by type
-            if (type.equalsIgnoreCase("all")) {
-                recipes = recipeRepository.findAllByUser(user);
+        type = "all"; // search overrides filter
+        userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeNameContainingIgnoreCase(user, query);
+    } else if (type.equalsIgnoreCase("all")) {
+        userRecipes = userRecipeRepository.findByUser(user);
             } else {
                 try {
                     RecipeType recipeType = RecipeType.valueOf(type.toUpperCase());
-                    recipes = recipeRepository.findByRecipeTypeAndUser(recipeType, user);
+            userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
                 } catch (IllegalArgumentException e) {
-                    recipes = new ArrayList<>();
-                }
+            userRecipes = new ArrayList<>();
             }
         }
 
         List<RecipeDTO> displayRecipes = new ArrayList<>();
-    for (Recipe recipe : recipes) {
-            List<RecipeIngredient> recipeIngredientsList = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
-            List <IngredientDTO> ingredientDTOList = recipeService.recipeIngredientsToDTO(recipeIngredientsList);
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                                                recipe.getRecipeType(), ingredientDTOList, recipe.getRecipeId());
-            displayRecipes.add(recipeDTO);
+    for (UserRecipe userRecipe : userRecipes) {
+        Recipe recipe = userRecipe.getRecipe();
+        List<RecipeIngredient> ingredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
+        List<IngredientDTO> ingredientDTOs = recipeService.recipeIngredientsToDTO(ingredients);
+        RecipeDTO dto = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
+                                      recipe.getRecipeType(), ingredientDTOs, recipe.getRecipeId());
+        displayRecipes.add(dto);
         }
 
         model.addAttribute("recipes", displayRecipes);

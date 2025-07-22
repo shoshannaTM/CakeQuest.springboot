@@ -21,14 +21,18 @@ public class Recipe {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String instructions;
 
-    @Column(name = "recipe_url", nullable = false, unique = true)
+    @Column(name = "recipe_url", nullable = false)
     private String recipeUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     public Recipe() {
+    }
+
+    public Recipe(int recipeId, RecipeType recipeType, String recipeName, String instructions, String recipeUrl) {
+        this.recipeId = recipeId;
+        this.recipeType = recipeType;
+        this.recipeName = recipeName;
+        this.instructions = instructions;
+        this.recipeUrl = recipeUrl;
     }
 
     public Recipe(RecipeType recipeType, String recipeName, String instructions, String recipeUrl) {
@@ -70,15 +74,11 @@ public class Recipe {
         this.instructions = instructions;
     }
 
-    public String getRecipeUrl() { return recipeUrl; }
-
-    public void setRecipeUrl(String recipeUrl) { this.recipeUrl = recipeUrl; }
-
-    public User getUser() {
-        return user;
+    public String getRecipeUrl() {
+        return recipeUrl;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setRecipeUrl(String recipeUrl) {
+        this.recipeUrl = recipeUrl;
     }
 }
