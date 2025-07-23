@@ -8,6 +8,7 @@ import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import jakarta.servlet.http.HttpSession;
+import jdk.jfr.StackTrace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,30 +82,33 @@ public class NavController {
                           @ModelAttribute("user") User user,
                           Model model) {
 
-    List<UserRecipe> userRecipes;
+        List<UserRecipe> userRecipes;
 
         if (query != null && !query.isBlank()) {
-        type = "all"; // search overrides filter
-        userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeNameContainingIgnoreCase(user, query);
-    } else if (type.equalsIgnoreCase("all")) {
-        userRecipes = userRecipeRepository.findByUser(user);
-            } else {
-                try {
-                    RecipeType recipeType = RecipeType.valueOf(type.toUpperCase());
-            userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
-                } catch (IllegalArgumentException e) {
-            userRecipes = new ArrayList<>();
+            // Search by name for this user
+            userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeNameContainingIgnoreCase(user, query);
+        } else if (type.equalsIgnoreCase("all")) {
+            // All recipes for this user
+            userRecipes = userRecipeRepository.findByUser(user);
+        } else {
+            try {
+                RecipeType recipeType = RecipeType.valueOf(type.toUpperCase());
+                userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
+            } catch (IllegalArgumentException e) {
+                userRecipes = new ArrayList<>();
             }
         }
 
+        // Convert UserRecipe to RecipeDTO for display
         List<RecipeDTO> displayRecipes = new ArrayList<>();
-    for (UserRecipe userRecipe : userRecipes) {
-        Recipe recipe = userRecipe.getRecipe();
-        List<RecipeIngredient> ingredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
-        List<IngredientDTO> ingredientDTOs = recipeService.recipeIngredientsToDTO(ingredients);
-        RecipeDTO dto = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                                      recipe.getRecipeType(), ingredientDTOs, recipe.getRecipeId());
-        displayRecipes.add(dto);
+        for (UserRecipe ur : userRecipes) {
+            Recipe recipe = ur.getRecipe();
+            List<RecipeIngredient> ingredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
+            List<IngredientDTO> ingredientDTOs = recipeService.recipeIngredientsToDTO(ingredients);
+
+            RecipeDTO dto = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
+                    recipe.getRecipeType(), ingredientDTOs, recipe.getRecipeId());
+            displayRecipes.add(dto);
         }
 
         model.addAttribute("recipes", displayRecipes);
@@ -112,6 +116,7 @@ public class NavController {
         model.addAttribute("query", query);
         return "recipes";
     }
+
 
     @GetMapping("/shopping")
     public String shopping(){return "shopping";}

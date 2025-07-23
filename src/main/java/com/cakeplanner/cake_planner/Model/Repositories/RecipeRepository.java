@@ -22,10 +22,4 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByRecipeType(RecipeType type);
 
     List<Recipe> findByRecipeNameContainingIgnoreCase(String query);
-
-    List<Recipe> findAllByUser(User user);
-    List<Recipe> findByRecipeTypeAndUser(RecipeType recipeType, User user);
-    List<Recipe> findByRecipeNameContainingIgnoreCaseAndUser(String recipeName, User user);
-
-
 }

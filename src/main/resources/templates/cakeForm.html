@@ -13,7 +13,7 @@
         <div class="title">
             <h1>New Cake Project</h1>
         </div>
-        <form>
+        <form method="post" th:action="@{/cakeForm}">
             <div class="mb-3">
                 <label for="cakeNameInput">What would you like to name this cake?</label>
                 <input type="text" class="form-control" id="cakeNameInput" placeholder="Sister's Super Awesome Birthday Cake?" required>
@@ -23,44 +23,53 @@
                 <input type="date" class="form-control" id="dueDate" name="dueDate">
             </div>
             <div class="mb-3">
-                <label for="sizeSelect">What size cake will this be?</label>
-                <select class="custom-select" id="sizeSelect">
-                    <option selected>Select a size... </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <label for="cakeFlavorSelect">What flavor cake?</label>
+                <select class="custom-select" id="cakeFlavorSelect" name="cakeRecipeId">
+                    <option disabled selected>Select a cake flavor... </option>
+                    <option th:each="recipe : ${cakeRecipes}"
+                            th:value="${recipe.recipeId}"
+                            th:text="${recipe.recipeName}">
+                    </option>
+                    <option>None</option>
                 </select>
+                <!--FIXME-->       <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="cakeFlavorSelect">What flavor cake?</label>
-                <select class="custom-select" id="cakeFlavorSelect">
-                    <option selected>Select a cake flavor... </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+                <label for="cakeSizeSelect">How many batches of this cake recipe do you need?</label>
+                <input type="number" class="form-control" id="cakeSizeSelect" name="cakeSizeSelect" step="0.5" min="0" placeholder="1">
             </div>
             <div class="mb-3">
                 <label for="fillingFlavorSelect">What flavor filling?</label>
-                <select class="custom-select" id="fillingFlavorSelect">
-                    <option selected>Select a filling flavor... </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select class="custom-select" id="fillingFlavorSelect" name="fillingRecipeId">
+                    <option disabled selected>Select a filling flavor... </option>
+                    <option th:each="recipe : ${fillingRecipes}"
+                            th:value="${recipe.recipeId}"
+                            th:text="${recipe.recipeName}">
+                    </option>
+                    <option>None</option>
                 </select>
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
+                <label for="fillingSizeSelect">How many batches of this filling recipe do you need?</label>
+                <input type="number" class="form-control" id="fillingSizeSelect" name="fillingSizeSelect" step="0.5" min="0" placeholder="1">
+            </div>
+            <div class="mb-3">
                 <label for="frostingFlavorSelect">What flavor frosting?</label>
-                <select class="custom-select" id="frostingFlavorSelect">
-                    <option selected>Select a frosting flavor... </option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <select class="custom-select" id="frostingFlavorSelect" name="frostingRecipeId">
+                    <option disabled selected>Select a frosting flavor... </option>
+                    <option th:each="recipe : ${frostingRecipes}"
+                            th:value="${recipe.recipeId}"
+                            th:text="${recipe.recipeName}">
+                    </option>
+                    <option>None</option>
                 </select>
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="frostingSizeSelect">How many batches of this frosting recipe do you need?</label>
+                <input type="number" class="form-control" id="frostingSizeSelect" name="frostingSizeSelect" step="0.5" min="0" placeholder="1">
             </div>
             <div class="mb-3">
                 <label for="dietaryRestrictionInput" class="form-label">Any dietary restrictions? (Optional)</label>
@@ -74,7 +83,7 @@
             </div>
 
             <div class="saveBtn">
-                <a href="#" class="btn">Save</a>
+                <button type="submit" class="btn">Save</button>
             </div>
         </form>
     </div>

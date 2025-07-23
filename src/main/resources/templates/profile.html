@@ -10,12 +10,6 @@
 <main layout:fragment="content">
     <div  class="container">
     <div class="profile-header">
-        <!-- Dynamic profile image with fallback FIXME
-        <img th:src="${user?.profileImageUrl} ?: '/images/ProfilePlaceholder.png'"
-             alt="Profile Picture"
-             class="profile-img" /> -->
-
-        <!-- Dynamic name with fallbacks -->
         <h1 class="profile-name"
             th:text="(${user?.firstName} ?: 'First') + ' ' + (${user?.lastName} ?: 'Last')">
             First Last
