@@ -12,19 +12,20 @@
     <div class="container">
         <div class="title">
             <h1>New Cake Project</h1>
+            <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
         </div>
         <form method="post" th:action="@{/cakeForm}">
             <div class="mb-3">
-                <label for="cakeNameInput">What would you like to name this cake?</label>
-                <input type="text" class="form-control" id="cakeNameInput" placeholder="Sister's Super Awesome Birthday Cake?" required>
+                <label for="cakeName">What would you like to name this cake?</label>
+                <input type="text" class="form-control" id="cakeName" name="cakeName" placeholder="Sister's Super Awesome Birthday Cake?" required>
             </div>
             <div class="mb-3">
                 <label for="dueDate" class="form-label">Due Date</label>
-                <input type="date" class="form-control" id="dueDate" name="dueDate">
+                <input type="datetime-local" class="form-control" id="dueDate" name="dueDate">
             </div>
             <div class="mb-3">
-                <label for="cakeFlavorSelect">What flavor cake?</label>
-                <select class="custom-select" id="cakeFlavorSelect" name="cakeRecipeId">
+                <label for="cakeRecipe">What flavor cake?</label>
+                <select class="custom-select" id="cakeRecipe" name="cakeRecipeId">
                     <option disabled selected>Select a cake flavor... </option>
                     <option th:each="recipe : ${cakeRecipes}"
                             th:value="${recipe.recipeId}"
@@ -32,16 +33,25 @@
                     </option>
                     <option>None</option>
                 </select>
-                <!--FIXME-->       <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="cakeSizeSelect">How many batches of this cake recipe do you need?</label>
-                <input type="number" class="form-control" id="cakeSizeSelect" name="cakeSizeSelect" step="0.5" min="0" placeholder="1">
+                <label for="cakeMultiplier">How many batches of this cake recipe do you need?</label>
+                <select class="custom-select" id="cakeMultiplier" name="cakeMultiplier">
+                    <option>0.5</option>
+                    <option selected>1</option>
+                    <option>1.5</option>
+                    <option>2</option>
+                    <option>2.5</option>
+                    <option>3</option>
+                    <option>3.5</option>
+                    <option>4</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="fillingFlavorSelect">What flavor filling?</label>
-                <select class="custom-select" id="fillingFlavorSelect" name="fillingRecipeId">
+                <label for="fillingFlavor">What flavor filling?</label>
+                <select class="custom-select" id="fillingFlavor" name="fillingRecipeId">
                     <option disabled selected>Select a filling flavor... </option>
                     <option th:each="recipe : ${fillingRecipes}"
                             th:value="${recipe.recipeId}"
@@ -52,12 +62,22 @@
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="fillingSizeSelect">How many batches of this filling recipe do you need?</label>
-                <input type="number" class="form-control" id="fillingSizeSelect" name="fillingSizeSelect" step="0.5" min="0" placeholder="1">
+                <label for="fillingMultiplier">How many batches of this filling recipe do you need?</label>
+                <select class="custom-select" id="fillingMultiplier" name="fillingMultiplier">
+                    <option>0.5</option>
+                    <option selected>1</option>
+                    <option>1.5</option>
+                    <option>2</option>
+                    <option>2.5</option>
+                    <option>3</option>
+                    <option>3.5</option>
+                    <option>4</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="frostingFlavorSelect">What flavor frosting?</label>
-                <select class="custom-select" id="frostingFlavorSelect" name="frostingRecipeId">
+                <label for="frostingFlavor">What flavor frosting?</label>
+                <select class="custom-select" id="frostingFlavor" name="frostingRecipeId">
                     <option disabled selected>Select a frosting flavor... </option>
                     <option th:each="recipe : ${frostingRecipes}"
                             th:value="${recipe.recipeId}"
@@ -68,17 +88,27 @@
                 <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="frostingSizeSelect">How many batches of this frosting recipe do you need?</label>
-                <input type="number" class="form-control" id="frostingSizeSelect" name="frostingSizeSelect" step="0.5" min="0" placeholder="1">
+                <label for="frostingMultiplier">How many batches of this frosting recipe do you need?</label>
+                <select class="custom-select" id="frostingMultiplier" name="frostingMultiplier">
+                    <option>0.5</option>
+                    <option selected>1</option>
+                    <option>1.5</option>
+                    <option>2</option>
+                    <option>2.5</option>
+                    <option>3</option>
+                    <option>3.5</option>
+                    <option>4</option>
+                </select>
+                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
-                <label for="dietaryRestrictionInput" class="form-label">Any dietary restrictions? (Optional)</label>
-                <textarea class="form-control" id="dietaryRestrictionInput" name="dietaryRestrictionInput" rows="4"
+                <label for="dietaryRestriction" class="form-label">Any dietary restrictions? (Optional)</label>
+                <textarea class="form-control" id="dietaryRestriction" name="dietaryRestriction" rows="4"
                           placeholder="Please note any dietary needs for this cake (i.e. Gluten Free, Vegan, Nut Allergy, Halal, etc.)"></textarea>
             </div>
             <div class="mb-3">
-                <label for="notesInput" class="form-label">Decoration notes? (Optional)</label>
-                <textarea class="form-control" id="notesInput" name="notesInput" rows="4"
+                <label for="decorationNotes" class="form-label">Decoration notes? (Optional)</label>
+                <textarea class="form-control" id="decorationNotes" name="decorationNotes" rows="4"
                           placeholder="Add any special requests for this cake here (i.e. Frosting color,  style, etc.)"></textarea>
             </div>
 

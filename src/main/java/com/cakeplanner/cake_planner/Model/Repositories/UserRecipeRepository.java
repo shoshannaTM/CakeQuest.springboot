@@ -15,5 +15,4 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, UserReci
     List<UserRecipe> findByUser(User user);
     List<UserRecipe> findByUserAndRecipe_RecipeNameContainingIgnoreCase(User user, String name);
     List<UserRecipe> findByUserAndRecipe_RecipeType(User user, RecipeType type);
-
 }

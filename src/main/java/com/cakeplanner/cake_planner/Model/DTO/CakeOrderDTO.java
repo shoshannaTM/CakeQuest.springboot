@@ -1,64 +1,36 @@
-package com.cakeplanner.cake_planner.Model.Entities;
+package com.cakeplanner.cake_planner.Model.DTO;
 
-
-import jakarta.persistence.*;
+import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "cake_order")
-public class CakeOrder {
+public class CakeOrderDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cake_id")
     private int cakeId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "cake_name", columnDefinition = "TEXT")
     private String cakeName;
-
-    @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "cake_recipe_id")
     private Recipe cakeRecipe;
-
-    @Column(name = "cake_multiplier")
     private double cakeMultiplier;
 
-    @ManyToOne
-    @JoinColumn(name = "filling_recipe_id")
     private Recipe fillingRecipe;
-
-    @Column(name = "filling_multiplier")
     private double fillingMultiplier;
 
-    @ManyToOne
-    @JoinColumn(name = "frosting_recipe_id")
     private Recipe frostingRecipe;
-
-    @Column(name = "frosting_multiplier")
     private double frostingMultiplier;
 
-    @Column(name = "dietary_restriction", columnDefinition = "TEXT")
     private String dietaryRestriction;
-
-    @Column(name = "decoration_notes", columnDefinition = "TEXT")
     private String decorationNotes;
 
-    public CakeOrder() {
+    public CakeOrderDTO() {
     }
 
-    public CakeOrder(User user, String cakeName, LocalDateTime dueDate,
-                     Recipe cakeRecipe, double cakeMultiplier, Recipe fillingRecipe,
-                     double fillingMultiplier, Recipe frostingRecipe, double frostingMultiplier,
-                     String dietaryRestriction, String decorationNotes) {
-        this.user = user;
+    public CakeOrderDTO(int cakeId, String cakeName, LocalDateTime dueDate,
+                        Recipe cakeRecipe, double cakeMultiplier,
+                        Recipe fillingRecipe, double fillingMultiplier,
+                        Recipe frostingRecipe, double frostingMultiplier,
+                        String dietaryRestriction, String decorationNotes) {
+        this.cakeId = cakeId;
         this.cakeName = cakeName;
         this.dueDate = dueDate;
         this.cakeRecipe = cakeRecipe;
@@ -77,14 +49,6 @@ public class CakeOrder {
 
     public void setCakeId(int cakeId) {
         this.cakeId = cakeId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getCakeName() {
@@ -165,5 +129,9 @@ public class CakeOrder {
 
     public void setDecorationNotes(String decorationNotes) {
         this.decorationNotes = decorationNotes;
+    }
+
+    public String getFlavorSummary() {
+        return cakeRecipe.getRecipeName() + " - " + fillingRecipe.getRecipeName() + " - " + frostingRecipe.getRecipeName();
     }
 }

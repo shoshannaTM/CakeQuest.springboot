@@ -1,11 +1,14 @@
 package com.cakeplanner.cake_planner.Controller;
+import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
+import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
+import com.cakeplanner.cake_planner.Model.Services.CakeOrderService;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import jakarta.servlet.http.HttpSession;
 import jdk.jfr.StackTrace;
@@ -34,46 +37,20 @@ public class NavController {
     private UserRecipeRepository userRecipeRepository;
 
     @Autowired
+    private CakeOrderService cakeOrderService;
+
+    @Autowired
     private RecipeService recipeService;
 
     @GetMapping("/")
-    public String showCakes(Model model) {
+    public String cakes( @ModelAttribute("user") User user,
+                             Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
-        List<DummyCakes> cakes = new ArrayList<>();
+        List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
 
-            cakes.add(new DummyCakes(
-                    "Sophie's Unicorn Cake",
-                    "Vanilla",
-                    "Strawberry Jam",
-                    "Buttercream",
-                    LocalDateTime.now().plusDays(2).format(formatter),
-                    25,
-                    1
-            ));
-
-            cakes.add(new DummyCakes(
-                    "Dad's Retirement Cake",
-                    "Chocolate",
-                    "Salted Caramel",
-                    "Ganache",
-                    LocalDateTime.now().plusDays(5).format(formatter),
-                    60,
-                    2
-            ));
-
-            cakes.add(new DummyCakes(
-                    "Wedding Cake",
-                    "Red Velvet",
-                    "Cream Cheese",
-                    "Fondant",
-                    LocalDateTime.now().plusWeeks(1).format(formatter),
-                    90,
-                    3
-            ));
-
-            model.addAttribute("cakes", cakes);
-            return "home";
+        model.addAttribute("cakes", cakes);
+        return "home";
     }
 
     @GetMapping("/recipes")

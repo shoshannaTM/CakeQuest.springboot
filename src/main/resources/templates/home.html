@@ -34,14 +34,15 @@
 
             <div th:each="cake : ${cakes}">
                 <div th:replace="fragments/progressBarCard :: progressBarCard(
-         ${cake.name},
-         ${cake.cakeFlavor + ' - ' + cake.fillingFlavor + ' - ' + cake.frostingFlavor},
-         ${cake.dueDate},
-         ${cake.progress},
-         'cakes/' + ${cake.id})">
-                </div>
+                                 ${cake.cakeName},
+                                 ${cake.flavorSummary},
+                                 ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 0,
+                                 ${'/cakes/' + cake.cakeId}
+                                 )"></div>
+
             </div>
-        </div>
+    </div>
     </div>
 </main>
 </body>

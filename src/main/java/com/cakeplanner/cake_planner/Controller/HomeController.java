@@ -1,18 +1,15 @@
 package com.cakeplanner.cake_planner.Controller;
 
-import com.cakeplanner.cake_planner.Model.Entities.DummyCakes;
-import com.cakeplanner.cake_planner.Model.Entities.User;
-import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
+import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Entities.Recipe;
+import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
+import com.cakeplanner.cake_planner.Model.Services.CakeOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +21,12 @@ public class HomeController {
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
     @Autowired
     UserRecipeRepository userRecipeRepository;
+
+    @Autowired
+    RecipeRepository recipeRepository;
+
+    @Autowired
+    CakeOrderService cakeOrderService;
 
     @GetMapping("/cakeForm")
     public String showCakeForm(@ModelAttribute("user") User user, Model model) {
@@ -55,26 +58,33 @@ public class HomeController {
 
 
     @PostMapping("/cakeForm")
-    public String createCake(Model model) {
+    public String createCake(@RequestParam("cakeName") String cakeName,
+                             @RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dueDate,
+                             @RequestParam("cakeRecipeId") int cakeRecipeId,
+                             @RequestParam("cakeMultiplier") double cakeMultiplier,
+                             @RequestParam("fillingRecipeId") int fillingRecipeId,
+                             @RequestParam("fillingMultiplier") double fillingMultiplier,
+                             @RequestParam("frostingRecipeId") int frostingRecipeId,
+                             @RequestParam("frostingMultiplier") double frostingMultiplier,
+                             @RequestParam(value = "dietaryRestriction", required = false) String dietaryRestriction,
+                             @RequestParam(value = "decorationNotes", required = false) String decorationNotes,
+                             @ModelAttribute("user") User user,
+                             Model model) {
+        Recipe cakeRecipe = recipeRepository.findRecipeByRecipeId(cakeRecipeId);
+        Recipe fillingRecipe = recipeRepository.findRecipeByRecipeId(fillingRecipeId);
+        Recipe frostingRecipe = recipeRepository.findRecipeByRecipeId(frostingRecipeId);
+        CakeOrder cakeOrder = new CakeOrder(user, cakeName, dueDate, cakeRecipe, cakeMultiplier, fillingRecipe, fillingMultiplier,
+                                            frostingRecipe, frostingMultiplier, dietaryRestriction, decorationNotes);
+
+        cakeOrderService.save(cakeOrder);
+
         return "home";
     }
 
     //FIXME
     @GetMapping("cakes/{id}")
     public String viewCakeDetails(@PathVariable int id, Model model) {
-        // Recreate the dummy cake with the matching ID
-        DummyCakes cake = null;
 
-        if (id == 1) {
-            cake = new DummyCakes("Sophie's Unicorn Cake", "Vanilla", "Strawberry Jam", "Buttercream", LocalDateTime.now().plusDays(2).format(formatter), 25, 1);
-        } else if (id == 2) {
-            cake = new DummyCakes("Dad's Retirement Cake", "Chocolate", "Salted Caramel", "Ganache", LocalDateTime.now().plusDays(5).format(formatter), 60, 2);
-        } else if (id == 3) {
-            cake = new DummyCakes("Wedding Cake", "Red Velvet", "Cream Cheese", "Fondant", LocalDateTime.now().plusWeeks(1).format(formatter), 90, 3);
-        }
-
-
-        model.addAttribute("cake", cake);
         return "cakeDetails";
     }
 
