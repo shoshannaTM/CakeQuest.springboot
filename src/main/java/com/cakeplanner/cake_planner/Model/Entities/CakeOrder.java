@@ -51,6 +51,10 @@ public class CakeOrder {
     @Column(name = "decoration_notes", columnDefinition = "TEXT")
     private String decorationNotes;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shopping_list_id")
+    private ShoppingList shoppingList;
+
     public CakeOrder() {
     }
 
@@ -166,4 +170,8 @@ public class CakeOrder {
     public void setDecorationNotes(String decorationNotes) {
         this.decorationNotes = decorationNotes;
     }
+
+    public ShoppingList getShoppingList() {return shoppingList;}
+
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
 }

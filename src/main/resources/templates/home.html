@@ -24,22 +24,21 @@
     <div class="dashboard-grid">
         <div class="dashboard-left-column">
             <h2 class="section-title">Today's Baking</h2>
-            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/1')"></div>
-            <div th:replace="fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/1')"></div>
-
+            <div th:replace="~{fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/2')}"></div>
+            <div th:replace="~{fragments/arrowCard :: arrowCard('Task Title', 'For Cake Name', 'Complete By', ${cake?.date ?: 'TBD'}, 'cakes/1')}"></div>
         </div>
 
         <div class="dashboard-right-column">
             <h2 class="section-title">All Cakes</h2>
 
             <div th:each="cake : ${cakes}">
-                <div th:replace="fragments/progressBarCard :: progressBarCard(
+                <div th:replace="~{fragments/progressBarCard :: progressBarCard(
                                  ${cake.cakeName},
                                  ${cake.flavorSummary},
                                  ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
                                  0,
                                  ${'/cakes/' + cake.cakeId}
-                                 )"></div>
+                                 )}"></div>
 
             </div>
     </div>

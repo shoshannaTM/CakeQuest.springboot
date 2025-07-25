@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Model.Services;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -48,4 +49,26 @@ public class SpoonacularService {
         return response.getBody();
     }
 
+    public double getConversionRate(String ingredientName, String sourceUnit, String targetUnit) {
+        String url = "https://api.spoonacular.com/recipes/convert";
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("ingredientName", ingredientName)
+                .queryParam("sourceAmount", 1)  // always 1 to get the rate
+                .queryParam("sourceUnit", sourceUnit)
+                .queryParam("targetUnit", targetUnit)
+                .queryParam("apiKey", apiKey);
+
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                builder.toUriString(),
+                String.class
+        );
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            JSONObject result = new JSONObject(response.getBody());
+            return result.optDouble("targetAmount", -1);  // -1 fallback
+        } else {
+            throw new RuntimeException("Spoonacular API error: " + response.getStatusCode());
+        }
+    }
 }

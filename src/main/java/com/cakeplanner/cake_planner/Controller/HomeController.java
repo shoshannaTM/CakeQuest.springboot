@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Controller;
 
+import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
@@ -76,9 +77,9 @@ public class HomeController {
         CakeOrder cakeOrder = new CakeOrder(user, cakeName, dueDate, cakeRecipe, cakeMultiplier, fillingRecipe, fillingMultiplier,
                                             frostingRecipe, frostingMultiplier, dietaryRestriction, decorationNotes);
 
-        cakeOrderService.save(cakeOrder);
+        CakeOrderDTO cakeDTO = cakeOrderService.save(cakeOrder);
 
-        return "home";
+        return "redirect:/";
     }
 
     //FIXME
@@ -87,7 +88,4 @@ public class HomeController {
 
         return "cakeDetails";
     }
-
-
-
 }
