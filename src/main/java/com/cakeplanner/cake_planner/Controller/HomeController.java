@@ -83,7 +83,7 @@ public class HomeController {
     }
 
     //FIXME
-    @GetMapping("cakes/{id}")
+    @GetMapping("/cakes/{id}")
     public String viewCakeDetails(@PathVariable int id, Model model) {
 
         return "cakeDetails";

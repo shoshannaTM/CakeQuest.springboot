@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Controller;
 import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
+import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
@@ -10,6 +11,7 @@ import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.CakeOrderService;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
+import com.cakeplanner.cake_planner.Model.Services.CakeTaskService;
 import jakarta.servlet.http.HttpSession;
 import jdk.jfr.StackTrace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -40,6 +43,9 @@ public class NavController {
     private CakeOrderService cakeOrderService;
 
     @Autowired
+    private CakeTaskService cakeTaskService;
+
+    @Autowired
     private RecipeService recipeService;
 
     @GetMapping("/")
@@ -48,8 +54,13 @@ public class NavController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
-
         model.addAttribute("cakes", cakes);
+
+        //Do I want to only get tasks for the current day??
+        List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOs(user);
+        tasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
+        model.addAttribute("tasks", tasks);
+
         return "home";
     }
 

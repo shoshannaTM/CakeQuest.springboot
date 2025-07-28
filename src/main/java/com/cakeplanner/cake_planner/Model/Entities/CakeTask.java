@@ -138,5 +138,9 @@ public class CakeTask {
     public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
+
+    public ShoppingList getShoppingList() {return shoppingList;}
+
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
 }
 
