@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Model.Repositories;
 
+import com.cakeplanner.cake_planner.Model.Entities.CakeOrder;
 import com.cakeplanner.cake_planner.Model.Entities.CakeTask;
 import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.User;
@@ -9,5 +10,7 @@ import java.util.List;
 
 public interface CakeTaskRepository extends JpaRepository<CakeTask, Integer> {
     List<CakeTask> findAllByUser(User user);
+
+    List<CakeTask> findAllByCakeOrder(CakeOrder cakeOrder);
 
 }

@@ -11,6 +11,7 @@
 <main layout:fragment="content">
     <div class="title">
         <h1 th:text="${recipe.recipeName}">Recipe Name</h1>
+        <p class="complete" th:if="${completed == 'true'}">This task has been marked complete!</p>
     </div>
 
     <div class="container">
@@ -38,9 +39,11 @@
         </div>
     </div>
 
-    <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
-        <a href="#" class="btn shopping-btn">Mark As Complete</a>
-    </div>
+    <form th:action="@{/tasks/{id}(id=${task.taskId})}" method="post">
+        <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
+            <button type="submit" class="btn">Mark Task As Complete</button>
+        </div>
+    </form>
 </main>
 </body>
 </html>

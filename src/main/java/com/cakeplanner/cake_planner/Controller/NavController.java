@@ -57,7 +57,7 @@ public class NavController {
         model.addAttribute("cakes", cakes);
 
         //Do I want to only get tasks for the current day??
-        List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOs(user);
+        List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForUser(user);
         tasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
         model.addAttribute("tasks", tasks);
 

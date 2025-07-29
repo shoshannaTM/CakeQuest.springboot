@@ -1,4 +1,4 @@
-<div th:fragment="pantryCard(title, subtitle)" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="pantryCard(title, subtitle, unit)" xmlns:th="http://www.thymeleaf.org">
     <div class="card pantry-card">
       <div class="pantry-card-content">
         <div class="card-header">
@@ -8,7 +8,7 @@
             <label for="pantry-amount" class="ingredient-card-label">Amount in Pantry:</label>
             <div class="ingredient-inputs flex-row">
             <input type="text" id="pantry-amount" class="form-control" placeholder="Estimate amount">
-            <span class="ingredient-card-unit">grams</span>
+            <span class="ingredient-card-unit" th:text="${unit}">grams</span>
             </div>
           </div>
         </div>

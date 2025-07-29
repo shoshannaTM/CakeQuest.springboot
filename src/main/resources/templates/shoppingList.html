@@ -10,23 +10,26 @@
 <body class="shoppingListPage">
 
 <main layout:fragment="content">
+    <form th:action="@{/tasks/{id}(id=${task.taskId})}" method="post">
     <div class="title">
         <h1>Shop Your Pantry For CakeName(s)</h1>
+        <p class="complete" th:if="${completed == 'true'}">This task has been marked complete!</p>
         <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0.</p>
     </div>
 
     <div class="pantry-cards">
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
-        <div th:replace="fragments/pantryCard :: pantryCard('IngredientName','Total Needed: xXXg')"></div>
+        <div th:each="item : ${task.shoppingList.items}">
+            <div th:replace="~{fragments/pantryCard :: pantryCard(
+                      ${item.name},
+                      ${'Total Needed: ' + item.amount + ' ' + item.unit},
+                      ${item.unit}
+                    )}"></div>
+        </div>
     </div>
-
-    <div class="shopping-btn-wrapper center">
-        <a href="#" class="btn shopping-btn">Mark As Complete</a>
-    </div>
+            <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
+                <button type="submit" class="btn">Mark Task As Complete</button>
+            </div>
+    </form>
 </main>
-
 </body>
 </html>

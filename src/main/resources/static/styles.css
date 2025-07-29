@@ -252,6 +252,7 @@ input[type="checkbox"] {
 }
 .dashboard-left-column {
     display: grid;
+    min-width: 325px;
     grid-template-columns: 1fr;
     row-gap: 1rem;
 }
@@ -372,7 +373,7 @@ input[type="checkbox"] {
     margin: 0;
   }
 
-  .profile-details {
+  .details {
     text-align: center;
   }
 
@@ -415,24 +416,24 @@ input[type="checkbox"] {
     color: #cc5a7d;
 }
 
-.cakeInfoPage .container {
-    max-width: fit-content;
+.cakeInfoPage {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
 }
 
 .details-list {
     line-height: 2rem;
 }
-
-.cakeInfoPage .details-list {
-list-style-type: none;
-}
-
-.info {
-    text-align: left;
-    line-height: 1rem;
-    margin-bottom: 2rem;
-}
-
 
 .recipe-item{
     line-height: 1rem;
@@ -532,12 +533,17 @@ list-style-type: none;
 .date {
   font-size: 0.95rem;
   line-height: 1.4;
+  text-align: left;
   margin: 0.25rem 0;
   color: #666;
 }
 
 .date {
   color: #999;
+}
+
+.complete {
+  color: #008000;
 }
 
 /* Progress Bar */

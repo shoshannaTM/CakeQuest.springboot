@@ -40,7 +40,7 @@ public class RecipeController {
             // Optional: return a custom error page or redirect
             return "error/404";
         }
-
+        //fIXME should have a method in RecipeService
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
         List<IngredientDTO> ingredientDTOList = recipeService.recipeIngredientsToDTO(recipeIngredients);
 

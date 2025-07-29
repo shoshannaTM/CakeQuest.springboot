@@ -4,6 +4,7 @@ package com.cakeplanner.cake_planner.Model.Entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cake_order")
@@ -174,4 +175,5 @@ public class CakeOrder {
     public ShoppingList getShoppingList() {return shoppingList;}
 
     public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
+
 }

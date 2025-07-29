@@ -16,8 +16,14 @@ public class CakeTask {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "cake_id")
+    private CakeOrder cakeOrder;
+
     @Column(name = "task_name")
     private String name;
+
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "task_type", nullable = false)
@@ -40,12 +46,16 @@ public class CakeTask {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
+    @Column(name = "completed")
+    private Boolean completed;
+
     public CakeTask() {}
 
-    public CakeTask(User user, String name, TaskType taskType,
+    public CakeTask(User user, CakeOrder cakeOrder, String name, TaskType taskType,
                     ShoppingList shoppingList, String dietaryRestriction,
                     LocalDateTime dueDate) {
         this.user = user;
+        this.cakeOrder = cakeOrder;
         this.name = name;
         this.taskType = taskType;
         this.shoppingList = shoppingList;
@@ -53,10 +63,11 @@ public class CakeTask {
         this.dueDate = dueDate;
     }
 
-    public CakeTask(User user, String name,
+    public CakeTask(User user, CakeOrder cakeOrder, String name,
                     TaskType taskType, Recipe recipe,
                     String dietaryRestriction, LocalDateTime dueDate) {
         this.user = user;
+        this.cakeOrder = cakeOrder;
         this.name = name;
         this.taskType = taskType;
         this.recipe = recipe;
@@ -64,10 +75,11 @@ public class CakeTask {
         this.dueDate = dueDate;
     }
 
-    public CakeTask(User user, String name,
+    public CakeTask(User user, CakeOrder cakeOrder, String name,
                     TaskType taskType, String dietaryRestriction,
                     String decorationNotes, LocalDateTime dueDate) {
         this.user = user;
+        this.cakeOrder = cakeOrder;
         this.name = name;
         this.taskType = taskType;
         this.dietaryRestriction = dietaryRestriction;
@@ -89,6 +101,14 @@ public class CakeTask {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public CakeOrder getCakeOrder() {
+        return cakeOrder;
+    }
+
+    public void setCakeOrder(CakeOrder cakeOrder) {
+        this.cakeOrder = cakeOrder;
     }
 
     public String getName() {
@@ -142,5 +162,9 @@ public class CakeTask {
     public ShoppingList getShoppingList() {return shoppingList;}
 
     public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
+
+    public Boolean getCompleted() {return completed;}
+
+    public void setCompleted(Boolean completed) {this.completed = completed;}
 }
 

@@ -4,35 +4,26 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${cake != null} ? ${cake.name} : 'Cake Details'">Cake Details</title>
+    <title>Cake Details</title>
 </head>
-<body class="cakeInfoPage">
+<body>
 <main layout:fragment="content">
-    <div class="container">
+    <div  class="cakeInfoPage">
         <div class="title">
-            <h1 th:text="${cake != null} ? ${cake.name} : 'Cake Details'">Cake Details</h1>
+            <h1 th:text="${cakeOrder != null} ? ${cakeOrder.cakeName} : 'Cake Details'"></h1>
         </div>
 
         <div class="info">
-            <ul class="details-list">
-                <li><strong>Due Date:</strong> <span th:text="${cake != null} ? ${cake.dueDate} : 'MMMM dd, yyyy'">MMMM dd, yyyy</span></li>
-
-                <!--/* FIXME
-                <li><strong>Size:</strong> <span th:text="${cake != null} ? ${cake.size} : 'Cake Size'">Cake Size</span></li>
-                */-->
-
-                <li><strong>Cake Flavor:</strong> <span th:text="${cake != null} ? ${cake.cakeFlavor} : 'Cake Flavor'">Cake Flavor</span></li>
-                <li><strong>Filling Flavor:</strong> <span th:text="${cake != null} ? ${cake.fillingFlavor} : 'Filling Flavor'">Filling Flavor</span></li>
-                <li><strong>Frosting Flavor:</strong> <span th:text="${cake != null} ? ${cake.frostingFlavor} : 'Frosting Flavor'">Frosting Flavor</span></li>
-
-                <!--/* FIXME
-                <li><strong>Dietary Restrictions:</strong> <span th:text="${cake != null} ? ${cake.dietaryRestrictions} : 'None'">None</span></li>
-                <li><strong>Decoration Notes:</strong> <span th:text="${cake != null} ? ${cake.notes} : 'No notes provided.'">No notes provided.</span></li>
-                */-->
-            </ul>
+            <div th:each=" task : ${tasks}">
+                <div th:replace="~{fragments/arrowCard :: arrowCard(
+                                 ${task.name},
+                                 '',
+                                 'Task Due',
+                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 ${'/tasks/' + task.taskId}
+                                 )}"></div>
+            </div>
         </div>
-
 
         <div>
             <a th:href="@{/cakeForm}" class="btn">Edit Cake</a>

@@ -145,31 +145,31 @@ public class CakeOrderService {
         List<CakeTask> cakeTasks = new ArrayList<>();
 
         String shopTaskName = "Shop the ingredients for " + cakeOrder.getCakeName();
-          CakeTask shopForCake = new CakeTask(cakeOrder.getUser(), shopTaskName, TaskType.SHOP,
+          CakeTask shopForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopTaskName, TaskType.SHOP,
                                            cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
                                            cakeOrder.getDueDate().minusDays(3));
         cakeTasks.add(shopForCake);
 
         String bakeCakeTaskName = "Bake & Chill Cakes for " + cakeOrder.getCakeName();
-        CakeTask bakeCake = new CakeTask(cakeOrder.getUser(), bakeCakeTaskName, TaskType.BAKE,
+        CakeTask bakeCake = new CakeTask(cakeOrder.getUser(), cakeOrder, bakeCakeTaskName, TaskType.BAKE,
                                          cakeOrder.getCakeRecipe(), cakeOrder.getDietaryRestriction(),
                                          cakeOrder.getDueDate().minusDays(2));
         cakeTasks.add(bakeCake);
 
         String makeFillingCakeTaskName = "Make & Chill Filling for " + cakeOrder.getCakeName();
-        CakeTask makeFilling = new CakeTask(cakeOrder.getUser(), makeFillingCakeTaskName, TaskType.MAKE_FILLING,
+        CakeTask makeFilling = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFillingCakeTaskName, TaskType.MAKE_FILLING,
                                             cakeOrder.getFillingRecipe(), cakeOrder.getDietaryRestriction(),
                                             cakeOrder.getDueDate().minusDays(1));
        cakeTasks.add(makeFilling);
 
         String makeFrostingCakeTaskName = "Make Frosting for " + cakeOrder.getCakeName();
-        CakeTask makeFrosting = new CakeTask(cakeOrder.getUser(), makeFrostingCakeTaskName, TaskType.MAKE_FROSTING,
+        CakeTask makeFrosting = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFrostingCakeTaskName, TaskType.MAKE_FROSTING,
                                              cakeOrder.getFrostingRecipe(), cakeOrder.getDietaryRestriction(),
                                              cakeOrder.getDueDate().minusHours(5));
         cakeTasks.add(makeFrosting);
 
-        String assembleAndDecorateCakeTaskName = "Assemble & Decorate" + cakeOrder.getCakeName();
-        CakeTask assembleAndDecorate = new CakeTask(cakeOrder.getUser(), assembleAndDecorateCakeTaskName,
+        String assembleAndDecorateCakeTaskName = "Assemble & Decorate " + cakeOrder.getCakeName();
+        CakeTask assembleAndDecorate = new CakeTask(cakeOrder.getUser(), cakeOrder, assembleAndDecorateCakeTaskName,
                                                     TaskType.DECORATE,cakeOrder.getDietaryRestriction(),
                                                     cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2));
         cakeTasks.add(assembleAndDecorate);
