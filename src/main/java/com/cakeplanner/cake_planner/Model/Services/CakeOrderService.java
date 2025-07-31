@@ -144,34 +144,40 @@ public class CakeOrderService {
    public void createTasksForCake(CakeOrder cakeOrder){
         List<CakeTask> cakeTasks = new ArrayList<>();
 
-        String shopTaskName = "Shop the ingredients for " + cakeOrder.getCakeName();
-          CakeTask shopForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopTaskName, TaskType.SHOP,
+        String shopPantryTaskName = "Check Your Pantry For Ingredients For " + cakeOrder.getCakeName();
+          CakeTask shopPantryForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopPantryTaskName, TaskType.SHOP_PANTRY,
                                            cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
-                                           cakeOrder.getDueDate().minusDays(3));
-        cakeTasks.add(shopForCake);
+                                           cakeOrder.getDueDate().minusDays(3), false);
+        cakeTasks.add(shopPantryForCake);
+
+       String shopStoreTaskName = "Buy Ingredients For " + cakeOrder.getCakeName();
+       CakeTask shopStoreForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopStoreTaskName, TaskType.SHOP_STORE,
+                                                 cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
+                                                 cakeOrder.getDueDate().minusDays(3), false);
+       cakeTasks.add(shopStoreForCake);
 
         String bakeCakeTaskName = "Bake & Chill Cakes for " + cakeOrder.getCakeName();
         CakeTask bakeCake = new CakeTask(cakeOrder.getUser(), cakeOrder, bakeCakeTaskName, TaskType.BAKE,
                                          cakeOrder.getCakeRecipe(), cakeOrder.getDietaryRestriction(),
-                                         cakeOrder.getDueDate().minusDays(2));
+                                         cakeOrder.getDueDate().minusDays(2), false);
         cakeTasks.add(bakeCake);
 
         String makeFillingCakeTaskName = "Make & Chill Filling for " + cakeOrder.getCakeName();
         CakeTask makeFilling = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFillingCakeTaskName, TaskType.MAKE_FILLING,
                                             cakeOrder.getFillingRecipe(), cakeOrder.getDietaryRestriction(),
-                                            cakeOrder.getDueDate().minusDays(1));
+                                            cakeOrder.getDueDate().minusDays(1), false);
        cakeTasks.add(makeFilling);
 
         String makeFrostingCakeTaskName = "Make Frosting for " + cakeOrder.getCakeName();
         CakeTask makeFrosting = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFrostingCakeTaskName, TaskType.MAKE_FROSTING,
                                              cakeOrder.getFrostingRecipe(), cakeOrder.getDietaryRestriction(),
-                                             cakeOrder.getDueDate().minusHours(5));
+                                             cakeOrder.getDueDate().minusHours(5), false);
         cakeTasks.add(makeFrosting);
 
         String assembleAndDecorateCakeTaskName = "Assemble & Decorate " + cakeOrder.getCakeName();
         CakeTask assembleAndDecorate = new CakeTask(cakeOrder.getUser(), cakeOrder, assembleAndDecorateCakeTaskName,
                                                     TaskType.DECORATE,cakeOrder.getDietaryRestriction(),
-                                                    cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2));
+                                                    cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2), false);
         cakeTasks.add(assembleAndDecorate);
 
         for(CakeTask ct: cakeTasks){

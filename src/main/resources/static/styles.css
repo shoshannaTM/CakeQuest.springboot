@@ -342,7 +342,7 @@ input[type="checkbox"] {
 }
 
 .pantry-card {
-    width: fit-content;
+    width: 500px;
     justify-self: center;
 }
 
@@ -670,6 +670,10 @@ Mobile
 
   .pantry-card-content .form-control {
     width: 100%;
+  }
+
+  .pantry-card {
+    width: 350px;
   }
 
   .ingredient-card-label {

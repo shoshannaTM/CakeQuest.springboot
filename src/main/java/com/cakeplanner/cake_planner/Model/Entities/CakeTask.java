@@ -23,8 +23,6 @@ public class CakeTask {
     @Column(name = "task_name")
     private String name;
 
-
-
     @Enumerated(EnumType.STRING)
     @Column(name = "task_type", nullable = false)
     private TaskType taskType;
@@ -53,7 +51,7 @@ public class CakeTask {
 
     public CakeTask(User user, CakeOrder cakeOrder, String name, TaskType taskType,
                     ShoppingList shoppingList, String dietaryRestriction,
-                    LocalDateTime dueDate) {
+                    LocalDateTime dueDate, Boolean completed) {
         this.user = user;
         this.cakeOrder = cakeOrder;
         this.name = name;
@@ -61,11 +59,12 @@ public class CakeTask {
         this.shoppingList = shoppingList;
         this.dietaryRestriction = dietaryRestriction;
         this.dueDate = dueDate;
+        this.completed = completed;
     }
 
     public CakeTask(User user, CakeOrder cakeOrder, String name,
                     TaskType taskType, Recipe recipe,
-                    String dietaryRestriction, LocalDateTime dueDate) {
+                    String dietaryRestriction, LocalDateTime dueDate, Boolean completed) {
         this.user = user;
         this.cakeOrder = cakeOrder;
         this.name = name;
@@ -73,11 +72,12 @@ public class CakeTask {
         this.recipe = recipe;
         this.dietaryRestriction = dietaryRestriction;
         this.dueDate = dueDate;
+        this.completed = completed;
     }
 
     public CakeTask(User user, CakeOrder cakeOrder, String name,
                     TaskType taskType, String dietaryRestriction,
-                    String decorationNotes, LocalDateTime dueDate) {
+                    String decorationNotes, LocalDateTime dueDate, Boolean completed) {
         this.user = user;
         this.cakeOrder = cakeOrder;
         this.name = name;
@@ -85,6 +85,19 @@ public class CakeTask {
         this.dietaryRestriction = dietaryRestriction;
         this.decorationNotes = decorationNotes;
         this.dueDate = dueDate;
+        this.completed = completed;
+    }
+
+    public CakeTask(User user, CakeOrder cakeOrder, String name,
+                    TaskType taskType, String dietaryRestriction,
+                    LocalDateTime dueDate, Boolean completed) {
+        this.user = user;
+        this.cakeOrder = cakeOrder;
+        this.name = name;
+        this.taskType = taskType;
+        this.dietaryRestriction = dietaryRestriction;
+        this.dueDate = dueDate;
+        this.completed = completed;
     }
 
     public int getTaskId() {

@@ -5,14 +5,13 @@
       layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Shopping List</title>
+    <title>Pantry Shopping List</title>
 </head>
 <body class="shoppingListPage">
-
 <main layout:fragment="content">
     <form th:action="@{/tasks/shop_pantry/{id}(id=${task.taskId})}" method="post">
     <div class="title">
-        <h1>Shop Your Pantry For CakeName(s)</h1>
+        <h1 th:text="${task.name}">Pantry Shopping</h1>
         <p class="complete" th:if="${task.completed}">This task has been marked complete!</p>
         <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0.</p>
     </div>

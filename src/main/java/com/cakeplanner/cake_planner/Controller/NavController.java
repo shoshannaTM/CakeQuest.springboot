@@ -90,12 +90,8 @@ public class NavController {
         // Convert UserRecipe to RecipeDTO for display
         List<RecipeDTO> displayRecipes = new ArrayList<>();
         for (UserRecipe ur : userRecipes) {
-            Recipe recipe = ur.getRecipe();
-            List<RecipeIngredient> ingredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
-            List<IngredientDTO> ingredientDTOs = recipeService.recipeIngredientsToDTO(ingredients);
-
-            RecipeDTO dto = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                    recipe.getRecipeType(), ingredientDTOs, recipe.getRecipeId());
+            int recipeId = ur.getRecipe().getRecipeId();
+            RecipeDTO dto = recipeService.recipeToDto(recipeId);
             displayRecipes.add(dto);
         }
 

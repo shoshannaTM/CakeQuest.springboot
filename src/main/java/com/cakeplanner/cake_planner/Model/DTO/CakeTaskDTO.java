@@ -1,6 +1,7 @@
 package com.cakeplanner.cake_planner.Model.DTO;
 
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
+import com.cakeplanner.cake_planner.Model.Entities.ShoppingList;
 
 import java.time.LocalDateTime;
 
@@ -10,26 +11,28 @@ public class CakeTaskDTO {
     private String name;
     private TaskType taskType;
     private Integer recipeId;
-    private Integer shoppingListId;
+    private ShoppingList shoppingList;
     private String dietaryRestriction;
     private String decorationNotes;
     private LocalDateTime dueDate;
+    private Boolean completed;
 
     public CakeTaskDTO() {}
 
-    public CakeTaskDTO(int taskId, String name, TaskType taskType, Integer shoppingListId,
-                       String dietaryRestriction, LocalDateTime dueDate) {
+    public CakeTaskDTO(int taskId, String name, TaskType taskType, ShoppingList shoppingList,
+                       String dietaryRestriction, LocalDateTime dueDate, Boolean completed) {
         this.taskId = taskId;
         this.name = name;
         this.taskType = taskType;
-        this.shoppingListId = shoppingListId;
+        this.shoppingList = shoppingList;
         this.dietaryRestriction = dietaryRestriction;
         this.dueDate = dueDate;
+        this.completed = completed;
     }
 
     public CakeTaskDTO(int taskId, String name, TaskType taskType, Integer recipeId,
                        String dietaryRestriction, String decorationNotes,
-                       LocalDateTime dueDate) {
+                       LocalDateTime dueDate, Boolean completed) {
         this.taskId = taskId;
         this.name = name;
         this.taskType = taskType;
@@ -37,6 +40,19 @@ public class CakeTaskDTO {
         this.dietaryRestriction = dietaryRestriction;
         this.decorationNotes = decorationNotes;
         this.dueDate = dueDate;
+        this.completed = completed;
+    }
+
+    public CakeTaskDTO(int taskId, String name, TaskType taskType,
+                       String dietaryRestriction, String decorationNotes,
+                       LocalDateTime dueDate, Boolean completed) {
+        this.taskId = taskId;
+        this.name = name;
+        this.taskType = taskType;
+        this.dietaryRestriction = dietaryRestriction;
+        this.decorationNotes = decorationNotes;
+        this.dueDate = dueDate;
+        this.completed = completed;
     }
 
     public int getTaskId() {
@@ -71,13 +87,9 @@ public class CakeTaskDTO {
         this.recipeId = recipeId;
     }
 
-    public Integer getShoppingListId() {
-        return shoppingListId;
-    }
+    public ShoppingList getShoppingList() {return shoppingList;}
 
-    public void setShoppingListId(Integer shoppingListId) {
-        this.shoppingListId = shoppingListId;
-    }
+    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
 
     public String getDietaryRestriction() {
         return dietaryRestriction;
@@ -102,5 +114,9 @@ public class CakeTaskDTO {
     public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
+
+    public Boolean getCompleted() {return completed;}
+
+    public void setCompleted(Boolean completed) {this.completed = completed;}
 }
 

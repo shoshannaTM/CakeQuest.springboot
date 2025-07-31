@@ -1,5 +1,6 @@
 package com.cakeplanner.cake_planner.Controller;
 
+import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
@@ -40,14 +41,7 @@ public class RecipeController {
             // Optional: return a custom error page or redirect
             return "error/404";
         }
-        //fIXME should have a method in RecipeService
-        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
-        List<IngredientDTO> ingredientDTOList = recipeService.recipeIngredientsToDTO(recipeIngredients);
-
-        RecipeDTO recipeDTO = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                recipe.getRecipeType(), ingredientDTOList, recipe.getRecipeId());
-
-
+        RecipeDTO recipeDTO = recipeService.recipeToDto(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("mode", "read");
         return "recipeDetails";

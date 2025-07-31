@@ -67,6 +67,15 @@ public class RecipeService {
         return new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(), recipe.getRecipeType(), ingredientDTOList);
     }
 
+    public RecipeDTO recipeToDto(int recipeId){
+        Recipe r = recipeRepository.findRecipeByRecipeId(recipeId);
+        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
+        List<IngredientDTO> ingredientDTOList = recipeIngredientsToDTO(recipeIngredients);
+
+        RecipeDTO recipeDTO = new RecipeDTO(r.getRecipeName(), r.getRecipeUrl(), r.getInstructions(),
+                                            r.getRecipeType(), ingredientDTOList);
+        return recipeDTO;
+    }
 
     public List<IngredientDTO> recipeIngredientsToDTO(List<RecipeIngredient> recipeIngredients) {
         List<IngredientDTO> dtoList = new ArrayList<>();

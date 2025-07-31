@@ -9,7 +9,33 @@
 </head>
 <body class="shoppingListPage">
 <main layout:fragment="content">
+  <form th:action="@{/tasks/shop_store/{id}(id=${task.taskId})}" method="post">
+    <div class="title">
+      <h1 th:text="${task.name}">Store Shopping</h1>
+      <p class="complete" th:if="${task.completed}">This task has been marked complete!</p>
+      <p class="tagline">Here's what you still need to buy, based on your pantry inputs.</p>
+    </div>
 
+    <div class="checklist">
+      <ul>
+        <li th:each="item : ${task.shoppingList.items}">
+          <label>
+            <input type="checkbox"
+                   th:name="'checkedItems'"
+                   th:value="${item.name}" />
+            <span th:text="${item.amount + ' ' + item.unit + ' ' + item.name}"></span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    </div>
+    <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
+      <button type="submit" class="btn"
+              th:text="${task.completed} ? 'Undo Marking Task As Complete' :
+                         'Mark Task As Complete'"></button>
+    </div>
+  </form>
 </main>
 </body>
 </html>

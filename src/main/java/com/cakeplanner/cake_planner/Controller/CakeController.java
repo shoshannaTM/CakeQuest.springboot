@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class CakeController {
@@ -126,74 +123,74 @@ public class CakeController {
 
     @GetMapping("/tasks/{id}")
     public String viewTaskDetails(@PathVariable int id, Model model) {
-        Optional<CakeTask> taskOptional = cakeTaskRepository.findById(id);
-        if (taskOptional.isEmpty()) {
+
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+
+        if (ctDTO.getTaskType() == null) {
             return "error/404";
-        }
-
-        CakeTask cakeTask = taskOptional.get();
-
-        if (cakeTask.getTaskType() == TaskType.SHOP) {
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
             model.addAttribute("mode", "task");
-            model.addAttribute("task", cakeTask);
+            model.addAttribute("task", ctDTO);
+            return "pantryShoppingList";
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
+            model.addAttribute("mode", "task");
+            model.addAttribute("task", ctDTO);
             return "shoppingList";
-        } else if (cakeTask.getTaskType() == TaskType.DECORATE) {
-            model.addAttribute("task", cakeTask);
+        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
             model.addAttribute("mode", "task");
+            model.addAttribute("task", ctDTO);
             return "decorateDetails";
         } else {
-            //fIXME should have a method in RecipeService
-            Recipe recipe = cakeTask.getRecipe();
-            int recipeId = recipe.getRecipeId();
-            List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
-            List<IngredientDTO> ingredientDTOList = recipeService.recipeIngredientsToDTO(recipeIngredients);
-
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                    recipe.getRecipeType(), ingredientDTOList, recipe.getRecipeId());
+            int recipeId = ctDTO.getRecipeId();
+            RecipeDTO recipeDTO = recipeService.recipeToDto(recipeId);
             model.addAttribute("mode", "task");
             model.addAttribute("recipe", recipeDTO);
+            model.addAttribute("task", ctDTO);
+
             return "recipeDetails";
         }
+    }
+
+    @PostMapping("/tasks/shop_pantry/{id}")
+    public String postPantryShopping(@PathVariable int id,
+                                     @RequestParam Map<String, String> pantry, Model model) {
+        cakeTaskService.processPantryList(id, pantry);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "shoppingList";
     }
 
     @PostMapping("/tasks/{id}")
     public String markTaskComplete(@PathVariable int id, Model model) {
         boolean success = cakeTaskService.markTaskComplete(id);
-        TaskType type = cakeTaskService.getTaskType(id);
-
-        Optional<CakeTask> taskOptional = cakeTaskRepository.findById(id);
-        if (taskOptional.isEmpty()) {
+        if(!success){
             return "error/404";
         }
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
 
-        CakeTask cakeTask = taskOptional.get();
-
-        if (success) {
-            model.addAttribute("completed", "true");
-            if (cakeTask.getTaskType() == TaskType.SHOP) {
-                model.addAttribute("mode", "task");
-                model.addAttribute("task", cakeTask);
-                return "shoppingList";
-            } else if (cakeTask.getTaskType() == TaskType.DECORATE) {
-                model.addAttribute("task", cakeTask);
-                model.addAttribute("mode", "task");
-                return "decorateDetails";
-            } else {
-                //fIXME should have a method in RecipeService
-                Recipe recipe = cakeTask.getRecipe();
-                int recipeId = recipe.getRecipeId();
-                List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
-                List<IngredientDTO> ingredientDTOList = recipeService.recipeIngredientsToDTO(recipeIngredients);
-
-                RecipeDTO recipeDTO = new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(),
-                        recipe.getRecipeType(), ingredientDTOList, recipe.getRecipeId());
-                model.addAttribute("mode", "task");
-                model.addAttribute("recipe", recipeDTO);
-                return "recipeDetails";
-            }
-        } else {
+        if (ctDTO.getTaskType() == null) {
             return "error/404";
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
+            model.addAttribute("mode", "task");
+            model.addAttribute("task", ctDTO);
+            return "pantryShoppingList";
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
+            model.addAttribute("mode", "task");
+            model.addAttribute("task", ctDTO);
+            return "shoppingList";
+        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
+            model.addAttribute("mode", "task");
+            model.addAttribute("task", ctDTO);
+            return "decorateDetails";
+        } else {
+            int recipeId = ctDTO.getRecipeId();
+            RecipeDTO recipeDTO = recipeService.recipeToDto(recipeId);
+            model.addAttribute("mode", "task");
+            model.addAttribute("recipe", recipeDTO);
+            model.addAttribute("task", ctDTO);
+
+            return "recipeDetails";
         }
     }
-
 }

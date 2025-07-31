@@ -5,9 +5,13 @@
           <h3 th:text="${title}">Card Title</h3>
           <p class="subtitle" th:text="${subtitle}">Subtitle</p>
           <div class="input-row">
-            <label for="pantry-amount" class="ingredient-card-label">Amount in Pantry:</label>
+          <label class="ingredient-card-label">Amount in Pantry:</label>
             <div class="ingredient-inputs flex-row">
-            <input type="text" id="pantry-amount" class="form-control" placeholder="Estimate amount">
+            <input type="number"
+                   step="any"
+                   class="form-control"
+                   th:name="${title}"
+                   placeholder="Estimate amount"/>
             <span class="ingredient-card-unit" th:text="${unit}">grams</span>
             </div>
           </div>

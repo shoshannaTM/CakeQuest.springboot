@@ -12,7 +12,7 @@
     <div class="container">
         <div class="title">
             <h1 th:text="${task.name}">Decorate Cake</h1>
-            <p class="complete" th:if="${completed == 'true'}">This task has been marked complete!</p>
+            <p class="complete" th:if="${task.completed}">This task has been marked complete!</p>
         </div>
         <div class="details">
             <p><strong>Due: </strong> <span th:text="${#temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm')}">TBD</span></p>
