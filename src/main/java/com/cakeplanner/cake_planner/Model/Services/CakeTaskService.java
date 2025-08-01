@@ -9,6 +9,7 @@ import com.cakeplanner.cake_planner.Model.Entities.ShoppingListItem;
 import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,12 @@ public class CakeTaskService {
 
     @Autowired
     CakeOrderRepository cakeOrderRepository;
+
+    @Autowired
+    CakeOrderService cakeOrderService;
+
+    @Autowired
+    RecipeIngredientRepository recipeIngredientRepository;
 
     public CakeTaskDTO shoppingTaskToDTO(CakeTask task){
             CakeTaskDTO dto = new CakeTaskDTO(
@@ -164,15 +171,31 @@ public class CakeTaskService {
         return null;
     }
 
+    public void resetPantryList(int taskId){
+        Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
+        if (optionalTask.isEmpty()){
+            return;
+        }
+        CakeTask task = optionalTask.get();
+        CakeOrder cakeOrder = task.getCakeOrder();
+
+        cakeOrderService.buildShoppingList(
+                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getCakeRecipe().getRecipeId()),
+                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFillingRecipe().getRecipeId()),
+                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFrostingRecipe().getRecipeId()),
+                cakeOrder
+        );
+        task.setShoppingList(cakeOrder.getShoppingList());
+        cakeTaskRepository.save(task);
+    }
+
     public void processPantryList(int taskId, Map<String, String> pantryData) {
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
-        if (optionalTask.isEmpty()) return;
-
+        if (optionalTask.isEmpty()){
+            return;
+        }
         CakeTask task = optionalTask.get();
-        boolean newStatus = !task.getCompleted();
-        task.setCompleted(newStatus);
 
-        if (newStatus) {
             List<ShoppingListItem> items = task.getShoppingList().getItems();
             for (ShoppingListItem item : items) {
                 String key = item.getName();
@@ -185,8 +208,6 @@ public class CakeTaskService {
                     }
                 }
             }
-        }
         cakeTaskRepository.save(task);
     }
-
 }

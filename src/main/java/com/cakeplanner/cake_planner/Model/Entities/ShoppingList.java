@@ -15,7 +15,7 @@ public class ShoppingList {
     @OneToOne
     private CakeOrder cakeOrder;
 
-    @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShoppingListItem> items = new ArrayList<>();
 
     public ShoppingList() {

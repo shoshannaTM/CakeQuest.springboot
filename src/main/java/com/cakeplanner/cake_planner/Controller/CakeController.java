@@ -92,40 +92,39 @@ public class CakeController {
         return "cakeDetails";
     }
 
-
-    @GetMapping("/tasks/{id}")
-    public String viewTaskDetails(@PathVariable int id, Model model) {
+    @GetMapping("/task/SHOP_PANTRY/{id}")
+    public String getPantryTask(@PathVariable int id, Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
-
-        if (ctDTO.getTaskType() == null) {
-            return "error/404";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
-            return "pantryShoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
-            return "shoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
-            return "decorateDetails";
-        } else {
-            int recipeId = ctDTO.getRecipeId();
-            RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
-            model.addAttribute("recipe", recipeDTO);
-            return "recipeDetails";
-        }
+        return "pantryShoppingList";
     }
 
-    @PostMapping("/tasks/shop_pantry/{id}")
-    public String postPantryShopping(@PathVariable int id,
-                                     @RequestParam Map<String, String> pantry, Model model) {
-        cakeTaskService.processPantryList(id, pantry);
+    @PostMapping("/task/SHOP_PANTRY/{id}")
+    public String postPantryTask(@PathVariable int id,
+                                 @RequestParam( required = false) Map<String, String> pantry,
+                                 Model model){
+        Boolean completed = cakeTaskService.toggleTaskComplete(id);
+        if(completed){
+            cakeTaskService.processPantryList(id, pantry);
+        } else {
+            cakeTaskService.resetPantryList(id);
+        }
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "pantryShoppingList";
+    }
+
+    @GetMapping("/task/SHOP_STORE/{id}")
+    public String getStoreTask(@PathVariable int id, Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "shoppingList";
     }
 
-    @PostMapping("/tasks/{id}")
+   /* @PostMapping("/tasks/{id}")
     public String markTaskComplete(@PathVariable int id, Model model) {
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
         if(completed == null){
@@ -149,9 +148,40 @@ public class CakeController {
             RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
             model.addAttribute("recipe", recipeDTO);
             return "recipeDetails";
+
         }
     }
+    @PostMapping("/tasks/shop_pantry/{id}")
+    public String postPantryShopping(@PathVariable int id,
+                                     @RequestParam Map<String, String> pantry, Model model) {
+        cakeTaskService.processPantryList(id, pantry);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "shoppingList";
+    }
 
+        @GetMapping("/tasks/{id}")
+    public String viewTaskDetails(@PathVariable int id, Model model) {
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+
+        if (ctDTO.getTaskType() == null) {
+            return "error/404";
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
+            return "pantryShoppingList";
+        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
+            return "shoppingList";
+        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
+            return "decorateDetails";
+        } else {
+            int recipeId = ctDTO.getRecipeId();
+            RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+            model.addAttribute("recipe", recipeDTO);
+            return "recipeDetails";
+        }
+    }*/
     @PostMapping("/tasks/shop_store/{id}")
     public String postStoreShopping(){
 

@@ -30,7 +30,7 @@
                                  '',
                                  'Task Due',
                                  ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/tasks/' + task.taskId}
+                                 ${'/task/' + task.taskType + '/' + task.taskId}
                                  )}"></div>
         </div>
     </div>

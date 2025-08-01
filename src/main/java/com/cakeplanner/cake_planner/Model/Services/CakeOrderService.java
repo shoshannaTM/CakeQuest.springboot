@@ -50,7 +50,18 @@ public class CakeOrderService {
                           recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFrostingRecipe().getRecipeId()),
                           cakeOrder);
         cakeOrderRepository.save(cakeOrder);
-        createTasksForCake(cakeOrder);
+
+        List<CakeTask> cakeTasks = new ArrayList<>();
+        cakeTasks.add(createPantryTask(cakeOrder));
+        cakeTasks.add(createShoppingTask(cakeOrder));
+        cakeTasks.add(createBakingTask(cakeOrder));
+        cakeTasks.add(createFillingTask(cakeOrder));
+        cakeTasks.add(createFrostingTask(cakeOrder));
+        cakeTasks.add(createDecoratingTask(cakeOrder));
+
+        for(CakeTask ct: cakeTasks){
+            cakeTaskRepository.save(ct);
+        }
     }
 
     public void buildShoppingList(List<RecipeIngredient> cakeIngredients,
@@ -59,73 +70,80 @@ public class CakeOrderService {
                                         CakeOrder cakeOrder) {
 
         Map<String, ShoppingListItem> itemMap = new HashMap<>();
-        ShoppingList shoppingList = new ShoppingList(cakeOrder, new ArrayList<>());
 
-        // Add entire cake recipe to map
-        for (RecipeIngredient ri : cakeIngredients) {
-            String name = ri.getIngredient().getIngredientName().toLowerCase();
-            double multiplied = ri.getQuantity() * cakeOrder.getCakeMultiplier();
-            ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
-            itemMap.put(name, listItem);
+        ShoppingList shoppingList = cakeOrder.getShoppingList();
+
+        // If no shopping list exists yet, create and attach it
+        if (shoppingList == null) {
+            shoppingList = new ShoppingList(cakeOrder, new ArrayList<>());
+            cakeOrder.setShoppingList(shoppingList);
         }
 
-        // Check map for filling recipe ingredients
-        for (RecipeIngredient ri : fillingIngredients) {
-            String name = ri.getIngredient().getIngredientName().toLowerCase();
-            double multiplied = ri.getQuantity() * cakeOrder.getFillingMultiplier();
-
-            if (itemMap.containsKey(name)) {
-                ShoppingListItem existingListItem = itemMap.get(name);
-                String unitA = existingListItem.getUnit();
-                String unitB = ri.getUnit();
-
-                if (unitB.equalsIgnoreCase(unitA)) {
-                    double newAmount = existingListItem.getAmount() + multiplied;
-                    existingListItem.setAmount(newAmount);
-                    itemMap.put(name, existingListItem);
-                } else {
-                    double conversionRate = spoonacularService.getConversionRate(
-                            name, unitB, unitA); // convert ri unit to match existing
-                    double normalizedAmount = multiplied * conversionRate;
-                    double newAmount = existingListItem.getAmount() + normalizedAmount;
-                    existingListItem.setAmount(newAmount);
-                    itemMap.put(name, existingListItem);
-                }
-            } else {
+            // Add entire cake recipe to map
+            for (RecipeIngredient ri : cakeIngredients) {
+                String name = ri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = ri.getQuantity() * cakeOrder.getCakeMultiplier();
                 ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
                 itemMap.put(name, listItem);
             }
-        }
 
-        // Check map for frosting recipe ingredients
-        for (RecipeIngredient ri : frostingIngredients) {
-            String name = ri.getIngredient().getIngredientName().toLowerCase();
-            double multiplied = ri.getQuantity() * cakeOrder.getFrostingMultiplier();
+            // Check map for filling recipe ingredients
+            for (RecipeIngredient ri : fillingIngredients) {
+                String name = ri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = ri.getQuantity() * cakeOrder.getFillingMultiplier();
 
-            if (itemMap.containsKey(name)) {
-                ShoppingListItem existingListItem = itemMap.get(name);
-                String unitA = existingListItem.getUnit();
-                String unitB = ri.getUnit();
+                if (itemMap.containsKey(name)) {
+                    ShoppingListItem existingListItem = itemMap.get(name);
+                    String unitA = existingListItem.getUnit();
+                    String unitB = ri.getUnit();
 
-                if (unitB.equalsIgnoreCase(unitA)) {
-                    double newAmount = existingListItem.getAmount() + multiplied;
-                    existingListItem.setAmount(newAmount);
-                    itemMap.put(name, existingListItem);
+                    if (unitB.equalsIgnoreCase(unitA)) {
+                        double newAmount = existingListItem.getAmount() + multiplied;
+                        existingListItem.setAmount(newAmount);
+                        itemMap.put(name, existingListItem);
+                    } else {
+                        double conversionRate = spoonacularService.getConversionRate(
+                                name, unitB, unitA); // convert ri unit to match existing
+                        double normalizedAmount = multiplied * conversionRate;
+                        double newAmount = existingListItem.getAmount() + normalizedAmount;
+                        existingListItem.setAmount(newAmount);
+                        itemMap.put(name, existingListItem);
+                    }
                 } else {
-                    double conversionRate = spoonacularService.getConversionRate(
-                            name, unitB, unitA); // convert ri unit to match existing
-                    double normalizedAmount = multiplied * conversionRate;
-                    double newAmount = existingListItem.getAmount() + normalizedAmount;
-                    existingListItem.setAmount(newAmount);
-                    itemMap.put(name, existingListItem);
+                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
+                    itemMap.put(name, listItem);
                 }
-            } else {
-                ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
-                itemMap.put(name, listItem);
             }
-        }
-        shoppingList.setItems(new ArrayList<>(itemMap.values()));
-        cakeOrder.setShoppingList(shoppingList);
+
+            // Check map for frosting recipe ingredients
+            for (RecipeIngredient ri : frostingIngredients) {
+                String name = ri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = ri.getQuantity() * cakeOrder.getFrostingMultiplier();
+
+                if (itemMap.containsKey(name)) {
+                    ShoppingListItem existingListItem = itemMap.get(name);
+                    String unitA = existingListItem.getUnit();
+                    String unitB = ri.getUnit();
+
+                    if (unitB.equalsIgnoreCase(unitA)) {
+                        double newAmount = existingListItem.getAmount() + multiplied;
+                        existingListItem.setAmount(newAmount);
+                        itemMap.put(name, existingListItem);
+                    } else {
+                        double conversionRate = spoonacularService.getConversionRate(
+                                name, unitB, unitA); // convert ri unit to match existing
+                        double normalizedAmount = multiplied * conversionRate;
+                        double newAmount = existingListItem.getAmount() + normalizedAmount;
+                        existingListItem.setAmount(newAmount);
+                        itemMap.put(name, existingListItem);
+                    }
+                } else {
+                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
+                    itemMap.put(name, listItem);
+                }
+            }
+            shoppingList.getItems().clear();
+            shoppingList.getItems().addAll(itemMap.values());
     }
 
     public List<CakeOrderDTO> getCakeDTOs(User user) {
@@ -154,47 +172,51 @@ public class CakeOrderService {
         return cakeDTO;
     }
 
-   public void createTasksForCake(CakeOrder cakeOrder){
-        List<CakeTask> cakeTasks = new ArrayList<>();
+   public CakeTask createPantryTask(CakeOrder cakeOrder) {
+       String pantryTaskName = "Check Your Pantry For Ingredients For " + cakeOrder.getCakeName();
+       CakeTask pantry = new CakeTask(cakeOrder.getUser(), cakeOrder, pantryTaskName, TaskType.SHOP_PANTRY,
+               cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
+               cakeOrder.getDueDate().minusDays(3), false);
+       return pantry;
+   }
 
-        String shopPantryTaskName = "Check Your Pantry For Ingredients For " + cakeOrder.getCakeName();
-        CakeTask shopPantryForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopPantryTaskName, TaskType.SHOP_PANTRY,
-                                           cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
-                                           cakeOrder.getDueDate().minusDays(3), false);
-        cakeTasks.add(shopPantryForCake);
+    public CakeTask createShoppingTask(CakeOrder cakeOrder) {
+        String shopTaskName = "Buy Ingredients For " + cakeOrder.getCakeName();
+        CakeTask shopping = new CakeTask(cakeOrder.getUser(), cakeOrder, shopTaskName, TaskType.SHOP_STORE,
+                cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
+                cakeOrder.getDueDate().minusDays(3), false);
+        return shopping;
+    }
 
-        String shopStoreTaskName = "Buy Ingredients For " + cakeOrder.getCakeName();
-        CakeTask shopStoreForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopStoreTaskName, TaskType.SHOP_STORE,
-                                                 cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
-                                                 cakeOrder.getDueDate().minusDays(3), false);
-        cakeTasks.add(shopStoreForCake);
+    public CakeTask createBakingTask(CakeOrder cakeOrder) {
+        String bakeTaskName = "Bake & Chill Cakes for " + cakeOrder.getCakeName();
+        CakeTask bake = new CakeTask(cakeOrder.getUser(), cakeOrder, bakeTaskName, TaskType.BAKE,
+                cakeOrder.getCakeRecipe(), cakeOrder.getDietaryRestriction(),
+                cakeOrder.getDueDate().minusDays(2), false);
+        return bake;
+    }
 
-        String bakeCakeTaskName = "Bake & Chill Cakes for " + cakeOrder.getCakeName();
-        CakeTask bakeCake = new CakeTask(cakeOrder.getUser(), cakeOrder, bakeCakeTaskName, TaskType.BAKE,
-                                         cakeOrder.getCakeRecipe(), cakeOrder.getDietaryRestriction(),
-                                         cakeOrder.getDueDate().minusDays(2), false);
-        cakeTasks.add(bakeCake);
+    public CakeTask createFillingTask(CakeOrder cakeOrder) {
+        String fillingTaskName = "Make & Chill Filling for " + cakeOrder.getCakeName();
+        CakeTask filling = new CakeTask(cakeOrder.getUser(), cakeOrder,fillingTaskName, TaskType.MAKE_FILLING,
+                cakeOrder.getFillingRecipe(), cakeOrder.getDietaryRestriction(),
+                cakeOrder.getDueDate().minusDays(1), false);
+        return filling;
+    }
 
-        String makeFillingCakeTaskName = "Make & Chill Filling for " + cakeOrder.getCakeName();
-        CakeTask makeFilling = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFillingCakeTaskName, TaskType.MAKE_FILLING,
-                                            cakeOrder.getFillingRecipe(), cakeOrder.getDietaryRestriction(),
-                                            cakeOrder.getDueDate().minusDays(1), false);
-        cakeTasks.add(makeFilling);
+    public CakeTask createFrostingTask(CakeOrder cakeOrder) {
+        String frostingTaskName = "Make Frosting for " + cakeOrder.getCakeName();
+        CakeTask frosting = new CakeTask(cakeOrder.getUser(), cakeOrder, frostingTaskName, TaskType.MAKE_FROSTING,
+                cakeOrder.getFrostingRecipe(), cakeOrder.getDietaryRestriction(),
+                cakeOrder.getDueDate().minusHours(5), false);
+        return frosting;
+    }
 
-        String makeFrostingCakeTaskName = "Make Frosting for " + cakeOrder.getCakeName();
-        CakeTask makeFrosting = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFrostingCakeTaskName, TaskType.MAKE_FROSTING,
-                                             cakeOrder.getFrostingRecipe(), cakeOrder.getDietaryRestriction(),
-                                             cakeOrder.getDueDate().minusHours(5), false);
-        cakeTasks.add(makeFrosting);
-
-        String assembleAndDecorateCakeTaskName = "Assemble & Decorate " + cakeOrder.getCakeName();
-        CakeTask assembleAndDecorate = new CakeTask(cakeOrder.getUser(), cakeOrder, assembleAndDecorateCakeTaskName,
-                                                    TaskType.DECORATE,cakeOrder.getDietaryRestriction(),
-                                                    cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2), false);
-        cakeTasks.add(assembleAndDecorate);
-
-        for(CakeTask ct: cakeTasks){
-            cakeTaskRepository.save(ct);
-        }
+    public CakeTask createDecoratingTask(CakeOrder cakeOrder) {
+        String decorateTaskName = "Assemble & Decorate " + cakeOrder.getCakeName();
+        CakeTask decorate = new CakeTask(cakeOrder.getUser(), cakeOrder, decorateTaskName,
+                TaskType.DECORATE, cakeOrder.getDietaryRestriction(),
+                cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2), false);
+        return decorate;
     }
 }

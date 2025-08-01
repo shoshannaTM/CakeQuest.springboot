@@ -9,26 +9,39 @@
 </head>
 <body>
 <main layout:fragment="content">
-    <form th:action="@{/tasks/shop_pantry/{id}(id=${task.taskId})}" method="post">
-    <div class="title">
-        <h1 th:text="${task.name}">Pantry Shopping</h1>
-        <p class="complete" th:if="${task.completed}">This task has been marked complete! <span>
-            <a class="link" th:action="@{/tasks/shop_pantry/{id}(id=${task.taskId})}">Reopen Task</a></span>
-        </p>
-        <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0.</p>
-    </div>
-
-    <div class="pantry-cards">
-        <div th:each="item : ${task.shoppingList.items}">
-            <div th:replace="~{fragments/pantryCard :: pantryCard(
-                      ${item.name},
-                      ${'Total Needed: ' + item.amount + ' ' + item.unit},
-                      ${item.unit}
-                    )}"></div>
+    <form th:action="@{/task/SHOP_PANTRY/{id}(id=${task.taskId})}" method="post">
+        <div class="title">
+            <h1 th:text="${task.name}">Pantry Shopping</h1>
+            <p class="complete" th:if="${task.completed}">
+                This task has been marked complete! Time to head to the store.
+            </p>
+            <p th:if="${!task.completed}" class="tagline">
+                Shop your pantry first! Input the amount you already have — if you have none, input 0.
+            </p>
         </div>
-    </div>
+        <div class="pantry-cards" th:if="${!task.completed}">
+            <div th:each="item : ${task.shoppingList.items}">
+                <div th:replace="~{fragments/pantryCard :: pantryCard(
+              ${item.name},
+              ${'Total Needed: ' + item.amount + ' ' + item.unit},
+              ${item.unit}
+         )}"></div>
+            </div>
+        </div>
+        <div class="pantry-cards" th:if="${task.completed}">
+            <div th:each="item : ${task.shoppingList.items}">
+                <div th:replace="~{fragments/pantryVOCard :: pantryVOCard(
+              ${item.name},
+              ${item.amount},
+              ${item.unit}
+         )}"></div>
+            </div>
+        </div>
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
             <button type="submit" class="btn">Mark Task As Complete</button>
+        </div>
+        <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
+        <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
         </div>
     </form>
 </main>

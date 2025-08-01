@@ -1,0 +1,15 @@
+<div th:fragment="pantryVOCard(title, amount, unit)" xmlns:th="http://www.thymeleaf.org">
+  <div class="card pantry-card">
+    <div class="pantry-card-content">
+      <div class="card-header">
+        <h3 th:text="${title}">Card Title</h3>
+        <div class="input-row">
+          <p class="ingredient-card-label">Amount needed from store:</p>
+          <div class="ingredients flex-row">
+            <p th:text="${amount + ' ' + unit}">XX grams</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
