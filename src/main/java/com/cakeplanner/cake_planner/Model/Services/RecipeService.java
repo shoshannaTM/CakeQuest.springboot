@@ -64,16 +64,16 @@ public class RecipeService {
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipe.getRecipeId());
         List<IngredientDTO> ingredientDTOList = recipeIngredientsToDTO(recipeIngredients);
 
-        return new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(), recipe.getRecipeType(), ingredientDTOList);
+        return new RecipeDTO(recipe.getRecipeName(), recipe.getRecipeUrl(), recipe.getInstructions(), recipe.getRecipeType(), ingredientDTOList, recipe.getRecipeId());
     }
 
-    public RecipeDTO recipeToDto(int recipeId){
+    public RecipeDTO recipeToDTO(int recipeId){
         Recipe r = recipeRepository.findRecipeByRecipeId(recipeId);
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findRecipeIngredientsByRecipeId(recipeId);
         List<IngredientDTO> ingredientDTOList = recipeIngredientsToDTO(recipeIngredients);
 
         RecipeDTO recipeDTO = new RecipeDTO(r.getRecipeName(), r.getRecipeUrl(), r.getInstructions(),
-                                            r.getRecipeType(), ingredientDTOList);
+                                            r.getRecipeType(), ingredientDTOList, recipeId);
         return recipeDTO;
     }
 
@@ -97,6 +97,10 @@ public class RecipeService {
             return (recipe.getRecipeId() > 0);
         }
 
+    public List<UserRecipe> usersRecipesByType(User user, RecipeType recipeType){
+        List<UserRecipe> userRecipesOfType = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
+        return userRecipesOfType;
+    }
 
     public void saveIngredients(Recipe recipe, RecipeDTO recipeDTO) {
         for (IngredientDTO dto : recipeDTO.getIngredients()) {
@@ -106,5 +110,37 @@ public class RecipeService {
             RecipeIngredient recipeIngredient = new RecipeIngredient(recipe, ingredient, dto.getAmount(), dto.getUnit());
             recipeIngredientRepository.save(recipeIngredient);
         }
+    }
+
+    public List<RecipeDTO> filterRecipes(User user, String type){
+        List<RecipeDTO> displayRecipes = new ArrayList<>();
+        if(type.equalsIgnoreCase("all")){
+            List<UserRecipe> recipes = userRecipeRepository.findByUser(user);
+            for (UserRecipe ur : recipes) {
+                int recipeId = ur.getRecipe().getRecipeId();
+                RecipeDTO dto = recipeToDTO(recipeId);
+                displayRecipes.add(dto);
+            }
+        } else {
+            RecipeType recipeType = RecipeType.valueOf(type.toUpperCase());
+            List<UserRecipe> recipes = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
+            for (UserRecipe ur : recipes) {
+                int recipeId = ur.getRecipe().getRecipeId();
+                RecipeDTO dto = recipeToDTO(recipeId);
+                displayRecipes.add(dto);
+            }
+        }
+        return displayRecipes;
+    }
+
+    public List<RecipeDTO> searchRecipes(User user, String search){
+        List<RecipeDTO> displayRecipes = new ArrayList<>();
+        List<UserRecipe> recipes = userRecipeRepository.findByUserAndRecipe_RecipeNameContainingIgnoreCase(user, search);
+        for (UserRecipe ur : recipes) {
+            int recipeId = ur.getRecipe().getRecipeId();
+            RecipeDTO dto = recipeToDTO(recipeId);
+            displayRecipes.add(dto);
+        }
+        return displayRecipes;
     }
 }

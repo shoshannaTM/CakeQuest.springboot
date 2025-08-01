@@ -1,11 +1,13 @@
 package com.cakeplanner.cake_planner.Model.Services;
 
+import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
 import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
 import com.cakeplanner.cake_planner.Model.Entities.CakeOrder;
 import com.cakeplanner.cake_planner.Model.Entities.CakeTask;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Entities.ShoppingListItem;
 import com.cakeplanner.cake_planner.Model.Entities.User;
+import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class CakeTaskService {
 
     @Autowired
     CakeTaskRepository cakeTaskRepository;
+
+    @Autowired
+    CakeOrderRepository cakeOrderRepository;
 
     public CakeTaskDTO shoppingTaskToDTO(CakeTask task){
             CakeTaskDTO dto = new CakeTaskDTO(
@@ -100,7 +105,14 @@ public class CakeTaskService {
         return cakeTaskDTOs;
     }
 
-    public List<CakeTaskDTO> getCakeTaskDTOsForCake(CakeOrder cakeOrder) {
+    public List<CakeTaskDTO> getCakeTaskDTOsForCake(int id) {
+        Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(id);
+
+        if (cakeOrderOptional.isEmpty()) {
+            List<CakeTaskDTO> empty = new ArrayList<>();
+            return empty;
+        }
+        CakeOrder cakeOrder = cakeOrderOptional.get();
         List<CakeTask> cakeTasks = cakeTaskRepository.findAllByCakeOrder(cakeOrder);
         List<CakeTaskDTO> cakeTaskDTOs = new ArrayList<>();
         for(CakeTask ct: cakeTasks) {
@@ -118,16 +130,16 @@ public class CakeTaskService {
         return cakeTaskDTOs;
     }
 
-    public boolean markTaskComplete(int taskId) {
+    public Boolean toggleTaskComplete(int taskId) {
         Optional<CakeTask> cakeTaskOptional = cakeTaskRepository.findById(taskId);
 
         if (cakeTaskOptional.isPresent()) {
             CakeTask cakeTask = cakeTaskOptional.get();
-            cakeTask.setCompleted(true);
+            cakeTask.setCompleted(!cakeTask.getCompleted());
             cakeTaskRepository.save(cakeTask);
-            return true;
+            return cakeTask.getCompleted();
         }
-        return false;
+        return null;
     }
 
     public boolean markTaskIncomplete(int taskId) {
@@ -174,7 +186,6 @@ public class CakeTaskService {
                 }
             }
         }
-
         cakeTaskRepository.save(task);
     }
 

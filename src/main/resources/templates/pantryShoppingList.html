@@ -7,12 +7,14 @@
     <meta charset="UTF-8">
     <title>Pantry Shopping List</title>
 </head>
-<body class="shoppingListPage">
+<body>
 <main layout:fragment="content">
     <form th:action="@{/tasks/shop_pantry/{id}(id=${task.taskId})}" method="post">
     <div class="title">
         <h1 th:text="${task.name}">Pantry Shopping</h1>
-        <p class="complete" th:if="${task.completed}">This task has been marked complete!</p>
+        <p class="complete" th:if="${task.completed}">This task has been marked complete! <span>
+            <a class="link" th:action="@{/tasks/shop_pantry/{id}(id=${task.taskId})}">Reopen Task</a></span>
+        </p>
         <p class="tagline">Shop your pantry first! Input the amount you already have, if you have none, input 0.</p>
     </div>
 
@@ -25,11 +27,9 @@
                     )}"></div>
         </div>
     </div>
-            <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
-                <button type="submit" class="btn"
-                        th:text="${task.completed} ? 'Undo Marking Task As Complete' :
-                         'Mark Task As Complete'"></button>
-            </div>
+        <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
+            <button type="submit" class="btn">Mark Task As Complete</button>
+        </div>
     </form>
 </main>
 </body>

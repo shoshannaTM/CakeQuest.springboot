@@ -1,52 +1,30 @@
 package com.cakeplanner.cake_planner.Controller;
 
-import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
-import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Entities.Recipe;
-import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
 import com.cakeplanner.cake_planner.Model.Entities.User;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
-import com.cakeplanner.cake_planner.Model.Services.RecipeScraperService;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class RecipeController {
-    @Autowired
-    private RecipeScraperService recipeScraperService;
+    private final RecipeService recipeService;
 
-    @Autowired
-    private RecipeRepository recipeRepository;
+    public RecipeController(RecipeService recipeService) {
+        this.recipeService = recipeService;
+    }
 
-    @Autowired
-    private RecipeIngredientRepository recipeIngredientRepository;
-    @Autowired
-    private RecipeService recipeService;
-    //FIXME
     @GetMapping("/recipes/{recipeId}")
     public String showRecipeDetails(@PathVariable Integer recipeId, Model model) {
-        // Fetch the recipe entity from the database
-        Recipe recipe = recipeRepository.findRecipeByRecipeId(recipeId);
-
-        if (recipe == null) {
-            // Optional: return a custom error page or redirect
-            return "error/404";
-        }
-        RecipeDTO recipeDTO = recipeService.recipeToDto(recipeId);
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("mode", "read");
         return "recipeDetails";
     }
-
 
     @GetMapping("/recipes/new")
     public String showNewForm(Model model) throws IOException {

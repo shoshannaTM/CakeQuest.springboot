@@ -28,7 +28,6 @@ public class RecipeDTO {
         this.recipeType = recipeType;
         this.ingredients = ingredients;
     }
-
     public String getRecipeName() {
         return recipeName;
     }

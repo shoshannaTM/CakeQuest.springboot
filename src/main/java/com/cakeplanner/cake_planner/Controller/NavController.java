@@ -1,52 +1,32 @@
 package com.cakeplanner.cake_planner.Controller;
 import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
 import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
-import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
-import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
 import com.cakeplanner.cake_planner.Model.Services.CakeOrderService;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import com.cakeplanner.cake_planner.Model.Services.CakeTaskService;
-import jakarta.servlet.http.HttpSession;
-import jdk.jfr.StackTrace;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 @Controller
 public class NavController {
-    @Autowired
-    private RecipeRepository recipeRepository;
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
+    private final RecipeService recipeService;
+    private final CakeOrderService cakeOrderService;
+    private final CakeTaskService cakeTaskService;
 
-    @Autowired
-    private RecipeIngredientRepository recipeIngredientRepository;
-
-    @Autowired
-    private UserRecipeRepository userRecipeRepository;
-
-    @Autowired
-    private CakeOrderService cakeOrderService;
-
-    @Autowired
-    private CakeTaskService cakeTaskService;
-
-    @Autowired
-    private RecipeService recipeService;
+    public NavController(RecipeService recipeService, CakeOrderService cakeOrderService, CakeTaskService cakeTaskService) {
+        this.recipeService = recipeService;
+        this.cakeOrderService = cakeOrderService;
+        this.cakeTaskService = cakeTaskService;
+    }
 
     @GetMapping("/")
     public String cakes( @ModelAttribute("user") User user,
@@ -69,34 +49,17 @@ public class NavController {
                           @RequestParam(name = "query", required = false) String query,
                           @ModelAttribute("user") User user,
                           Model model) {
-
-        List<UserRecipe> userRecipes;
+        List<RecipeDTO> displayRecipes;
 
         if (query != null && !query.isBlank()) {
-            // Search by name for this user
-            userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeNameContainingIgnoreCase(user, query);
-        } else if (type.equalsIgnoreCase("all")) {
-            // All recipes for this user
-            userRecipes = userRecipeRepository.findByUser(user);
+            displayRecipes = recipeService.searchRecipes(user, query);
+            model.addAttribute("selectedType", "all");
         } else {
-            try {
-                RecipeType recipeType = RecipeType.valueOf(type.toUpperCase());
-                userRecipes = userRecipeRepository.findByUserAndRecipe_RecipeType(user, recipeType);
-            } catch (IllegalArgumentException e) {
-                userRecipes = new ArrayList<>();
-            }
-        }
-
-        // Convert UserRecipe to RecipeDTO for display
-        List<RecipeDTO> displayRecipes = new ArrayList<>();
-        for (UserRecipe ur : userRecipes) {
-            int recipeId = ur.getRecipe().getRecipeId();
-            RecipeDTO dto = recipeService.recipeToDto(recipeId);
-            displayRecipes.add(dto);
+            displayRecipes = recipeService.filterRecipes(user, type);
+            model.addAttribute("selectedType", type);
         }
 
         model.addAttribute("recipes", displayRecipes);
-        model.addAttribute("selectedType", type);
         model.addAttribute("query", query);
         return "recipes";
     }

@@ -6,13 +6,13 @@ import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
 import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class CakeOrderService {
@@ -27,16 +27,30 @@ public class CakeOrderService {
     RecipeIngredientRepository recipeIngredientRepository;
 
     @Autowired
+    RecipeRepository recipeRepository;
+
+    @Autowired
     SpoonacularService spoonacularService;
 
-    public CakeOrderDTO save(CakeOrder cakeOrder) {
+    public void createCakeOrderFromForm(String cakeName, LocalDateTime dueDate, int cakeRecipeId,
+                                        double cakeMultiplier, int fillingRecipeId, double fillingMultiplier,
+                                        int frostingRecipeId, double frostingMultiplier, String dietaryRestriction,
+                                        String decorationNotes, User user){
+        Recipe cakeRecipe = recipeRepository.findRecipeByRecipeId(cakeRecipeId);
+        Recipe fillingRecipe = recipeRepository.findRecipeByRecipeId(fillingRecipeId);
+        Recipe frostingRecipe = recipeRepository.findRecipeByRecipeId(frostingRecipeId);
+        CakeOrder cakeOrder = new CakeOrder(user, cakeName, dueDate, cakeRecipe, cakeMultiplier, fillingRecipe, fillingMultiplier,
+                frostingRecipe, frostingMultiplier, dietaryRestriction, decorationNotes);
+        save(cakeOrder);
+    }
+
+    public void save(CakeOrder cakeOrder) {
         buildShoppingList(recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getCakeRecipe().getRecipeId()),
                           recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFillingRecipe().getRecipeId()),
                           recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFrostingRecipe().getRecipeId()),
                           cakeOrder);
         cakeOrderRepository.save(cakeOrder);
         createTasksForCake(cakeOrder);
-        return cakeOrderToDTO(cakeOrder);
     }
 
     public void buildShoppingList(List<RecipeIngredient> cakeIngredients,
@@ -110,7 +124,6 @@ public class CakeOrderService {
                 itemMap.put(name, listItem);
             }
         }
-
         shoppingList.setItems(new ArrayList<>(itemMap.values()));
         cakeOrder.setShoppingList(shoppingList);
     }
@@ -119,14 +132,20 @@ public class CakeOrderService {
         List<CakeOrderDTO> cakeDTOs = new ArrayList<>();
         List<CakeOrder> cakes = cakeOrderRepository.findByUser(user);
         for(CakeOrder cakeOrder: cakes){
-            CakeOrderDTO cakeDTO = cakeOrderToDTO(cakeOrder);
+            CakeOrderDTO cakeDTO = cakeOrderIdToDTO(cakeOrder.getCakeId());
             cakeDTOs.add(cakeDTO);
         }
-
         return cakeDTOs;
     }
 
-    public CakeOrderDTO cakeOrderToDTO(CakeOrder cakeOrder){
+    public CakeOrderDTO cakeOrderIdToDTO(int id){
+        Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(id);
+
+        if (cakeOrderOptional.isEmpty()) {
+            CakeOrderDTO empty = new CakeOrderDTO();
+            return empty;
+        }
+        CakeOrder cakeOrder = cakeOrderOptional.get();
         CakeOrderDTO cakeDTO = new CakeOrderDTO(cakeOrder.getCakeId(), cakeOrder.getCakeName(), cakeOrder.getDueDate(),
                 cakeOrder.getCakeRecipe(), cakeOrder.getCakeMultiplier(),
                 cakeOrder.getFillingRecipe(), cakeOrder.getFillingMultiplier(),
@@ -135,26 +154,20 @@ public class CakeOrderService {
         return cakeDTO;
     }
 
-    // Shopping CakeTask -> due 3 days before
-    // Cake baking CakeTask -> due 2 days before
-    // Make Filling CakeTask -> due 1 day before
-    // Make Frosting CakeTask -> due 5 hours before
-    // Assemble and Decorate -> due 2 hours before
-
    public void createTasksForCake(CakeOrder cakeOrder){
         List<CakeTask> cakeTasks = new ArrayList<>();
 
         String shopPantryTaskName = "Check Your Pantry For Ingredients For " + cakeOrder.getCakeName();
-          CakeTask shopPantryForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopPantryTaskName, TaskType.SHOP_PANTRY,
+        CakeTask shopPantryForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopPantryTaskName, TaskType.SHOP_PANTRY,
                                            cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
                                            cakeOrder.getDueDate().minusDays(3), false);
         cakeTasks.add(shopPantryForCake);
 
-       String shopStoreTaskName = "Buy Ingredients For " + cakeOrder.getCakeName();
-       CakeTask shopStoreForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopStoreTaskName, TaskType.SHOP_STORE,
+        String shopStoreTaskName = "Buy Ingredients For " + cakeOrder.getCakeName();
+        CakeTask shopStoreForCake = new CakeTask(cakeOrder.getUser(), cakeOrder, shopStoreTaskName, TaskType.SHOP_STORE,
                                                  cakeOrder.getShoppingList(), cakeOrder.getDietaryRestriction(),
                                                  cakeOrder.getDueDate().minusDays(3), false);
-       cakeTasks.add(shopStoreForCake);
+        cakeTasks.add(shopStoreForCake);
 
         String bakeCakeTaskName = "Bake & Chill Cakes for " + cakeOrder.getCakeName();
         CakeTask bakeCake = new CakeTask(cakeOrder.getUser(), cakeOrder, bakeCakeTaskName, TaskType.BAKE,
@@ -166,7 +179,7 @@ public class CakeOrderService {
         CakeTask makeFilling = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFillingCakeTaskName, TaskType.MAKE_FILLING,
                                             cakeOrder.getFillingRecipe(), cakeOrder.getDietaryRestriction(),
                                             cakeOrder.getDueDate().minusDays(1), false);
-       cakeTasks.add(makeFilling);
+        cakeTasks.add(makeFilling);
 
         String makeFrostingCakeTaskName = "Make Frosting for " + cakeOrder.getCakeName();
         CakeTask makeFrosting = new CakeTask(cakeOrder.getUser(), cakeOrder, makeFrostingCakeTaskName, TaskType.MAKE_FROSTING,

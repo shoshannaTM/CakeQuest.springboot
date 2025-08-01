@@ -2,25 +2,29 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Shopping List</title>
 </head>
 <body class="shoppingListPage">
 <main layout:fragment="content">
+  <div class="container">
   <form th:action="@{/tasks/shop_store/{id}(id=${task.taskId})}" method="post">
     <div class="title">
       <h1 th:text="${task.name}">Store Shopping</h1>
-      <p class="complete" th:if="${task.completed}">This task has been marked complete!</p>
+      <p class="complete" th:if="${task.completed}">This task has been marked complete! <span>
+        <a class="link" href="#">Reopen Task</a> </span>
       <p class="tagline">Here's what you still need to buy, based on your pantry inputs.</p>
     </div>
 
     <div class="checklist">
-      <ul>
-        <li th:each="item : ${task.shoppingList.items}">
+      <ul class = "shopping-list">
+        <li th:each="item : ${task.shoppingList.items}"
+                     th:if="${item.amount > 0}">
           <label>
             <input type="checkbox"
+                   required
                    th:name="'checkedItems'"
                    th:value="${item.name}" />
             <span th:text="${item.amount + ' ' + item.unit + ' ' + item.name}"></span>
@@ -29,13 +33,11 @@
       </ul>
     </div>
 
-    </div>
-    <div class="shopping-btn-wrapper center" th:if="${mode == 'task'}">
-      <button type="submit" class="btn"
-              th:text="${task.completed} ? 'Undo Marking Task As Complete' :
-                         'Mark Task As Complete'"></button>
+    <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
+      <button type="submit" class="btn">Mark Task As Complete</button>
     </div>
   </form>
+  </div>
 </main>
 </body>
 </html>

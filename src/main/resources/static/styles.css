@@ -109,8 +109,8 @@ input[type="checkbox"] {
   margin: .25rem;
 }
 
-.shoppingListPage .details-list {
-    list-style: none;
+.shopping-list {
+  list-style: none;
 }
 
 .input-row {
@@ -408,11 +408,11 @@ input[type="checkbox"] {
     margin: 0.25rem 0rem;
 }
 
-.delete {
+.link {
     color: #e26d8f;
 }
 
-.delete:hover {
+.link:hover {
     color: #cc5a7d;
 }
 
