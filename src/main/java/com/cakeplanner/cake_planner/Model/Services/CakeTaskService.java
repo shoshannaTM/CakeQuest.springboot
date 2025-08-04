@@ -13,10 +13,7 @@ import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -110,6 +107,60 @@ public class CakeTaskService {
             }
         }
         return cakeTaskDTOs;
+    }
+
+    public List<CakeTaskDTO> getIncompleteTasks(List<CakeTaskDTO> usersTasks){
+        List<CakeTaskDTO> incompleteTasks = new ArrayList<>();
+        for(CakeTaskDTO ct : usersTasks){
+            if(!ct.getCompleted()){
+                incompleteTasks.add(ct);
+            }
+        }
+        return incompleteTasks;
+    }
+
+    public List<CakeTaskDTO> getCompletedTasks(List<CakeTaskDTO> usersTasks){
+        List<CakeTaskDTO> completedTasks = new ArrayList<>();
+        for(CakeTaskDTO ct : usersTasks){
+            if(ct.getCompleted()){
+                completedTasks.add(ct);
+            }
+        }
+        return completedTasks;
+    }
+
+    public Map<CakeOrderDTO, Integer> getProgressForCakes(List<CakeOrderDTO> cakes){
+        Map<CakeOrderDTO, Integer> cakesWProgress = new HashMap<>();
+        for(CakeOrderDTO cake: cakes){
+            Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(cake.getCakeId());
+
+            if (cakeOrderOptional.isEmpty()) {
+                continue;
+            }
+            CakeOrder cakeOrder = cakeOrderOptional.get();
+
+            Integer progress = progressPercent(cakeOrder);
+
+            cakesWProgress.put(cake, progress);
+        }
+        return cakesWProgress;
+    }
+
+    public Integer progressPercent(CakeOrder cakeOrder) {
+        List<CakeTask> cakeTasks = cakeTaskRepository.findAllByCakeOrder(cakeOrder);
+
+        if (cakeTasks.isEmpty()) {
+            return 0;
+        }
+        int completedCount = 0;
+        for (CakeTask ct : cakeTasks) {
+            if (ct.getCompleted()) {
+                completedCount++;
+            }
+        }
+        double progress = ((double) completedCount / cakeTasks.size()) * 100;
+        Integer progressInt = (int) Math.round(progress);
+        return progressInt;
     }
 
     public List<CakeTaskDTO> getCakeTaskDTOsForCake(int id) {
@@ -210,4 +261,40 @@ public class CakeTaskService {
             }
         cakeTaskRepository.save(task);
     }
+
+    public double getFrostingMultiplier(int taskId, TaskType taskType){
+        Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
+        if (optionalTask.isEmpty()){
+            return -1;
+        }
+        CakeTask task = optionalTask.get();
+        CakeOrder cakeOrder = task.getCakeOrder();
+        if(taskType.equals(TaskType.MAKE_FROSTING)) {
+            double frostingMultiplier = cakeOrder.getFrostingMultiplier();
+            return frostingMultiplier;
+        } else if(taskType.equals(TaskType.MAKE_FILLING)){
+            double fillingMultiplier = cakeOrder.getFillingMultiplier();
+            return fillingMultiplier;
+        } else {
+            double cakeMultiplier = cakeOrder.getCakeMultiplier();
+            return cakeMultiplier;
+        }
+    }
+
+    public List<CakeTaskDTO> getIncompleteShoppingTasksForUser(User user) {
+        // Get all CakeTaskDTOs for the user
+        List<CakeTaskDTO> allTaskDTOs = getCakeTaskDTOsForUser(user);
+
+        // Filter to only incomplete shopping tasks
+        List<CakeTaskDTO> incompleteShoppingTasks = new ArrayList<>();
+        for (CakeTaskDTO task : allTaskDTOs) {
+            if ((task.getTaskType() == TaskType.SHOP_PANTRY || task.getTaskType() == TaskType.SHOP_STORE)
+                    && !task.getCompleted()) {
+                incompleteShoppingTasks.add(task);
+            }
+        }
+
+        return incompleteShoppingTasks;
+    }
+
 }

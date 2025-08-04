@@ -12,8 +12,7 @@
     <div class="container">
         <div class="title">
             <h1 th:text="${task.name}">Decorate Cake</h1>
-            <p class="complete" th:if="${task.completed}">This task has been marked complete! <span>
-                <a class="link" href="#">Reopen Task</a> </span>
+            <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
         </div>
         <div class="details">
             <p><strong>Due: </strong> <span th:text="${#temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm')}">TBD</span></p>
@@ -24,12 +23,15 @@
         </div>
 
         <div class="details" th:if="${task.decorationNotes != null}">
-            <p><strong>Decoration Notes: </strong> <span th:text="${task.decorationNotes}"></span>No decoration notes provided</p>
+            <p><strong>Decoration Notes: </strong> <span th:text="${task.decorationNotes}"></span></p>
         </div>
 
-        <form th:action="@{/tasks/{id}(id=${task.taskId})}" method="post">
+        <form th:action="@{'/task/DECORATE/' + ${task.taskId}}" method="post">
             <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
                 <button type="submit" class="btn">Mark Task As Complete</button>
+            </div>
+            <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
+                <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
             </div>
         </form>
     </div>

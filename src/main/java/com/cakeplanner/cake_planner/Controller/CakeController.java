@@ -5,7 +5,6 @@ import com.cakeplanner.cake_planner.Model.DTO.CakeTaskDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Services.CakeOrderService;
 import com.cakeplanner.cake_planner.Model.Services.CakeTaskService;
 import com.cakeplanner.cake_planner.Model.Services.RecipeService;
@@ -124,67 +123,102 @@ public class CakeController {
         return "shoppingList";
     }
 
-   /* @PostMapping("/tasks/{id}")
-    public String markTaskComplete(@PathVariable int id, Model model) {
+    @PostMapping("/task/SHOP_STORE/{id}")
+    public String postStoreShopping(@PathVariable int id, Model model){
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
-        if(completed == null){
-            return "error/404";
-        }
-        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-
-        model.addAttribute("mode", "task");
-        model.addAttribute("task", ctDTO);
-
-        if (ctDTO.getTaskType() == null) {
-            return "error/404";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
-            return "pantryShoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
-            return "shoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
-            return "decorateDetails";
-        } else {
-            int recipeId = ctDTO.getRecipeId();
-            RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
-            model.addAttribute("recipe", recipeDTO);
-            return "recipeDetails";
-
-        }
-    }
-    @PostMapping("/tasks/shop_pantry/{id}")
-    public String postPantryShopping(@PathVariable int id,
-                                     @RequestParam Map<String, String> pantry, Model model) {
-        cakeTaskService.processPantryList(id, pantry);
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "shoppingList";
     }
 
-        @GetMapping("/tasks/{id}")
-    public String viewTaskDetails(@PathVariable int id, Model model) {
+    @GetMapping("/task/BAKE/{id}")
+    public String getBakeTask(@PathVariable int id, Model model) {
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @PostMapping("/task/BAKE/{id}")
+    public String postBakeTask(@PathVariable int id, Model model){
+        Boolean completed = cakeTaskService.toggleTaskComplete(id);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @GetMapping("/task/MAKE_FILLING/{id}")
+    public String getMakeFillingTask(@PathVariable int id, Model model) {
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @PostMapping("/task/MAKE_FILLING/{id}")
+    public String postMakeFillingTask(@PathVariable int id, Model model){
+        Boolean completed = cakeTaskService.toggleTaskComplete(id);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @GetMapping("/task/MAKE_FROSTING/{id}")
+    public String getMakeFrostingTask(@PathVariable int id, Model model){
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        double frostingMultiplier = cakeTaskService.getFrostingMultiplier(id, ctDTO.getTaskType());
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", frostingMultiplier);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @PostMapping("/task/MAKE_FROSTING/{id}")
+    public String postMakeFrostingTask(@PathVariable int id, Model model){
+        Boolean completed = cakeTaskService.toggleTaskComplete(id);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        int recipeId = ctDTO.getRecipeId();
+        double frostingMultiplier = cakeTaskService.getFrostingMultiplier(id,ctDTO.getTaskType());
+        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", frostingMultiplier);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "recipeDetails";
+    }
+
+    @GetMapping("/task/DECORATE/{id}")
+    public String getDecorate(@PathVariable int id, Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
+        return "decorateDetails";
+    }
 
-        if (ctDTO.getTaskType() == null) {
-            return "error/404";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_PANTRY)){
-            return "pantryShoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.SHOP_STORE)){
-            return "shoppingList";
-        } else if (ctDTO.getTaskType().equals(TaskType.DECORATE)){
-            return "decorateDetails";
-        } else {
-            int recipeId = ctDTO.getRecipeId();
-            RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
-            model.addAttribute("recipe", recipeDTO);
-            return "recipeDetails";
-        }
-    }*/
-    @PostMapping("/tasks/shop_store/{id}")
-    public String postStoreShopping(){
-
-        return "redirect:/";
+    @PostMapping("/task/DECORATE/{id}")
+    public String postDecorate(@PathVariable int id, Model model){
+        Boolean completed = cakeTaskService.toggleTaskComplete(id);
+        CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
+        model.addAttribute("mode", "task");
+        model.addAttribute("task", ctDTO);
+        return "decorateDetails";
     }
 }

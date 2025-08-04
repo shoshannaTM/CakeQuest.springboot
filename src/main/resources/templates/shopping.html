@@ -8,8 +8,6 @@
 </head>
 <body>
 <main layout:fragment="content">
-
-    <!-- Centered Welcome Header -->
     <div class="shopping-header-grid">
         <div class="shopping-header-left-column">
             <h1>Shopping Lists</h1>
@@ -19,30 +17,43 @@
             <img src="/images/—Pngtree—cute girl with shopping cart.png" alt="Cute girl shopping drawing" />
         </div>
     </div>
-    <!-- Shopping list Grid Below -->
+
     <div class="shopping-page-content">
         <div class="shopping-left-column">
             <h2 class="section-title">Create a Custom List</h2>
             <p class="tagline">Select cakes, get one shopping list.</p>
             <div class="shopping-cards">
-                <div th:replace="fragments/checkBoxCard :: checkBoxCard('true', 'Cake A', 'Vanilla - Jam - Buttercream', ${cake?.date ?: 'MM/DD/YYYY'})"></div>
-                <div th:replace="fragments/checkBoxCard :: checkBoxCard('false', 'Cake B', 'Chocolate - Mousse - Buttercream', ${cake?.date ?: 'MM/DD/YYYY'})"></div>
+                <div th:each="cake : ${cakes}">
+                    <div th:replace="fragments/checkBoxCard :: checkBoxCard(
+                        ${false},
+                        ${cake.cakeName},
+                        ${cake.flavorSummary},
+                        ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy') : 'TBD'}
+                    )"></div>
+                </div>
             </div>
             <div class="shopping-btn-wrapper center">
                 <a href="#" class="btn shopping-btn">+ Custom Shopping List</a>
             </div>
         </div>
 
+        <!-- RIGHT COLUMN: arrowCards from shopping tasks-->
         <div class="shopping-right-column">
-            <h2 class="section-title">Upcoming Shopping</h2>
+            <h2 class="section-title">Upcoming Shopping Tasks</h2>
             <p class="tagline">Start shopping for your next cake</p>
             <div class="shopping-cards">
-                <div th:replace="fragments/arrowCard :: arrowCard('Start Shopping', 'for Cake A', 'List Created', ${list?.date ?: 'MM/DD/YYYY'}, '/shoppingLists/1')"></div>
-                <div th:replace="fragments/arrowCard :: arrowCard('Start Shopping', 'for Cake A', 'List Created', ${list?.date ?: 'MM/DD/YYYY'}, '/shoppingLists/1')"></div>
+                <div th:each="task : ${shoppingTasks}">
+                    <div th:each=" task : ${shoppingTasks}">
+                        <div th:replace="~{fragments/arrowCard :: arrowCard(
+                                 ${task.name},
+                                 '',
+                                 'Task Due',
+                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 ${'/task/' + task.taskType + '/' + task.taskId}
+                                 )}"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 </main>
-</body>
-</html>

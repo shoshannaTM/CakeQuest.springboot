@@ -1,29 +1,23 @@
 package com.cakeplanner.cake_planner.Model.DTO;
 
+import com.cakeplanner.cake_planner.Model.Entities.CakeTask;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.ShoppingList;
 
 import java.time.LocalDateTime;
 
 public class CakeOrderDTO {
-
     private int cakeId;
     private String cakeName;
     private LocalDateTime dueDate;
-
     private Recipe cakeRecipe;
     private double cakeMultiplier;
-
     private Recipe fillingRecipe;
     private double fillingMultiplier;
-
     private Recipe frostingRecipe;
     private double frostingMultiplier;
-
     private String dietaryRestriction;
     private String decorationNotes;
-
-    private ShoppingList shoppingList;
 
     public CakeOrderDTO() {
     }
@@ -44,7 +38,6 @@ public class CakeOrderDTO {
         this.frostingMultiplier = frostingMultiplier;
         this.dietaryRestriction = dietaryRestriction;
         this.decorationNotes = decorationNotes;
-       // this.shoppingList = shoppingList;
     }
 
     public int getCakeId() {
@@ -135,11 +128,8 @@ public class CakeOrderDTO {
         this.decorationNotes = decorationNotes;
     }
 
-   // public ShoppingList getShoppingList() {return shoppingList;}
-
-   // public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
-
     public String getFlavorSummary() {
         return cakeRecipe.getRecipeName() + " - " + fillingRecipe.getRecipeName() + " - " + frostingRecipe.getRecipeName();
     }
+
 }

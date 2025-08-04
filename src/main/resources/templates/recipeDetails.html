@@ -12,8 +12,7 @@
     <div class="title">
         <h1 th:text="${recipe.recipeName}">Recipe Name</h1>
         <div th:if="${mode == 'task'}">
-            <p class="complete" th:if="${task.completed}">This task has been marked complete! <span>
-                <a class="link" href="#">Reopen Task</a> </span>
+            <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
         </div>
     </div>
 
@@ -23,12 +22,12 @@
             <ul class="details-list">
                 <li th:each="ingredient : ${recipe.ingredients}"
                     class="recipe-item"
-                    th:text="${ingredient.amount} + ' ' + ${ingredient.unit} + ' ' + ${ingredient.name}">
-                    Example Ingredient
+                    th:text="${mode == 'task' ? (ingredient.amount * multiplier) : ingredient.amount} + ' ' + ${ingredient.unit} + ' ' + ${ingredient.name}">
                 </li>
             </ul>
         </div>
     </div>
+
 
     <div class="container">
         <div class="info">
@@ -43,9 +42,12 @@
     </div>
 
     <div th:if="${mode == 'task'}">
-    <form th:action="@{/tasks/{id}(id=${task.taskId})}" method="post">
+    <form th:action="@{'/task/' + ${task.taskType} + '/' + ${task.taskId}}" method="post">
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
             <button type="submit" class="btn">Mark Task As Complete</button>
+        </div>
+        <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
+            <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
         </div>
     </form>
     </div>

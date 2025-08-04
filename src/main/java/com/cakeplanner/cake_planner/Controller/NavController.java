@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class NavController {
@@ -29,17 +30,25 @@ public class NavController {
     }
 
     @GetMapping("/")
-    public String cakes( @ModelAttribute("user") User user,
+    public String cakes(@ModelAttribute("user") User user,
                              Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
-        model.addAttribute("cakes", cakes);
+        Map<CakeOrderDTO, Integer> cakesWProgress = cakeTaskService.getProgressForCakes(cakes);
 
-        //Do I want to only get tasks for the current day??
+        model.addAttribute("cakes", cakesWProgress);
+
         List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForUser(user);
-        tasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
-        model.addAttribute("tasks", tasks);
+
+        List<CakeTaskDTO> toDoTasks = cakeTaskService.getIncompleteTasks(tasks);
+        toDoTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
+
+        List<CakeTaskDTO> completedTasks = cakeTaskService.getCompletedTasks(tasks);
+        completedTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
+
+        model.addAttribute("toDoTasks", toDoTasks);
+        model.addAttribute("completedTasks", completedTasks);
 
         return "home";
     }
@@ -66,7 +75,15 @@ public class NavController {
 
 
     @GetMapping("/shopping")
-    public String shopping(){return "shopping";}
+    public String shopping(@ModelAttribute("user") User user,
+                           Model model){
+        List<CakeTaskDTO> shoppingTasks = cakeTaskService.getIncompleteShoppingTasksForUser(user);
+        List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
+
+        model.addAttribute("shoppingTasks", shoppingTasks);
+        model.addAttribute("cakes", cakes);
+
+        return "shopping";}
 
     @GetMapping("/profile")
     public String profile(){return "profile";}
