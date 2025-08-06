@@ -80,22 +80,34 @@ public class CakeController {
 
     //FIXME
     @GetMapping("/cakes/{id}")
-    public String viewCakeDetails(@PathVariable int id, Model model) {
+    public String viewCakeDetails(@PathVariable int id,
+                                  @RequestHeader(value = "Referer") String referer,
+                                  Model model) {
         CakeOrderDTO cakeOrderDTO = cakeOrderService.cakeOrderIdToDTO(id);
         List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForCake(id);
-        tasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
 
+        List<CakeTaskDTO> toDoTasks = cakeTaskService.getIncompleteTasks(tasks);
+        toDoTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
+
+        List<CakeTaskDTO> completedTasks = cakeTaskService.getCompletedTasks(tasks);
+        completedTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
+
+        model.addAttribute("toDoTasks", toDoTasks);
+        model.addAttribute("completedTasks", completedTasks);
         model.addAttribute("cakeOrder", cakeOrderDTO);
-        model.addAttribute("tasks", tasks);
+        model.addAttribute("backUrl", referer);
 
         return "cakeDetails";
     }
 
     @GetMapping("/task/SHOP_PANTRY/{id}")
-    public String getPantryTask(@PathVariable int id, Model model) {
+    public String getPantryTask(@PathVariable int id,
+                                @RequestHeader(value = "Referer") String referer,
+                                Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
+        model.addAttribute("backUrl", referer);
         return "pantryShoppingList";
     }
 
@@ -137,7 +149,9 @@ public class CakeController {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        double cakeMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", cakeMultiplier);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "recipeDetails";
@@ -149,7 +163,9 @@ public class CakeController {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        double cakeMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", cakeMultiplier);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "recipeDetails";
@@ -160,7 +176,9 @@ public class CakeController {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        double fillingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", fillingMultiplier);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "recipeDetails";
@@ -172,7 +190,9 @@ public class CakeController {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        double fillingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
+        model.addAttribute("multiplier", fillingMultiplier);
         model.addAttribute("mode", "task");
         model.addAttribute("task", ctDTO);
         return "recipeDetails";
@@ -183,7 +203,7 @@ public class CakeController {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
-        double frostingMultiplier = cakeTaskService.getFrostingMultiplier(id, ctDTO.getTaskType());
+        double frostingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", frostingMultiplier);
         model.addAttribute("mode", "task");
@@ -196,7 +216,7 @@ public class CakeController {
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
         int recipeId = ctDTO.getRecipeId();
-        double frostingMultiplier = cakeTaskService.getFrostingMultiplier(id,ctDTO.getTaskType());
+        double frostingMultiplier = cakeTaskService.getMultiplier(id,ctDTO.getTaskType());
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", frostingMultiplier);

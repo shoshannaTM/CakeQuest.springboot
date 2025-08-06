@@ -43,6 +43,9 @@
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
         <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
         </div>
+        <div class="shopping-btn-wrapper center">
+            <a class="link" th:href="${backUrl}">← Back</a>
+        </div>
     </form>
 </main>
 </body>

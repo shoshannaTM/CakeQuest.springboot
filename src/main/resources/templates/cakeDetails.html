@@ -14,7 +14,21 @@
         </div>
 
         <div class="info">
-            <div th:each=" task : ${tasks}">
+            <h2 th:if="${toDoTasks != null and !toDoTasks.isEmpty()}"
+                class="section-title">To Do</h2>
+            <div th:each=" task : ${toDoTasks}">
+                <div th:replace="~{fragments/arrowCard :: arrowCard(
+                                 ${task.name},
+                                 '',
+                                 'Task Due',
+                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 ${'/task/' + task.taskType + '/' + task.taskId}
+                                 )}"></div>
+            </div>
+
+            <h2 th:if="${completedTasks != null and !completedTasks.isEmpty()}"
+                    class="section-title">Completed Tasks</h2>
+            <div th:each=" task : ${completedTasks}">
                 <div th:replace="~{fragments/arrowCard :: arrowCard(
                                  ${task.name},
                                  '',
@@ -30,6 +44,9 @@
         </div>
         <div>
             <a href="#" class="link" >Delete Cake</a>
+        </div>
+        <div class="shopping-btn-wrapper center">
+            <a class="link" th:href="${backUrl}">← Back</a>
         </div>
     </div>
 </main>

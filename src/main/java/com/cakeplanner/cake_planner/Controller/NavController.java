@@ -35,20 +35,19 @@ public class NavController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
-        Map<CakeOrderDTO, Integer> cakesWProgress = cakeTaskService.getProgressForCakes(cakes);
 
-        model.addAttribute("cakes", cakesWProgress);
+        Map<CakeOrderDTO, Integer> upcomingCakes = cakeTaskService.getUpcomingCakes(cakes);
+        model.addAttribute("upcomingCakes", upcomingCakes);
+
+        Map<CakeOrderDTO, Integer> pastCakes = cakeTaskService.getPastCakes(cakes);
+        model.addAttribute("pastCakes", pastCakes);
 
         List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForUser(user);
 
         List<CakeTaskDTO> toDoTasks = cakeTaskService.getIncompleteTasks(tasks);
         toDoTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
 
-        List<CakeTaskDTO> completedTasks = cakeTaskService.getCompletedTasks(tasks);
-        completedTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
-
         model.addAttribute("toDoTasks", toDoTasks);
-        model.addAttribute("completedTasks", completedTasks);
 
         return "home";
     }

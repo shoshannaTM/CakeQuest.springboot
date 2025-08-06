@@ -22,6 +22,7 @@
         <div class="shopping-left-column">
             <h2 class="section-title">Create a Custom List</h2>
             <p class="tagline">Select cakes, get one shopping list.</p>
+
             <div class="shopping-cards">
                 <div th:each="cake : ${cakes}">
                     <div th:replace="fragments/checkBoxCard :: checkBoxCard(
@@ -43,17 +44,15 @@
             <p class="tagline">Start shopping for your next cake</p>
             <div class="shopping-cards">
                 <div th:each="task : ${shoppingTasks}">
-                    <div th:each=" task : ${shoppingTasks}">
-                        <div th:replace="~{fragments/arrowCard :: arrowCard(
-                                 ${task.name},
-                                 '',
-                                 'Task Due',
-                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/task/' + task.taskType + '/' + task.taskId}
-                                 )}"></div>
+                    <div th:replace="~{fragments/arrowCard :: arrowCard(
+                                       ${task.name},
+                                        '',
+                                        'Task Due',
+                                        ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                         ${'/task/' + task.taskType + '/' + task.taskId}
+                                        )}"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </main>

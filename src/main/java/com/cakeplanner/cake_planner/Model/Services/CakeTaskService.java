@@ -129,21 +129,42 @@ public class CakeTaskService {
         return completedTasks;
     }
 
-    public Map<CakeOrderDTO, Integer> getProgressForCakes(List<CakeOrderDTO> cakes){
-        Map<CakeOrderDTO, Integer> cakesWProgress = new HashMap<>();
+    public Map<CakeOrderDTO, Integer> getUpcomingCakes(List<CakeOrderDTO> cakes){
+        Map<CakeOrderDTO, Integer> upcomingCakes = new HashMap<>();
         for(CakeOrderDTO cake: cakes){
             Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(cake.getCakeId());
 
             if (cakeOrderOptional.isEmpty()) {
                 continue;
             }
-            CakeOrder cakeOrder = cakeOrderOptional.get();
 
+            CakeOrder cakeOrder = cakeOrderOptional.get();
             Integer progress = progressPercent(cakeOrder);
 
-            cakesWProgress.put(cake, progress);
+            if(progress < 100) {
+                upcomingCakes.put(cake, progress);
+            }
         }
-        return cakesWProgress;
+        return upcomingCakes;
+    }
+
+    public Map<CakeOrderDTO, Integer> getPastCakes(List<CakeOrderDTO> cakes){
+        Map<CakeOrderDTO, Integer> pastCakes = new HashMap<>();
+        for(CakeOrderDTO cake: cakes){
+            Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(cake.getCakeId());
+
+            if (cakeOrderOptional.isEmpty()) {
+                continue;
+            }
+
+            CakeOrder cakeOrder = cakeOrderOptional.get();
+            Integer progress = progressPercent(cakeOrder);
+
+            if(progress == 100) {
+                pastCakes.put(cake, progress);
+            }
+        }
+        return pastCakes;
     }
 
     public Integer progressPercent(CakeOrder cakeOrder) {
@@ -262,7 +283,7 @@ public class CakeTaskService {
         cakeTaskRepository.save(task);
     }
 
-    public double getFrostingMultiplier(int taskId, TaskType taskType){
+    public double getMultiplier(int taskId, TaskType taskType){
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
         if (optionalTask.isEmpty()){
             return -1;

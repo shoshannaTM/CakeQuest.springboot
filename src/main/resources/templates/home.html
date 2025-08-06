@@ -8,8 +8,6 @@
 </head>
 <body>
 <main layout:fragment="content">
-
-    <!-- Centered Welcome Header -->
     <div class="home-header-grid">
         <div class="home-header-left-column">
             <h1 th:text="'Hi '+ ${user.firstName} + '!'">Welcome back, FirstName!</h1>
@@ -20,7 +18,6 @@
         <img src="/images/pngtreeWatercolorCakeOrange.png" alt="Watercolor Orange Cake" />
     </div>
     </div>
-    <!-- Dashboard Grid Below -->
     <div class="dashboard-grid">
         <div class="dashboard-left-column">
             <h2 class="section-title">To Do</h2>
@@ -32,23 +29,22 @@
                                  ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
                                  ${'/task/' + task.taskType + '/' + task.taskId}
                                  )}"></div>
+             </div>
         </div>
-            <h2 class="section-title">Completed Tasks</h2>
-            <div th:each=" task : ${completedTasks}">
-                <div th:replace="~{fragments/arrowCard :: arrowCard(
-                                 ${task.name},
-                                 '',
-                                 'Task Due',
-                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/task/' + task.taskType + '/' + task.taskId}
-                                 )}"></div>
-            </div>
-
-    </div>
 
         <div class="dashboard-right-column">
             <h2 class="section-title">Upcoming Cakes</h2>
-            <div th:each="entry : ${cakes}" th:with="cake=${entry.key}, progress=${entry.value}">
+            <div th:each="entry : ${upcomingCakes}" th:with="cake=${entry.key}, progress=${entry.value}">
+                <div th:insert="~{fragments/progressBarCard :: progressBarCard(
+                       ${cake.cakeName},
+                       ${cake.flavorSummary},
+                       ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                       ${progress},
+                       ${'/cakes/' + cake.cakeId}
+                       )}"></div>
+            </div>
+            <h2 class="section-title">Past Cakes</h2>
+            <div th:each="entry : ${pastCakes}" th:with="cake=${entry.key}, progress=${entry.value}">
                 <div th:insert="~{fragments/progressBarCard :: progressBarCard(
                        ${cake.cakeName},
                        ${cake.flavorSummary},
@@ -58,20 +54,7 @@
                        )}"></div>
             </div>
         </div>
-
-        <h2 class="section-title">Past Cakes</h2>
-        <div th:each="entry : ${cakes}" th:with="cake=${entry.key}, progress=${entry.value}">
-            <div th:insert="~{fragments/progressBarCard :: progressBarCard(
-                       ${cake.cakeName},
-                       ${cake.flavorSummary},
-                       ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                       ${progress},
-                       ${'/cakes/' + cake.cakeId}
-                       )}"></div>
-        </div>
     </div>
-    </div>
-        </div>
 </main>
 </body>
 </html>
