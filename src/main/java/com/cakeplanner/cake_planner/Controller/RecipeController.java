@@ -7,6 +7,7 @@ import com.cakeplanner.cake_planner.Model.Services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -19,26 +20,33 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes/{recipeId}")
-    public String showRecipeDetails(@PathVariable Integer recipeId, Model model) {
+    public String showRecipeDetails(@PathVariable Integer recipeId,
+                                    @RequestHeader(value = "Referer") String referer,
+                                    Model model) {
         RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("mode", "read");
+        model.addAttribute("referer", referer);
         return "recipeDetails";
     }
 
     @GetMapping("/recipes/new")
-    public String showNewForm(Model model) throws IOException {
+    public String showNewForm(@RequestHeader(value = "Referer") String referer,
+                              Model model) throws IOException {
         model.addAttribute("recipeTypes", RecipeType.values());
+        model.addAttribute("referer", referer);
         return "newRecipe";
     }
 
     @PostMapping("/recipes/new")
     public String handleNewRecipe(@RequestParam("recipeUrl") String recipeUrl,
-                                    @RequestParam("recipeType") RecipeType recipeType,
-                                    @ModelAttribute("user") User user,
+                                  @RequestParam("recipeType") RecipeType recipeType,
+                                  @RequestHeader(value = "Referer") String referer,
+                                  @ModelAttribute("user") User user,
                                     Model model) throws IOException {
         RecipeDTO displayRecipe = recipeService.processRecipeForDisplay(recipeUrl, recipeType, user);
         model.addAttribute("recipe", displayRecipe);
+        model.addAttribute("referer", referer);
         return "recipeDetails";
     }
 }

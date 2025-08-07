@@ -11,6 +11,7 @@
 <main layout:fragment="content">
   <div class="container">
   <form th:action="@{/task/SHOP_STORE/{id}(id=${task.taskId})}" method="post">
+    <input type="hidden" name="backUrl" th:value="${backUrl}" />
     <div class="title">
       <h1 th:text="${task.name}">Store Shopping</h1>
       <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
@@ -23,6 +24,7 @@
                      th:if="${item.amount > 0}">
           <label>
             <input type="checkbox"
+                   required
                    th:name="'checkedItems'"
                    th:value="${item.name}"
                    th:attr="disabled=${task.completed}, checked=${task.completed}" />
@@ -37,6 +39,9 @@
     </div>
     <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
       <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
+    </div>
+    <div class="shopping-btn-wrapper center">
+      <a class="link" th:href="@{${backUrl}}">← Back</a>
     </div>
   </form>
   </div>

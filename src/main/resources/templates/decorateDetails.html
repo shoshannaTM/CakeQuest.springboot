@@ -27,11 +27,15 @@
         </div>
 
         <form th:action="@{'/task/DECORATE/' + ${task.taskId}}" method="post">
+            <input type="hidden" name="backUrl" th:value="${backUrl}" />
             <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
                 <button type="submit" class="btn">Mark Task As Complete</button>
             </div>
             <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
                 <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
+            </div>
+            <div class="shopping-btn-wrapper center">
+                <a class="link" th:href="@{${backUrl}}">← Back</a>
             </div>
         </form>
     </div>

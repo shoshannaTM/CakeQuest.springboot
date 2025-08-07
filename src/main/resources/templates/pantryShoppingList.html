@@ -10,6 +10,7 @@
 <body>
 <main layout:fragment="content">
     <form th:action="@{/task/SHOP_PANTRY/{id}(id=${task.taskId})}" method="post">
+        <input type="hidden" name="backUrl" th:value="${backUrl}" />
         <div class="title">
             <h1 th:text="${task.name}">Pantry Shopping</h1>
             <p class="complete" th:if="${task.completed}">
@@ -44,7 +45,7 @@
         <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
         </div>
         <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="${backUrl}">← Back</a>
+            <a class="link" th:href="@{${backUrl}}">← Back</a>
         </div>
     </form>
 </main>

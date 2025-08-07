@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class UserController {
@@ -36,16 +37,20 @@ public class UserController {
     }
 
     @GetMapping("/profile/update")
-    public String showUpdateForm(Model model) {
+    public String showUpdateForm(Model model, @RequestHeader(value = "Referer") String referer) {
         // reuse current user
         model.addAttribute("formObject", model.getAttribute("user"));
         model.addAttribute("mode", "update");
+        model.addAttribute("referer", referer);
+
         return "userForm";
     }
 
     @PostMapping("/profile/update")
     public String handleUpdate(@Valid @ModelAttribute("formObject") UpdateDTO updateDTO,
-                               BindingResult result, Model model,  @ModelAttribute("user") User user) {
+                               BindingResult result,
+                               Model model,
+                               @ModelAttribute("user") User user) {
         if (result.hasErrors()) {
             //FIXME remove
             System.out.println("Binding error on update:");
@@ -65,14 +70,18 @@ public class UserController {
     }
 
     @GetMapping("/profile/update-password")
-    public String showPasswordForm(Model model){
+    public String showPasswordForm(Model model, @RequestHeader(value = "Referer") String referer){
         model.addAttribute("passwordFormObject", new PasswordDTO());
+        model.addAttribute("referer", referer);
+
         return "passwordForm";
     }
 
     @PostMapping("/profile/update-password")
     public String handlePasswordChange(@Valid @ModelAttribute("passwordFormObject") PasswordDTO passwordDTO,
-                                       BindingResult result, Model model, @ModelAttribute("user") User user) {
+                                       BindingResult result,
+                                       Model model,
+                                       @ModelAttribute("user") User user) {
         if (result.hasErrors()) {
             //FIXME remove
             System.out.println("Binding error on password change");
@@ -90,22 +99,26 @@ public class UserController {
         }
 
 
-        model.addAttribute("error", "Current password or email is incorrect.");
+        model.addAttribute("error", "Current password or email is incorrect."); //FIXME
+
         return "passwordForm";
     }
 
 
 
     @GetMapping("/signup")
-    public String showSignupForm(Model model) {
+    public String showSignupForm(Model model, @RequestHeader(value = "Referer") String referer) {
         model.addAttribute("formObject", new SignUpDTO()); // form needs empty user
         model.addAttribute("signUpMessage", true);
         model.addAttribute("mode", "signup");
+        model.addAttribute("referer", referer);
+
         return "userForm";
     }
 
     @PostMapping("/signup")
-    public String handleSignup(@Valid @ModelAttribute("formObject") SignUpDTO signUpDTO, BindingResult result, Model model) {
+    public String handleSignup(@Valid @ModelAttribute("formObject") SignUpDTO signUpDTO,
+                               BindingResult result, Model model) {
 
         //FIXME error printing
         if (result.hasErrors()) {
@@ -128,12 +141,15 @@ public class UserController {
         System.out.println(user.getEmail());
         //Success, go to login
         model.addAttribute("mode", "signup");
+
         return "login";
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("user", new User()); // form needs empty user
+    public String showLoginForm(Model model, @RequestHeader(value = "Referer") String referer) {
+        model.addAttribute("user", new User());
+        model.addAttribute("referer", referer);
+
         return "login";
     }
 }

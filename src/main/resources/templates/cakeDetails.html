@@ -22,7 +22,7 @@
                                  '',
                                  'Task Due',
                                  ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/task/' + task.taskType + '/' + task.taskId}
+                                 ${'/task/' + task.taskType + '/' + task.taskId + backUrl}
                                  )}"></div>
             </div>
 
@@ -34,7 +34,7 @@
                                  '',
                                  'Task Due',
                                  ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/task/' + task.taskType + '/' + task.taskId}
+                                 ${'/task/' + task.taskType + '/' + task.taskId + backUrl}
                                  )}"></div>
             </div>
         </div>
@@ -46,7 +46,7 @@
             <a href="#" class="link" >Delete Cake</a>
         </div>
         <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="${backUrl}">← Back</a>
+            <a class="link" th:href="@{/}">← Back</a>
         </div>
     </div>
 </main>
