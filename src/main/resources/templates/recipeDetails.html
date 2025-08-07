@@ -22,7 +22,7 @@
             <ul class="details-list">
                 <li th:each="ingredient : ${recipe.ingredients}"
                     class="recipe-item"
-                    th:text="${mode == 'task' ? (ingredient.amount * multiplier) : ingredient.amount} + ' ' + ${ingredient.unit} + ' ' + ${ingredient.name}">
+                    th:text="${(mode == 'task' ? (ingredient.amount * multiplier) : ingredient.amount) + ' ' + ingredient.unit + ' ' + ingredient.name}">
                 </li>
             </ul>
         </div>
@@ -42,7 +42,7 @@
     </div>
 
     <div th:if="${mode == 'task'}">
-    <form th:action="@{'/task/' + ${task.taskType} + '/' + ${task.taskId}}" method="post">
+        <form th:action="@{/task/{type}/{id}(type=${task.taskType}, id=${task.taskId})}" method="post">
         <input type="hidden" name="backUrl" th:value="${backUrl}" />
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
             <button type="submit" class="btn">Mark Task As Complete</button>
@@ -59,7 +59,6 @@
             <div class="shopping-btn-wrapper center">
                 <a class="link" th:href="@{/recipes}">← Back</a>
             </div>
-        </form>
     </div>
 
 </main>

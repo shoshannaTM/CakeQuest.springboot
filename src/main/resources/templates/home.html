@@ -27,7 +27,7 @@
                                  '',
                                  'Task Due',
                                  ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                 ${'/task/' + task.taskType + '/' + task.taskId}
+                                 ${'/task/' + task.taskType + '/' + task.taskId + backUrl}
                                  )}"></div>
              </div>
         </div>
@@ -40,7 +40,7 @@
                        ${cake.flavorSummary},
                        ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
                        ${progress},
-                       ${'/cakes/' + cake.cakeId}
+                       ${'/cakes/' + cake.cakeId + backUrl}
                        )}"></div>
             </div>
             <h2 class="section-title">Past Cakes</h2>
@@ -50,7 +50,7 @@
                        ${cake.flavorSummary},
                        ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
                        ${progress},
-                       ${'/cakes/' + cake.cakeId}
+                       ${'/cakes/' + cake.cakeId + backUrl}
                        )}"></div>
             </div>
         </div>

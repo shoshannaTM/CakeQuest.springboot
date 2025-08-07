@@ -36,6 +36,9 @@ public class NavController {
 
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
 
+        String backUrl = "?backUrl=/";
+        model.addAttribute("backUrl", backUrl);
+
         Map<CakeOrderDTO, Integer> upcomingCakes = cakeTaskService.getUpcomingCakes(cakes);
         model.addAttribute("upcomingCakes", upcomingCakes);
 
@@ -85,5 +88,9 @@ public class NavController {
         return "shopping";}
 
     @GetMapping("/profile")
-    public String profile(){return "profile";}
+    public String profile(@RequestParam(value = "success", required = false) String success, Model model){
+        if(success != null && !success.isEmpty()) {
+            model.addAttribute("success", success);
+        }
+        return "profile";}
 }

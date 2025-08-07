@@ -15,6 +15,7 @@
             <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
         </div>
         <form method="post" th:action="@{/cakeForm}">
+            <input type="hidden" name="backUrl" th:value="${backUrl}" />
             <div class="mb-3">
                 <label for="cakeName">What would you like to name this cake?</label>
                 <input type="text" class="form-control" id="cakeName" name="cakeName" placeholder="Sister's Super Awesome Birthday Cake?" required>
@@ -116,7 +117,7 @@
                 <button type="submit" class="btn">Save</button>
             </div>
             <div class="shopping-btn-wrapper center">
-                <a class="link" th:href="${referer}">← Back</a>
+                <a class="link" th:href="@{${backUrl}}">← Back</a>
             </div>
         </form>
     </div>

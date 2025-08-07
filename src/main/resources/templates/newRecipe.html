@@ -14,6 +14,7 @@
     </div>
 
     <form method="post" th:action="@{/recipes/new}">
+        <input type="hidden" name="backUrl" th:value="${backUrl}" />
     <div class="mb-3">
         <label for="urlInput">Simply paste in the URL of your favorite online recipe and we will do the rest.</label>
         <input type="text" class="form-control" id="urlInput" name="recipeUrl" placeholder="URL" required>
@@ -32,7 +33,7 @@
             <button type="submit" class="btn">Save</button>
         </div>
         <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="${referer}">← Back</a>
+            <a class="link" th:href="@{${backUrl}}">← Back</a>
         </div>
     </form>
 </main>

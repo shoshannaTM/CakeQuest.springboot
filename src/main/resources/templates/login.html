@@ -13,7 +13,6 @@
   <div class="title">
     <h1>Log In</h1>
     <p th:if="${mode == 'signup'}">Sign up successful! Go ahead and log in.</p>
-    <p th:if="${mode == 'newPassword'}">Password change successful! Log in with your new password.</p>
   </div>
   <form th:action="@{/login}" method="post">
     <div class="mb-3">
@@ -24,11 +23,12 @@
       <label for="inputPassword" class="form-label">Password</label>
       <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error message</div>
     <div class="saveBtn">
       <button type="submit" class="btn">Log In</button>
     </div>
     <div class="shopping-btn-wrapper center">
-      <a class="link" th:href="${referer}">← Back</a>
+      <a class="link"  th:href="@{/welcome}">← Back</a>
     </div>
   </form>
 </div>

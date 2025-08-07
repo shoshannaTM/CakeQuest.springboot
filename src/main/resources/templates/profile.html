@@ -19,10 +19,10 @@
     <div class="details">
         <p><strong>Email:</strong> <span th:text="${user?.email} ?: 'email@example.com'">email@example.com</span></p>
     </div>
-
+        <div class="alert alert-success" th:if="${success}" th:text="${success}">Success message</div>
     <div class="profile-actions">
-        <a th:href="@{/profile/update}" class="btn">Update Info</a>
-        <a th:href="@{/profile/update-password}" class="btn">Change Password</a>
+        <a th:href="@{'/profile/update?backUrl=/profile'}" class="btn">Update Info</a>
+        <a th:href="@{'/profile/update-password?backUrl=/profile'}" class="btn">Change Password</a>
         <a th:href="@{/logout}" class="btn">Log Out</a>
     </div>
     </div>

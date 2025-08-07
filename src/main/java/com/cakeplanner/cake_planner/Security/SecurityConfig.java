@@ -23,8 +23,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/welcome"))
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // use your custom login page
-                        .defaultSuccessUrl("/", true)  // or your homepage
+                        .loginPage("/login")                     // your custom login page
+                        .loginProcessingUrl("/login")            // Spring handles POST here
+                        .failureUrl("/login?error=true")         // PRG style redirect on error
                         .permitAll()
                 )
                 .logout(logout -> logout
