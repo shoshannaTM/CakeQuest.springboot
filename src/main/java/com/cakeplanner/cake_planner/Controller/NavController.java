@@ -84,6 +84,7 @@ public class NavController {
 
         model.addAttribute("shoppingTasks", shoppingTasks);
         model.addAttribute("cakes", cakes);
+        model.addAttribute("backUrl", "/shopping");
 
         return "shopping";}
 

@@ -221,28 +221,6 @@ public class CakeTaskService {
         return null;
     }
 
-    public boolean markTaskIncomplete(int taskId) {
-        Optional<CakeTask> cakeTaskOptional = cakeTaskRepository.findById(taskId);
-
-        if (cakeTaskOptional.isPresent()) {
-            CakeTask cakeTask = cakeTaskOptional.get();
-            cakeTask.setCompleted(false);
-            cakeTaskRepository.save(cakeTask);
-            return false;
-        }
-        return true;
-    }
-
-    public TaskType getTaskType(int taskId){
-        Optional<CakeTask> cakeTaskOptional = cakeTaskRepository.findById(taskId);
-
-        if (cakeTaskOptional.isPresent()) {
-            CakeTask cakeTask = cakeTaskOptional.get();
-            return cakeTask.getTaskType();
-        }
-        return null;
-    }
-
     public void resetPantryList(int taskId){
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
         if (optionalTask.isEmpty()){

@@ -19,6 +19,7 @@
     </div>
 
     <div class="shopping-page-content">
+        <form th:action="@{/shopping/custom_list}" method="post">
         <div class="shopping-left-column">
             <h2 class="section-title">Create a Custom List</h2>
             <p class="tagline">Select cakes, get one shopping list.</p>
@@ -26,7 +27,7 @@
             <div class="shopping-cards">
                 <div th:each="cake : ${cakes}">
                     <div th:replace="fragments/checkBoxCard :: checkBoxCard(
-                        ${false},
+                        ${cake.cakeId},
                         ${cake.cakeName},
                         ${cake.flavorSummary},
                         ${cake.dueDate != null ? #temporals.format(cake.dueDate, 'MM/dd/yyyy') : 'TBD'}
@@ -34,9 +35,10 @@
                 </div>
             </div>
             <div class="shopping-btn-wrapper center">
-                <a href="#" class="btn shopping-btn">+ Custom Shopping List</a>
+                <button type="submit" name="customList" class="btn shopping-btn">+ Custom Shopping List</button>
             </div>
         </div>
+        </form>
 
         <!-- RIGHT COLUMN: arrowCards from shopping tasks-->
         <div class="shopping-right-column">
@@ -49,8 +51,9 @@
                                         '',
                                         'Task Due',
                                         ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
-                                         ${'/task/' + task.taskType + '/' + task.taskId}
-                                        )}"></div>
+                                        @{/task/{type}/{id}(type=${task.taskType}, id=${task.taskId}, backUrl=${backUrl})}
+
+                    )}"></div>
                     </div>
                 </div>
             </div>
