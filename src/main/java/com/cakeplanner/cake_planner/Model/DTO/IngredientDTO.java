@@ -5,6 +5,9 @@ public class IngredientDTO {
     private double amount;
     private String unit;
 
+    public IngredientDTO() {
+    }
+
     public IngredientDTO(String name, double amount, String unit) {
         this.name = name;
         this.amount = amount;

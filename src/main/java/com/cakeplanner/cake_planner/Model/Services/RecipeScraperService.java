@@ -30,11 +30,8 @@ public class RecipeScraperService {
     @Autowired
     private SpoonacularService spoonacularService;
     public RecipeDTO scrapeRecipe(String url, RecipeType recipeType) throws IOException {
-        //get document from url FIXME
-        Document document = Jsoup
-                .connect(url)
-                .ignoreHttpErrors(true)  // this line lets Jsoup tolerate 103
-                .get();
+        //get document from url
+        Document document = Jsoup.connect(url).ignoreHttpErrors(true).get();
 
         //get json scripts from document and store them in a jsoup Elements object, by querying the css using .select method from jsoup
         //(Elements is a jsoup object that represents a list of jsoup Element objects, an Element = an HTML tag)

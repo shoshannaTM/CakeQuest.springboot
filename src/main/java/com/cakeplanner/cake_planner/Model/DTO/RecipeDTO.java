@@ -9,8 +9,9 @@ public class RecipeDTO {
     private String recipeUrl;
     private String instructions;
     private RecipeType recipeType;
-    private List<IngredientDTO> ingredients;
     private int recipeId;
+    private List<IngredientDTO> ingredients;
+
 
     public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients, int recipeId) {
         this.recipeName = recipeName;

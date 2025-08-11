@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Recipe</title>
+</head>
+<body>
+<main layout:fragment="content">
+  <div class="title">
+    <h1>Edit Recipe</h1>
+    <div th:if="${mode == 'scrape'}">
+      <p>Recipe scraping isn’t always perfect. Review and fix anything before saving.</p>
+    </div>
+  </div>
+
+  <form th:action="@{/recipe/edit}" th:object="${form}" method="post">
+    <input type="hidden" th:field="*{recipeId}"/>
+
+    <h3>Recipe Name</h3>
+    <input class="form-control" type="text" th:field="*{recipeName}" th:placeholder="*{recipeName}" />
+
+    <h3>Ingredients</h3>
+    <div th:each="ing, iter : *{ingredients}">
+      <div class="input-row">
+        <input class="form-control" type="text" th:field="*{ingredients[__${iter.index}__].name}"  placeholder="ingredient name"/>
+        <input class="form-control" type="number" step="any" th:field="*{ingredients[__${iter.index}__].amount}" placeholder="amount"/>
+        <input class="form-control" type="text" th:field="*{ingredients[__${iter.index}__].unit}"  placeholder="unit"/>
+        <button class="btn" type="submit" name="removeIngredient" th:value="${iter.index}">–</button>
+      </div>
+    </div>
+    <button type="submit" name="addIngredient">+ Add ingredient</button>
+
+    <h3>Steps</h3>
+    <div th:each="st, iter : *{instructions}">
+      <div class="input-row">
+        <input class="form-control" type="text" th:field="*{instructions[__${iter.index}__]}" placeholder="Describe the step"/>
+        <button class="btn"  type="submit" name="removeStep" th:value="${iter.index}">–</button>
+      </div>
+    </div>
+    <button  class="btn" type="submit" name="addStep">+ Add step</button>
+
+    <div class="saveBtn">
+      <button class="btn" type="submit" name="save">Save</button>
+    </div>
+
+    <div class="shopping-btn-wrapper center">
+      <a class="link" th:href="@{${backUrl}}">← Back</a>
+    </div>
+  </form>
+</main>
+</body>
+</html>
