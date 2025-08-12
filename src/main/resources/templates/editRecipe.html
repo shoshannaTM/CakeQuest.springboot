@@ -2,54 +2,111 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+      layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Edit Recipe</title>
 </head>
-<body>
+<body class="recipeEditPage">
 <main layout:fragment="content">
-  <div class="title">
+    <div class="mb-4 text-center">
     <h1>Edit Recipe</h1>
-    <div th:if="${mode == 'scrape'}">
-      <p>Recipe scraping isn’t always perfect. Review and fix anything before saving.</p>
-    </div>
+      <p class="subtitle" th:if="${mode == 'scrape'}">
+        Recipe scraping isn’t always perfect. Review and fix anything before saving.
+      </p>
   </div>
 
   <form th:action="@{/recipe/edit}" th:object="${form}" method="post">
     <input type="hidden" th:field="*{recipeId}"/>
 
-    <h3>Recipe Name</h3>
-    <input class="form-control" type="text" th:field="*{recipeName}" th:placeholder="*{recipeName}" />
-
-    <h3>Ingredients</h3>
-    <div th:each="ing, iter : *{ingredients}">
-      <div class="input-row">
-        <input class="form-control" type="text" th:field="*{ingredients[__${iter.index}__].name}"  placeholder="ingredient name"/>
-        <input class="form-control" type="number" step="any" th:field="*{ingredients[__${iter.index}__].amount}" placeholder="amount"/>
-        <input class="form-control" type="text" th:field="*{ingredients[__${iter.index}__].unit}"  placeholder="unit"/>
-        <button class="btn" type="submit" name="removeIngredient" th:value="${iter.index}">–</button>
+      <!-- Recipe name -->
+      <div class="mb-3">
+        <h3 class="section-title">Recipe Title</h3>
+        <input class="form-control" type="text" th:field="*{recipeName}" placeholder="Recipe name"/>
       </div>
-    </div>
-    <button type="submit" name="addIngredient">+ Add ingredient</button>
 
-    <h3>Steps</h3>
-    <div th:each="st, iter : *{instructions}">
-      <div class="input-row">
-        <input class="form-control" type="text" th:field="*{instructions[__${iter.index}__]}" placeholder="Describe the step"/>
-        <button class="btn"  type="submit" name="removeStep" th:value="${iter.index}">–</button>
+      <!-- INGREDIENTS -->
+      <div class="mb-3">
+    <h3 class="section-title">Ingredients</h3>
+        <div class="helper">Tip: to remove an ingredient, set the amount needed to 0.</div>
+        <!-- list keeps bullets on mobile; grid on md+ -->
+        <ul class="ps-3">
+          <li class="mb-3" th:each="ing,iter : *{ingredients}">
+            <!-- In your form, inside th:each="ing,iter : *{ingredients}" -->
+            <div class="ingredient-pill">
+              <div class="seg">
+                <label class="visually-hidden" th:for="'amt_'+${iter.index}">Amount</label>
+                <input  id="amt_{__${iter.index}__}"
+                        class="pill-input amount"
+                        type="text"
+                        inputmode="decimal" pattern="[0-9.,/ ]*"
+                        th:field="*{ingredients[__${iter.index}__].amount}"
+                        placeholder="1.0"
+                        data-next="unit_{__${iter.index}__}">
+              </div>
+
+              <div class="seg">
+                <label class="visually-hidden" th:for="'unit_'+${iter.index}">Unit</label>
+                <input  id="unit_{__${iter.index}__}"
+                        class="pill-input unit"
+                        type="text"
+                        th:field="*{ingredients[__${iter.index}__].unit}"
+                        placeholder="cup"
+                        list="unit-options"
+                        data-prev="amt_{__${iter.index}__}"
+                        data-next="name_{__${iter.index}__}">
+              </div>
+
+              <div class="seg seg-grow">
+                <label class="visually-hidden" th:for="'name_'+${iter.index}">Ingredient</label>
+                <input  id="name_{__${iter.index}__}"
+                        class="pill-input name"
+                        type="text"
+                        th:field="*{ingredients[__${iter.index}__].name}"
+                        placeholder="granulated sugar"
+                        data-prev="unit_{__${iter.index}__}">
+              </div>
+            </div>
+            <!-- optional common units -->
+            <datalist id="unit-options">
+              <option>tsp</option><option>Tbsp</option><option>cup</option>
+              <option>g</option><option>kg</option><option>ml</option><option>l</option>
+            </datalist>
+
+          </li>
+    </ul>
+    <button class="btn-add-edit" type="submit" name="addIngredient">+ Add ingredient</button>
+
       </div>
-    </div>
-    <button  class="btn" type="submit" name="addStep">+ Add step</button>
 
-    <div class="saveBtn">
+      <!-- STEPS -->
+      <div class="mb-3">
+    <h3 class="section-title">Instructions</h3>
+
+        <!-- ordered list for numbers; each step is a textarea -->
+        <ol class="ps-3">
+          <li class="mb-3" th:each="st,iter : *{instructions}">
+            <div class="row g-2 align-items-start">
+              <div class="col">
+                <textarea class="form-control autosize"
+                th:field="*{instructions[__${iter.index}__]}"
+                          rows="3"
+                          placeholder="Describe the step"></textarea>
+              </div>
+
+        </div>
+      </li>
+    </ol>
+
+        <button class="btn-add-edit" type="submit" name="addStep">+ Add Step</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
       <button class="btn" type="submit" name="save">Save</button>
+        <a class="link" th:href="@{${backUrl}}">← Back</a>
     </div>
-
-    <div class="shopping-btn-wrapper center">
-      <a class="link" th:href="@{${backUrl}}">← Back</a>
-    </div>
-  </form>
+    </form>
 </main>
 </body>
 </html>

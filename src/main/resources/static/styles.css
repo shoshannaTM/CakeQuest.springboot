@@ -62,6 +62,19 @@ main {
     width: fit-content;
 }
 
+.btn-add-edit{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px dashed #e26d8f;
+  color:#c44e68;
+  background:#fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top: 12px;
+}
+.btn-add-edit:hover{ background:#fff0f4; }
+
 
 .search {
   margin-top: 0;
@@ -443,6 +456,58 @@ input[type="checkbox"] {
 .recipe-section-title{
     margin-bottom: .75rem;
 }
+/* ----------------------------------
+   Edit Page
+---------------------------------- */
+/* visually hidden labels for a11y */
+.visually-hidden{position:absolute!important;clip:rect(1px,1px,1px,1px);padding:0;border:0;height:1px;width:1px;overflow:hidden}
+
+.ingredient-pill{
+  display:grid;
+  grid-template-columns: 1fr 1fr 2fr; /* amount | unit | name  */
+  gap: 0; /* we’ll draw dividers ourselves */
+  border:1px solid #dee2e6;
+  border-radius: 999px;
+  background:#fff;
+  padding: 6px;    /* inner breathing room */
+  align-items:center;
+}
+
+.ingredient-pill + .ingredient-pill{ margin-top: .75rem; }
+
+/* each segment */
+.ingredient-pill .seg{
+  position: relative;
+  padding: 0 10px;
+}
+.ingredient-pill .seg-grow{ width: 100%; }
+.ingredient-pill .seg-auto{ padding-right: 6px; }
+
+/* vertical dividers between segments (not before first or after last) */
+.ingredient-pill .seg:not(:first-child):not(.seg-auto)::before{
+  content:"";
+  position:absolute; left:0; top:8px; bottom:8px;
+  width:1px; background:#eee;
+}
+
+/* inputs */
+.pill-input{
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 8px 6px;
+  outline: none;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #585C5F;
+}
+
+/* focus ring on the whole pill when any child focuses */
+.ingredient-pill:focus-within{
+  box-shadow: 0 0 0 4px rgba(196, 215, 251);
+  border-color: #86B7FD;
+}
+
 
 /* ----------------------------------
    Login Page
@@ -586,6 +651,7 @@ input[type="checkbox"] {
 .fa-arrow-right:hover {
   color: #e26d8f;
 }
+
 
 /* ----------------------------------
 Mobile
