@@ -31,7 +31,7 @@ public class NavController {
 
     @GetMapping("/")
     public String cakes(@ModelAttribute("user") User user,
-                             Model model) {
+                        Model model) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
 
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
@@ -76,7 +76,7 @@ public class NavController {
     }
 
 
-    @GetMapping("/shopping")
+   /* @GetMapping("/shopping")
     public String shopping(@ModelAttribute("user") User user,
                            Model model){
         List<CakeTaskDTO> shoppingTasks = cakeTaskService.getIncompleteShoppingTasksForUser(user);
@@ -94,4 +94,5 @@ public class NavController {
             model.addAttribute("success", success);
         }
         return "profile";}
+}*/
 }
