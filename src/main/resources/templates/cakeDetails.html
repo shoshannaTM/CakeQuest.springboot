@@ -9,10 +9,14 @@
 <body>
 <main layout:fragment="content">
     <div  class="cakeInfoPage">
+        <div class="heading">
+            <div class="back-link">
+                <a class="link" th:href="@{/}"><i class="fa-solid fa-chevron-left"></i></a>
+            </div>
         <div class="title">
             <h1 th:text="${cakeOrder != null} ? ${cakeOrder.cakeName} : 'Cake Details'"></h1>
         </div>
-
+        </div>
         <div class="info">
             <h2 th:if="${toDoTasks != null and !toDoTasks.isEmpty()}"
                 class="section-title">To Do</h2>
@@ -44,9 +48,6 @@
         </div>
         <div>
             <a href="#" class="link" >Delete Cake</a>
-        </div>
-        <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="@{/}">← Back</a>
         </div>
     </div>
 </main>

@@ -156,7 +156,6 @@ public class RecipeService {
         return displayRecipes;
     }
 
-    @Transactional
     public void updateRecipeFromEditForm(EditRecipeDTO form) {
         Recipe recipe = recipeRepository.findRecipeByRecipeId(form.getRecipeId());
         recipe.setRecipeName(form.getRecipeName());
@@ -164,9 +163,11 @@ public class RecipeService {
 
         // Replace ingredients (simple approach: delete existing, insert new)
         List<RecipeIngredient> existing = recipeIngredientRepository.findRecipeIngredientsByRecipeId(form.getRecipeId());
-        for (RecipeIngredient ri : existing) recipeIngredientRepository.delete(ri);
+        for (RecipeIngredient ri : existing){
+            recipeIngredientRepository.delete(ri);
+        }
         for (IngredientDTO dto : form.getIngredients()) {
-            if (dto.getName() == null || dto.getName().isBlank()){
+            if (dto.getAmount() == 0 || dto.getName() == null || dto.getName().isBlank()){
                 continue;
             }
             Ingredient ing = ingredientRepository
@@ -175,5 +176,11 @@ public class RecipeService {
             recipeIngredientRepository.save(new RecipeIngredient(recipe, ing, dto.getAmount(), dto.getUnit()));
         }
         recipeRepository.save(recipe);
+    }
+
+    public void deleteRecipe(Integer recipeId) {
+        //userRecipeRepository.deleteAllByRecipeId(recipeId);
+        //recipeIngredientRepository.deleteAllByRecipeId(recipeId);
+        recipeRepository.deleteById(recipeId);
     }
 }

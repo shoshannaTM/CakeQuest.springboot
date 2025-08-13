@@ -421,14 +421,29 @@ input[type="checkbox"] {
     margin: 0.25rem 0rem;
 }
 
-.link {
+.link{
     color: #e26d8f;
+    text-decoration: none;
 }
 
 .link:hover {
     color: #cc5a7d;
 }
 
+.back-link {
+    position: absolute;
+    left: 2rem;
+}
+
+.btn-link{
+    border: none;
+    background: transparent;
+    color: #e26d8f;
+}
+
+.btn-link:hover {
+    color: #cc5a7d;
+}
 .cakeInfoPage {
    display: flex;
    flex-direction: column;
@@ -649,6 +664,17 @@ input[type="checkbox"] {
 }
 
 .fa-arrow-right:hover {
+  color: #e26d8f;
+}
+
+.fa-chevron-left {
+  font-size: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.fa-chevron-left:hover {
   color: #e26d8f;
 }
 

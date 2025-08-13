@@ -9,8 +9,13 @@
 </head>
 <body class="recipeEditPage">
 <main layout:fragment="content">
+  <div class="heading">
+    <div class="back-link">
+      <a class="link" th:href="@{${backUrl}}"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
     <div class="mb-4 text-center">
     <h1>Edit Recipe</h1>
+      </div>
       <p class="subtitle" th:if="${mode == 'scrape'}">
         Recipe scraping isn’t always perfect. Review and fix anything before saving.
       </p>
@@ -19,20 +24,16 @@
   <form th:action="@{/recipe/edit}" th:object="${form}" method="post">
     <input type="hidden" th:field="*{recipeId}"/>
 
-      <!-- Recipe name -->
       <div class="mb-3">
         <h3 class="section-title">Recipe Title</h3>
         <input class="form-control" type="text" th:field="*{recipeName}" placeholder="Recipe name"/>
       </div>
 
-      <!-- INGREDIENTS -->
       <div class="mb-3">
     <h3 class="section-title">Ingredients</h3>
         <div class="helper">Tip: to remove an ingredient, set the amount needed to 0.</div>
-        <!-- list keeps bullets on mobile; grid on md+ -->
         <ul class="ps-3">
           <li class="mb-3" th:each="ing,iter : *{ingredients}">
-            <!-- In your form, inside th:each="ing,iter : *{ingredients}" -->
             <div class="ingredient-pill">
               <div class="seg">
                 <label class="visually-hidden" th:for="'amt_'+${iter.index}">Amount</label>
@@ -51,7 +52,7 @@
                         class="pill-input unit"
                         type="text"
                         th:field="*{ingredients[__${iter.index}__].unit}"
-                        placeholder="cup"
+                        placeholder="unit"
                         list="unit-options"
                         data-prev="amt_{__${iter.index}__}"
                         data-next="name_{__${iter.index}__}">
@@ -63,11 +64,10 @@
                         class="pill-input name"
                         type="text"
                         th:field="*{ingredients[__${iter.index}__].name}"
-                        placeholder="granulated sugar"
+                        placeholder="ingredient name"
                         data-prev="unit_{__${iter.index}__}">
               </div>
             </div>
-            <!-- optional common units -->
             <datalist id="unit-options">
               <option>tsp</option><option>Tbsp</option><option>cup</option>
               <option>g</option><option>kg</option><option>ml</option><option>l</option>
@@ -75,15 +75,11 @@
 
           </li>
     </ul>
-    <button class="btn-add-edit" type="submit" name="addIngredient">+ Add ingredient</button>
-
+    <button class="btn-add-edit" type="submit" name="addIngredient" >+ Add ingredient</button>
       </div>
 
-      <!-- STEPS -->
       <div class="mb-3">
     <h3 class="section-title">Instructions</h3>
-
-        <!-- ordered list for numbers; each step is a textarea -->
         <ol class="ps-3">
           <li class="mb-3" th:each="st,iter : *{instructions}">
             <div class="row g-2 align-items-start">
@@ -101,11 +97,8 @@
         <button class="btn-add-edit" type="submit" name="addStep">+ Add Step</button>
       </div>
 
-      <!-- Actions -->
       <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
       <button class="btn" type="submit" name="save">Save</button>
-        <a class="link" th:href="@{${backUrl}}">← Back</a>
-    </div>
     </form>
 </main>
 </body>

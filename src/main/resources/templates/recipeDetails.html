@@ -9,8 +9,16 @@
 </head>
 <body class="recipeInfoPage">
 <main layout:fragment="content">
-    <div class="title">
+    <div class="heading">
+        <div class="back-link">
+        <a class="link" th:href="@{/recipes}"><i class="fa-solid fa-chevron-left"></i></a>
+        </div>
+
+        <div class="title">
         <h1 th:text="${recipe.recipeName}">Recipe Name</h1>
+        </div>
+    </div>
+    <div class="alert alert-success" role="alert" th:if="${message}" th:text="${message}"></div>
         <div th:if="${mode == 'task'}">
             <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
         </div>
@@ -56,10 +64,20 @@
     </form>
     </div>
     <div th:if="${mode == 'read'}">
+        <div class="shopping-btn-wrapper center">
+            <a th:href="@{/recipes/edit/{id}(id=${recipe.recipeId})}" class="btn">Edit Recipe</a>
+        </div>
+
+        <form th:action="@{/recipe/delete/{id}(id=${recipe.recipeId})}" method="post">
             <div class="shopping-btn-wrapper center">
-                <a class="link" th:href="@{/recipes}">← Back</a>
-            </div>
+            <button type="submit" class="btn-link"
+                    onclick="return confirm('Delete this recipe? This cannot be undone.')">
+                Delete Recipe
+            </button>
+                </div>
+        </form>
     </div>
+
 
 </main>
 </body>

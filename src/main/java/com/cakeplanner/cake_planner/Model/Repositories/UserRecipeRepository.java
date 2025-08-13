@@ -6,6 +6,7 @@ import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
 import com.cakeplanner.cake_planner.Model.Entities.UserRecipeId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface UserRecipeRepository extends JpaRepository<UserRecipe, UserReci
     List<UserRecipe> findByUser(User user);
     List<UserRecipe> findByUserAndRecipe_RecipeNameContainingIgnoreCase(User user, String name);
     List<UserRecipe> findByUserAndRecipe_RecipeType(User user, RecipeType type);
+
 }

@@ -50,15 +50,18 @@ public class RecipeController {
     @GetMapping("/recipes/edit/{id}")
     public String editRecipe(@PathVariable Integer id,
                              @RequestParam(value = "mode", required = false) String mode,
+                             @ModelAttribute("form") EditRecipeDTO form,
                              Model model) {
+        if (form == null || form.getRecipeId() == 0) {
+            RecipeDTO recipe = recipeService.recipeToDTO(id);
+            form = new EditRecipeDTO(
+                    recipe.getRecipeId(),
+                    recipe.getRecipeName(),
+                    recipe.getIngredients(),
+                    recipeService.instructionsFromString(recipe.getInstructions())
+            );
+        }
 
-        RecipeDTO recipe = recipeService.recipeToDTO(id);
-        EditRecipeDTO form = new EditRecipeDTO(
-                recipe.getRecipeId(),
-                recipe.getRecipeName(),
-                recipe.getIngredients(),
-                recipeService.instructionsFromString(recipe.getInstructions())
-        );
         model.addAttribute("form", form);
         model.addAttribute("mode", mode);
         model.addAttribute("backUrl", "/recipes");
@@ -66,48 +69,35 @@ public class RecipeController {
     }
 
     @PostMapping(value = "/recipe/edit", params = "addIngredient")
-    public String addIngredient(@ModelAttribute("form") EditRecipeDTO form, RedirectAttributes ra) {
+    public String addIngredient(@ModelAttribute("form") EditRecipeDTO form,
+                                RedirectAttributes redirectAttributes) {
         form.getIngredients().add(new IngredientDTO("", 0.0, ""));
-        ra.addFlashAttribute("form", form);
+        redirectAttributes.addFlashAttribute("form", form);
         return "redirect:/recipes/edit/" + form.getRecipeId();
     }
 
-    @PostMapping(value = "/recipe/edit", params = "removeIngredient")
-    public String removeIngredient(@ModelAttribute("form") EditRecipeDTO form,
-                                   @RequestParam("removeIngredient") int index,
-                                   RedirectAttributes ra) {
-        if (index >= 0 && index < form.getIngredients().size()) {
-            form.getIngredients().remove(index);
-        }
-        ra.addFlashAttribute("form", form);
-        return "redirect:/recipes/edit/" + form.getRecipeId();
-    }
 
     @PostMapping(value = "/recipe/edit", params = "addStep")
-    public String addStep(@ModelAttribute("form") EditRecipeDTO form, RedirectAttributes ra) {
+    public String addStep(@ModelAttribute("form") EditRecipeDTO form, RedirectAttributes redirectAttributes) {
         form.getInstructions().add("");
-        ra.addFlashAttribute("form", form);
-        return "redirect:/recipes/edit/" + form.getRecipeId();
-    }
-
-    @PostMapping(value = "/recipe/edit", params = "removeStep")
-    public String removeStep(@ModelAttribute("form") EditRecipeDTO form,
-                             @RequestParam("removeStep") int index,
-                             RedirectAttributes ra) {
-        if (index >= 0 && index < form.getInstructions().size()) {
-            form.getInstructions().remove(index);
-        }
-        ra.addFlashAttribute("form", form);
+        redirectAttributes.addFlashAttribute("form", form);
         return "redirect:/recipes/edit/" + form.getRecipeId();
     }
 
     @PostMapping(value = "/recipe/edit", params = "save")
     public String saveRecipe(@ModelAttribute("form") EditRecipeDTO form,
-                             RedirectAttributes ra) {
-        // Persist: name + instructions + ingredients
+                             RedirectAttributes redirectAttributes) {
         recipeService.updateRecipeFromEditForm(form);
-        ra.addFlashAttribute("message", "Recipe updated!");
+        redirectAttributes.addFlashAttribute("message", "Recipe updated and saved!");
         return "redirect:/recipes/" + form.getRecipeId();
     }
 
+
+    @PostMapping("/recipe/delete/{id}")
+    public String deleteRecipe(@PathVariable("id") Integer recipeId,
+                             RedirectAttributes redirectAttributes) {
+        recipeService.deleteRecipe(recipeId);
+        redirectAttributes.addFlashAttribute("message", "Recipe deleted successfully");
+        return "redirect:/recipes";
+    }
 }
