@@ -3,6 +3,8 @@ package com.cakeplanner.cake_planner.Model.Entities;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "recipe")
 
@@ -23,6 +25,20 @@ public class Recipe {
 
     @Column(name = "recipe_url", nullable = false)
     private String recipeUrl;
+
+    @OneToMany(
+            mappedBy = "recipe",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
+    private java.util.Set<RecipeIngredient> recipeIngredients = new java.util.HashSet<>();
+
+    @OneToMany(
+            mappedBy = "recipe",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
+    private java.util.Set<UserRecipe> userRecipes = new java.util.HashSet<>();
 
     public Recipe() {
     }
@@ -80,5 +96,21 @@ public class Recipe {
 
     public void setRecipeUrl(String recipeUrl) {
         this.recipeUrl = recipeUrl;
+    }
+
+    public Set<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
+    }
+
+    public void setRecipeIngredients(Set<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    public Set<UserRecipe> getUserRecipes() {
+        return userRecipes;
+    }
+
+    public void setUserRecipes(Set<UserRecipe> userRecipes) {
+        this.userRecipes = userRecipes;
     }
 }

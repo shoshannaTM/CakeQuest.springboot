@@ -117,7 +117,7 @@ public class UserController {
     public String showSignupForm(Model model, @RequestParam(value = "backUrl", required = false) String backUrl) {
         model.addAttribute("formObject", new SignUpDTO());
         model.addAttribute("mode", "signup");
-        model.addAttribute("backUrl", backUrl);
+        model.addAttribute("backUrl", "/welcome");
 
         return "userForm";
     }
@@ -163,6 +163,7 @@ public class UserController {
             model.addAttribute("error", "Incorrect email or password.");
         }
 
+        model.addAttribute("backUrl", "/welcome");
         return "login";
     }
 }

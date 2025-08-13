@@ -12,12 +12,12 @@ public class CakeTask {
     @Column(name = "task_id")
     private int taskId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "cake_id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cake_id", nullable = false) // FK → cake_order(cake_id)
     private CakeOrder cakeOrder;
 
     @Column(name = "task_name")
@@ -27,12 +27,12 @@ public class CakeTask {
     @Column(name = "task_type", nullable = false)
     private TaskType taskType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private ShoppingList shoppingList;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @Column(name = "dietary_restriction", columnDefinition = "TEXT", nullable = true)

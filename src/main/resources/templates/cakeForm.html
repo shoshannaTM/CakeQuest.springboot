@@ -10,11 +10,17 @@
 <body class="cakeFormPage">
 <main layout:fragment="content">
     <div class="container">
-        <div class="title">
-            <h1>New Cake Project</h1>
-            <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
-        </div>
+          <div class="heading">
+              <div class="back-link">
+                    <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
+              </div>
 
+            <div class="title">
+                <h1>New Cake Project</h1>
+                <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
+            </div>
+    </div>
+        <form th:action="@{/cakeForm}" method="post">
             <div class="mb-3">
                 <label for="cakeName">What would you like to name this cake?</label>
                 <input type="text" class="form-control" id="cakeName" name="cakeName" placeholder="Sister's Super Awesome Birthday Cake?" required>
@@ -114,9 +120,6 @@
 
             <div class="saveBtn">
                 <button type="submit" class="btn">Save</button>
-            </div>
-            <div class="shopping-btn-wrapper center">
-                <a class="link" th:href="@{${backUrl}}">← Back</a>
             </div>
         </form>
     </div>

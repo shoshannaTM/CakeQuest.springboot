@@ -219,4 +219,8 @@ public class CakeOrderService {
                 cakeOrder.getDecorationNotes(), cakeOrder.getDueDate().minusHours(2), false);
         return decorate;
     }
+
+    public void deleteById(int id) {
+        cakeOrderRepository.deleteById(id);
+    }
 }

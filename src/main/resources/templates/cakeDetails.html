@@ -46,9 +46,14 @@
         <div>
             <a th:href="@{/cakeForm}" class="btn">Edit Cake</a>
         </div>
-        <div>
-            <a href="#" class="link" >Delete Cake</a>
-        </div>
+        <form th:action="@{/cake/delete/{id}(id=${cakeOrder.cakeId})}" method="post">
+            <div class="shopping-btn-wrapper center">
+                <button type="submit" class="btn-link"
+                        onclick="return confirm('Delete this cake order? This cannot be undone.')">
+                    Delete
+                </button>
+            </div>
+        </form>
     </div>
 </main>
 </body>

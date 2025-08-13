@@ -58,7 +58,7 @@ public class CakeController {
         model.addAttribute("cakeRecipes", cakeRecipes);
         model.addAttribute("fillingRecipes", fillingRecipes);
         model.addAttribute("frostingRecipes", frostingRecipes);
-        model.addAttribute("referer", referer);
+        model.addAttribute("backUrl", "/");
 
         return "cakeForm";
     }
@@ -286,5 +286,14 @@ public class CakeController {
         model.addAttribute("task", ctDTO);
         redirectAttributes.addAttribute("backUrl", backUrl);
         return "redirect:/task/DECORATE/" + id;
+    }
+
+    @PostMapping("cake/delete/{id}")
+    public String postDelete(@PathVariable int id,
+                             @RequestParam(value = "backUrl", required = false) String backUrl,
+                             RedirectAttributes redirectAttributes,
+                             Model model){
+        cakeOrderService.deleteById(id);
+        return "redirect:/";
     }
 }

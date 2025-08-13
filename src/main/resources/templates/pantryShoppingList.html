@@ -11,6 +11,11 @@
 <main layout:fragment="content">
     <form th:action="@{/task/SHOP_PANTRY/{id}(id=${task.taskId})}" method="post">
         <input type="hidden" name="backUrl" th:value="${backUrl}" />
+     <div class="heading">
+        <div class="back-link">
+            <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
+        </div>
+
         <div class="title">
             <h1 th:text="${task.name}">Pantry Shopping</h1>
             <p class="complete" th:if="${task.completed}">
@@ -20,6 +25,7 @@
                 Shop your pantry first! Input the amount you already have — if you have none, input 0.
             </p>
         </div>
+     </div>
         <div class="pantry-cards" th:if="${!task.completed}">
             <div th:each="item : ${task.shoppingList.items}">
                 <div th:replace="~{fragments/pantryCard :: pantryCard(
@@ -43,9 +49,6 @@
         </div>
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
         <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
-        </div>
-        <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="@{${backUrl}}">← Back</a>
         </div>
     </form>
 </main>

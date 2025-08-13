@@ -10,9 +10,15 @@
 <body>
 <main layout:fragment="content">
 <div class="container">
-  <div class="title">
-    <h1>Log In</h1>
-    <p th:if="${mode == 'signup'}">Sign up successful! Go ahead and log in.</p>
+  <div class="heading">
+    <div class="back-link">
+      <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+    <div class="title">
+      <h1>Log In</h1>
+      <p th:if="${mode == 'signup'}">Sign up successful! Go ahead and log in.</p>
+    </div>
   </div>
   <form th:action="@{/login}" method="post">
     <div class="mb-3">
@@ -26,9 +32,6 @@
     <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error message</div>
     <div class="saveBtn">
       <button type="submit" class="btn">Log In</button>
-    </div>
-    <div class="shopping-btn-wrapper center">
-      <a class="link"  th:href="@{/welcome}">← Back</a>
     </div>
   </form>
 </div>

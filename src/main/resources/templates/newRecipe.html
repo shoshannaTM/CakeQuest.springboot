@@ -9,9 +9,15 @@
 </head>
 <body class="newRecipePage">
 <main layout:fragment="content">
+  <div class="heading">
+    <div class="back-link">
+      <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
     <div class="title">
         <h1>Import New Recipe</h1>
     </div>
+  </div>
 
     <form method="post" th:action="@{/recipes/new}">
         <input type="hidden" name="backUrl" th:value="${backUrl}" />
@@ -31,9 +37,6 @@
         </div>
         <div class="saveBtn">
             <button type="submit" class="btn">Save</button>
-        </div>
-        <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="@{${backUrl}}">← Back</a>
         </div>
     </form>
 </main>

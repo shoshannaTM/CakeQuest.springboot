@@ -10,11 +10,17 @@
 <body class="userFormPage">
 <main layout:fragment="content">
     <div class="container">
-    <div class="title">
-    <h1>User Info</h1>
-        <p th:if="${mode == 'signup'}">Sign up below to start turning sweet ideas into cake!</p>
-        <p th:if="${mode == 'update'}">Update your info below and hit save!</p>
-  </div>
+          <div class="heading">
+              <div class="back-link">
+                    <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
+              </div>
+
+              <div class="title">
+                    <h1>User Info</h1>
+                    <p th:if="${mode == 'signup'}">Sign up below to start turning sweet ideas into cake!</p>
+                    <p th:if="${mode == 'update'}">Update your info below and hit save!</p>
+              </div>
+        </div>
     <form th:action="${#strings.equals(mode, 'update') ? '/profile/update' : '/signup'}"
           th:object="${formObject}"
           method="post">
@@ -40,9 +46,6 @@
         <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error message</div>
         <div class="saveBtn">
             <button type="submit" class="btn">Save</button>
-        </div>
-        <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="@{${backUrl}}">← Back</a>
         </div>
     </form>
     </div>

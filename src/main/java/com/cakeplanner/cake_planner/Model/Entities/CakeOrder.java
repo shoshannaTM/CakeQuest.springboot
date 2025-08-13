@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "cake_order")
@@ -52,10 +53,16 @@ public class CakeOrder {
     @Column(name = "decoration_notes", columnDefinition = "TEXT")
     private String decorationNotes;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "shopping_list_id")
     private ShoppingList shoppingList;
 
+    @OneToMany(
+            mappedBy = "cakeOrder",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true
+    )
+    private java.util.Set<CakeTask> tasks = new java.util.HashSet<>();
     public CakeOrder() {
     }
 
@@ -176,4 +183,11 @@ public class CakeOrder {
 
     public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
 
+    public Set<CakeTask> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<CakeTask> tasks) {
+        this.tasks = tasks;
+    }
 }
