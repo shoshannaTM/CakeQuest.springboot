@@ -15,7 +15,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // FIXME, only like this for development
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signup", "/login", "/welcome", "/styles.css", "/images/**").permitAll()
+                        .requestMatchers("/signup", "/login", "/welcome", "/styles.css",
+                                "/images/**", "/manifest.json", "/js/main.js", "/js/sw.js").permitAll()
                         .anyRequest().authenticated()
                 )
                 //redirects unauthenticated users to welcome instead of default login
