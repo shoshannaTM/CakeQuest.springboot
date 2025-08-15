@@ -7,13 +7,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain security(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // FIXME, only like this for development
+      // CSRF: enable by default; if your login form doesn't post the token yet,
+      // temporarily ignore those endpoints (remove this ignore when you add the token).
+      .csrf(csrf -> csrf
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .ignoringRequestMatchers("/login", "/logout", "/signup") // TEMP if needed
+      )
+
+      // Static assets + public pages
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signup", "/login", "/welcome", "/styles.css",
                                 "/images/**", "/manifest.json", "/js/main.js", "/js/sw.js").permitAll()
@@ -24,14 +32,16 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/welcome"))
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")                     // your custom login page
-                        .loginProcessingUrl("/login")            // Spring handles POST here
-                        .failureUrl("/login?error=true")         // PRG style redirect on error
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/welcome")
+                                .loginPage("/login").permitAll()
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/", true)       // <<< after login, always go home
+                                .failureUrl("/login?error=true")
+                            )
+                                            .logout(logout -> logout
+                                            .logoutUrl("/logout")
+                                            .logoutSuccessUrl("/welcome")
+                                                            .deleteCookies("JSESSIONID")
+                                                    .invalidateHttpSession(true)
                 );
         return http.build();
     }
