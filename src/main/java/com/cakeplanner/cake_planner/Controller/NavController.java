@@ -75,6 +75,16 @@ public class NavController {
         return "recipes";
     }
 
+    @GetMapping("/profile")
+    public String profile(@RequestParam(value = "success", required = false) String success, Model model){
+        if(success != null && !success.isEmpty()) {
+            model.addAttribute("success", success);
+        }
+        return "profile";
+    }
+}
+
+
 
    /* @GetMapping("/shopping")
     public String shopping(@ModelAttribute("user") User user,
@@ -86,13 +96,7 @@ public class NavController {
         model.addAttribute("cakes", cakes);
         model.addAttribute("backUrl", "/shopping");
 
-        return "shopping";}
+        return "shopping";}*/
 
-    @GetMapping("/profile")
-    public String profile(@RequestParam(value = "success", required = false) String success, Model model){
-        if(success != null && !success.isEmpty()) {
-            model.addAttribute("success", success);
-        }
-        return "profile";}
-}*/
-}
+
+
