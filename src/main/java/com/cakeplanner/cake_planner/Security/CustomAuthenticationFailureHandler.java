@@ -46,11 +46,11 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         // Always store the specific reason for debugging
         request.getSession().setAttribute("LOGIN_ERROR_DETAIL", reason);
 
-        String userMsg = exposeSpecificMessageToUser
-                ? reason
-                : "Incorrect email or password.";
+       // String userMsg = exposeSpecificMessageToUser
+         //       ? reason
+        //        : "Incorrect email or password.";
 
-        String redirect = "/login?error=" + URLEncoder.encode(userMsg, StandardCharsets.UTF_8);
+        String redirect = "/login?error=" + URLEncoder.encode(reason, StandardCharsets.UTF_8);
         response.sendRedirect(request.getContextPath() + redirect);
     }
 }
