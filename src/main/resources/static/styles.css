@@ -106,6 +106,10 @@ main {
 }
 
 /* Forms & Inputs */
+.alert {
+    justify-self: center;
+}
+
 .form-control {
   border-radius: 30px;
   color: #585C5F;

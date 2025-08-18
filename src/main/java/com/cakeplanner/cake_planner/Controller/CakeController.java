@@ -34,7 +34,6 @@ public class CakeController {
 
     @GetMapping("/cakeForm")
     public String showCakeForm(@ModelAttribute("user") User user,
-                               @RequestHeader(value = "Referer") String referer,
                                Model model) {
         List<UserRecipe> userCakeRecipes = recipeService.usersRecipesByType(user, RecipeType.CAKE);
         List<UserRecipe> userFillingRecipes = recipeService.usersRecipesByType(user, RecipeType.FILLING);
