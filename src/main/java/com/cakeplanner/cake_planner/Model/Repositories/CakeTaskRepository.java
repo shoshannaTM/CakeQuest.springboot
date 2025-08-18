@@ -13,4 +13,5 @@ public interface CakeTaskRepository extends JpaRepository<CakeTask, Integer> {
 
     List<CakeTask> findAllByCakeOrder(CakeOrder cakeOrder);
 
+    List<CakeTask> findAllByCakeOrderAndTaskTypeInAndCompletedFalse(CakeOrder order, List<Object> objects);
 }

@@ -3,17 +3,10 @@ package com.cakeplanner.cake_planner.Model.Services;
 import com.cakeplanner.cake_planner.Model.DTO.EditRecipeDTO;
 import com.cakeplanner.cake_planner.Model.DTO.IngredientDTO;
 import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
+import com.cakeplanner.cake_planner.Model.Entities.*;
+import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
-import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
-import com.cakeplanner.cake_planner.Model.Entities.Recipe;
-import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
-import com.cakeplanner.cake_planner.Model.Entities.User;
-import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
-import com.cakeplanner.cake_planner.Model.Entities.UserRecipeId;
-import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.UserRecipeRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,16 +25,19 @@ public class RecipeService {
     @Autowired
     RecipeScraperService recipeScraperService;
     @Autowired
-    RecipeRepository recipeRepository;
-
+    CakeOrderService cakeOrderService;
     @Autowired
-    private UserRecipeRepository userRecipeRepository;
-
+    RecipeRepository recipeRepository;
+    @Autowired
+    UserRecipeRepository userRecipeRepository;
+    @Autowired
+    CakeTaskRepository cakeTaskRepository;
     @Autowired
     RecipeIngredientRepository recipeIngredientRepository;
-
     @Autowired
     IngredientRepository ingredientRepository;
+    @Autowired
+    CakeOrderRepository cakeOrderRepository;
 
     @Transactional
     public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeType, User user) throws IOException {
@@ -156,27 +152,54 @@ public class RecipeService {
         return displayRecipes;
     }
 
+    @Transactional
     public void updateRecipeFromEditForm(EditRecipeDTO form) {
         Recipe recipe = recipeRepository.findRecipeByRecipeId(form.getRecipeId());
         recipe.setRecipeName(form.getRecipeName());
         recipe.setInstructions(form.instructionsToString());
 
-        // Replace ingredients (simple approach: delete existing, insert new)
-        List<RecipeIngredient> existing = recipeIngredientRepository.findRecipeIngredientsByRecipeId(form.getRecipeId());
-        for (RecipeIngredient ri : existing){
-            recipeIngredientRepository.delete(ri);
-        }
+        // Replace ingredients
+        List<RecipeIngredient> existing =
+                recipeIngredientRepository.findRecipeIngredientsByRecipeId(form.getRecipeId());
+        recipeIngredientRepository.deleteAllInBatch(existing);
+
         for (IngredientDTO dto : form.getIngredients()) {
-            if (dto.getAmount() == 0 || dto.getName() == null || dto.getName().isBlank()){
-                continue;
-            }
+            if (dto.getAmount() == 0 || dto.getName() == null || dto.getName().isBlank()) continue;
+
             Ingredient ing = ingredientRepository
                     .findByIngredientNameIgnoreCase(dto.getName())
                     .orElseGet(() -> ingredientRepository.save(new Ingredient(dto.getName())));
+
             recipeIngredientRepository.save(new RecipeIngredient(recipe, ing, dto.getAmount(), dto.getUnit()));
         }
-        recipeRepository.save(recipe);
+        recipeRepository.saveAndFlush(recipe); // ensure new ingredients are visible in this TX
+
+        // Find all orders that use this recipe
+        List<CakeOrder> affected = cakeOrderRepository.findAllUsingRecipe(recipe);
+
+        for (CakeOrder order : affected) {
+            // Rebuild the shopping list from current recipe data (no "other" yet)
+            List<RecipeIngredient> cakeIng =
+                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getCakeRecipe().getRecipeId());
+            List<RecipeIngredient> fillingIng =
+                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getFillingRecipe().getRecipeId());
+            List<RecipeIngredient> frostingIng =
+                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getFrostingRecipe().getRecipeId());
+
+            cakeOrderService.buildShoppingList(cakeIng, fillingIng, frostingIng, order);
+            cakeOrderRepository.save(order);
+
+            // Repoint incomplete shopping tasks at the refreshed list
+            List<CakeTask> shopTasks = cakeTaskRepository.findAllByCakeOrderAndTaskTypeInAndCompletedFalse(
+                    order, List.of(TaskType.SHOP_PANTRY, TaskType.SHOP_STORE)
+            );
+            for (CakeTask t : shopTasks) {
+                t.setShoppingList(order.getShoppingList());
+                cakeTaskRepository.save(t);
+            }
+        }
     }
+
 
     public void deleteRecipe(Integer recipeId) {
         //userRecipeRepository.deleteAllByRecipeId(recipeId);
