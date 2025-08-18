@@ -13,8 +13,8 @@ import java.util.List;
 public interface UserRecipeRepository extends JpaRepository<UserRecipe, UserRecipeId> {
 
     boolean existsByUserAndRecipe(User user, Recipe recipe);
+    void deleteByUserAndRecipe(User user, Recipe recipe);
     List<UserRecipe> findByUser(User user);
     List<UserRecipe> findByUserAndRecipe_RecipeNameContainingIgnoreCase(User user, String name);
     List<UserRecipe> findByUserAndRecipe_RecipeType(User user, RecipeType type);
-
 }

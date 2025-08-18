@@ -268,9 +268,11 @@ public class RecipeService {
 
 
 
-    public void deleteRecipe(Integer recipeId) {
-        //userRecipeRepository.deleteAllByRecipeId(recipeId);
-        //recipeIngredientRepository.deleteAllByRecipeId(recipeId);
-        recipeRepository.deleteById(recipeId);
+    @Transactional
+    public void removeFromUserRecipes(Integer recipeId, User user) {
+        UserRecipeId id = new UserRecipeId(recipeId, user.getUserId());
+        if (userRecipeRepository.existsById(id)) {
+            userRecipeRepository.deleteById(id);
+        }
     }
 }

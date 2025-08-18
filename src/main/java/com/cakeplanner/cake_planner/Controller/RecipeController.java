@@ -95,8 +95,9 @@ public class RecipeController {
 
     @PostMapping("/recipe/delete/{id}")
     public String deleteRecipe(@PathVariable("id") Integer recipeId,
-                             RedirectAttributes redirectAttributes) {
-        recipeService.deleteRecipe(recipeId);
+                                RedirectAttributes redirectAttributes,
+                                @ModelAttribute("user") User user) {
+        recipeService.removeFromUserRecipes(recipeId, user);
         redirectAttributes.addFlashAttribute("message", "Recipe deleted successfully");
         return "redirect:/recipes";
     }
