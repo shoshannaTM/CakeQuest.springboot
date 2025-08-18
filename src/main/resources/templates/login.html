@@ -21,6 +21,9 @@
     </div>
   </div>
   <form th:action="@{/login}" method="post">
+  <!-- CSRF is required when not ignoring /login -->
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
     <div class="mb-3">
       <label for="inputEmail" class="form-label">Email address</label>
       <input type="email" name="username" class="form-control" id="inputEmail" placeholder="name@example.com" required>
@@ -29,7 +32,15 @@
       <label for="inputPassword" class="form-label">Password</label>
       <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password" required>
     </div>
+
+  <!-- Generic message from ?error=... -->
     <div class="alert alert-danger" th:if="${error}" th:text="${error}">Error message</div>
+
+  <!-- Optional: show specific reason only in dev -->
+  <p class="hint"
+     th:if="${@environment.getProperty('app.debug-auth','false') == 'true'}"
+     th:text="${#httpServletRequest.session.getAttribute('LOGIN_ERROR_DETAIL')}"></p>
+
     <div class="saveBtn">
       <button type="submit" class="btn">Log In</button>
     </div>
