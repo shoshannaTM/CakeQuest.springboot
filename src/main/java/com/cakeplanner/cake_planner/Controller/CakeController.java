@@ -20,7 +20,7 @@ import java.util.*;
 
 @Controller
 public class CakeController {
-    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final RecipeService recipeService;
     private final CakeOrderService cakeOrderService;
     private final CakeTaskService cakeTaskService;
@@ -55,6 +55,8 @@ public class CakeController {
             frostingRecipes.add(ur.getRecipe());
         }
 
+        String min = LocalDateTime.now().format(formatter);
+        model.addAttribute("min", min);
         model.addAttribute("cakeRecipes", cakeRecipes);
         model.addAttribute("fillingRecipes", fillingRecipes);
         model.addAttribute("frostingRecipes", frostingRecipes);

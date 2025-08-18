@@ -31,7 +31,7 @@
                        class="form-control"
                        id="dueDate"
                        name="dueDate"
-                       th:min="${#temporals.format(T(java.time.LocalDateTime).now(), 'yyyy-MM-dd\'T\'HH:mm')}">
+                       th:min="${min}">
             </div>
             <div class="mb-3">
                 <label for="cakeRecipe">What flavor cake?</label>
