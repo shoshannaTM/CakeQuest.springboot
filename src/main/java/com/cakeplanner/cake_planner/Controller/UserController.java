@@ -160,7 +160,7 @@ public class UserController {
         }
 
         if (error != null) {
-            model.addAttribute("error", "Incorrect email or password.");
+            model.addAttribute("error", error);
         }
 
         model.addAttribute("backUrl", "/welcome");
