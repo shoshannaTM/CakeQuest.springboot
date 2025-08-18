@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //check if recipe already exists by url, adds info to recipe table, ingredients table, and recipeIngredient table
 //Return a recipeDTO object (with ingredientDTO included) to controller to display recipe in UI
@@ -158,47 +156,116 @@ public class RecipeService {
         recipe.setRecipeName(form.getRecipeName());
         recipe.setInstructions(form.instructionsToString());
 
-        // Replace ingredients
+        // Load existing ingredients for this recipe
         List<RecipeIngredient> existing =
                 recipeIngredientRepository.findRecipeIngredientsByRecipeId(form.getRecipeId());
-        recipeIngredientRepository.deleteAllInBatch(existing);
 
-        for (IngredientDTO dto : form.getIngredients()) {
-            if (dto.getAmount() == 0 || dto.getName() == null || dto.getName().isBlank()) continue;
-
-            Ingredient ing = ingredientRepository
-                    .findByIngredientNameIgnoreCase(dto.getName())
-                    .orElseGet(() -> ingredientRepository.save(new Ingredient(dto.getName())));
-
-            recipeIngredientRepository.save(new RecipeIngredient(recipe, ing, dto.getAmount(), dto.getUnit()));
+        // Index existing by normalized name (or by Ingredient id) — no streams
+        Map<String, RecipeIngredient> byName = new HashMap<>();
+        for (RecipeIngredient ri : existing) {
+            String nm = ri.getIngredient().getIngredientName();
+            if (nm != null) {
+                String key = nm.trim().toLowerCase();
+                byName.put(key, ri);
+            }
         }
-        recipeRepository.saveAndFlush(recipe); // ensure new ingredients are visible in this TX
 
-        // Find all orders that use this recipe
+        // Track which existing rows we keep
+        Set<RecipeIngredientId> keptIds = new HashSet<>();
+
+        // Upsert rows from form
+        List<IngredientDTO> formItems = form.getIngredients();
+        if (formItems != null) {
+            for (IngredientDTO dto : formItems) {
+                String raw = (dto.getName() == null) ? "" : dto.getName().trim();
+                if (raw.isEmpty()) continue;
+                if (dto.getAmount() == null || dto.getAmount() <= 0.0) continue;
+
+                String key = raw.toLowerCase();
+
+                // Find or create Ingredient (normalize name)
+                Ingredient ing;
+                Optional<Ingredient> opt = ingredientRepository.findByIngredientNameIgnoreCase(raw);
+                if (opt.isPresent()) {
+                    ing = opt.get();
+                } else {
+                    ing = new Ingredient(raw);
+                    ing = ingredientRepository.save(ing);
+                }
+
+                RecipeIngredient existingRow = byName.get(key);
+                if (existingRow != null) {
+                    existingRow.setQuantity(dto.getAmount());
+                    existingRow.setUnit(dto.getUnit());
+                    if (existingRow.getRecipeIngredientId() != null) {
+                        keptIds.add(existingRow.getRecipeIngredientId());
+                    }
+                } else {
+                    recipeIngredientRepository.save(
+                            new RecipeIngredient(recipe, ing, dto.getAmount(), dto.getUnit())
+                    );
+                }
+            }
+        }
+
+        // Remove only rows that were actually deleted in the form — no streams
+        List<RecipeIngredient> toRemove = new ArrayList<>();
+        for (RecipeIngredient ri : existing) {
+            RecipeIngredientId id = ri.getRecipeIngredientId();
+            if (id == null || !keptIds.contains(id)) {
+                toRemove.add(ri);
+            }
+        }
+        if (!toRemove.isEmpty()) {
+            recipeIngredientRepository.deleteAllInBatch(toRemove);
+        }
+
+        recipeRepository.save(recipe);
+
+        // Recompute shopping lists for affected orders (null-safe)
         List<CakeOrder> affected = cakeOrderRepository.findAllUsingRecipe(recipe);
 
         for (CakeOrder order : affected) {
-            // Rebuild the shopping list from current recipe data (no "other" yet)
-            List<RecipeIngredient> cakeIng =
-                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getCakeRecipe().getRecipeId());
-            List<RecipeIngredient> fillingIng =
-                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getFillingRecipe().getRecipeId());
-            List<RecipeIngredient> frostingIng =
-                    recipeIngredientRepository.findRecipeIngredientsByRecipeId(order.getFrostingRecipe().getRecipeId());
+            List<RecipeIngredient> cakeIng;
+            if (order.getCakeRecipe() != null) {
+                cakeIng = recipeIngredientRepository.findRecipeIngredientsByRecipeId(
+                        order.getCakeRecipe().getRecipeId());
+            } else {
+                cakeIng = Collections.emptyList();
+            }
 
+            List<RecipeIngredient> fillingIng;
+            if (order.getFillingRecipe() != null) {
+                fillingIng = recipeIngredientRepository.findRecipeIngredientsByRecipeId(
+                        order.getFillingRecipe().getRecipeId());
+            } else {
+                fillingIng = Collections.emptyList();
+            }
+
+            List<RecipeIngredient> frostingIng;
+            if (order.getFrostingRecipe() != null) {
+                frostingIng = recipeIngredientRepository.findRecipeIngredientsByRecipeId(
+                        order.getFrostingRecipe().getRecipeId());
+            } else {
+                frostingIng = Collections.emptyList();
+            }
+
+            // Consider a merge strategy that preserves "other" items on the list
             cakeOrderService.buildShoppingList(cakeIng, fillingIng, frostingIng, order);
             cakeOrderRepository.save(order);
 
-            // Repoint incomplete shopping tasks at the refreshed list
-            List<CakeTask> shopTasks = cakeTaskRepository.findAllByCakeOrderAndTaskTypeInAndCompletedFalse(
-                    order, List.of(TaskType.SHOP_PANTRY, TaskType.SHOP_STORE)
-            );
+            // Repoint incomplete shopping tasks
+            List<CakeTask> shopTasks =
+                    cakeTaskRepository.findAllByCakeOrderAndTaskTypeInAndCompletedFalse(
+                            order, Arrays.asList(TaskType.SHOP_PANTRY, TaskType.SHOP_STORE));
+
             for (CakeTask t : shopTasks) {
                 t.setShoppingList(order.getShoppingList());
                 cakeTaskRepository.save(t);
             }
         }
     }
+
 
 
     public void deleteRecipe(Integer recipeId) {

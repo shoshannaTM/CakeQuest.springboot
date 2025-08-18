@@ -2,7 +2,7 @@ package com.cakeplanner.cake_planner.Model.DTO;
 
 public class IngredientDTO {
     private String name;
-    private double amount;
+    private Double amount;
     private String unit;
 
     public IngredientDTO() {
@@ -22,11 +22,11 @@ public class IngredientDTO {
         this.name = name;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
