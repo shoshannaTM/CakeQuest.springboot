@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 public class CakeTaskDTO {
 
-    private int taskId;
+    private Long taskId;
     private String name;
     private TaskType taskType;
-    private Integer recipeId;
+    private Long recipeId;
     private ShoppingList shoppingList;
     private String dietaryRestriction;
     private String decorationNotes;
@@ -19,7 +19,7 @@ public class CakeTaskDTO {
 
     public CakeTaskDTO() {}
 
-    public CakeTaskDTO(int taskId, String name, TaskType taskType, ShoppingList shoppingList,
+    public CakeTaskDTO(Long taskId, String name, TaskType taskType, ShoppingList shoppingList,
                        String dietaryRestriction, LocalDateTime dueDate, Boolean completed) {
         this.taskId = taskId;
         this.name = name;
@@ -30,7 +30,7 @@ public class CakeTaskDTO {
         this.completed = completed;
     }
 
-    public CakeTaskDTO(int taskId, String name, TaskType taskType, Integer recipeId,
+    public CakeTaskDTO(Long taskId, String name, TaskType taskType, Long recipeId,
                        String dietaryRestriction, String decorationNotes,
                        LocalDateTime dueDate, Boolean completed) {
         this.taskId = taskId;
@@ -43,7 +43,7 @@ public class CakeTaskDTO {
         this.completed = completed;
     }
 
-    public CakeTaskDTO(int taskId, String name, TaskType taskType,
+    public CakeTaskDTO(Long taskId, String name, TaskType taskType,
                        String dietaryRestriction, String decorationNotes,
                        LocalDateTime dueDate, Boolean completed) {
         this.taskId = taskId;
@@ -55,11 +55,11 @@ public class CakeTaskDTO {
         this.completed = completed;
     }
 
-    public int getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
@@ -79,11 +79,11 @@ public class CakeTaskDTO {
         this.taskType = taskType;
     }
 
-    public Integer getRecipeId() {
+    public Long getRecipeId() {
         return recipeId;
     }
 
-    public void setRecipeId(Integer recipeId) {
+    public void setRecipeId(Long recipeId) {
         this.recipeId = recipeId;
     }
 

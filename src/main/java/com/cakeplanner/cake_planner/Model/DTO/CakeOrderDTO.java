@@ -3,18 +3,19 @@ package com.cakeplanner.cake_planner.Model.DTO;
 import com.cakeplanner.cake_planner.Model.Entities.CakeTask;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.ShoppingList;
+import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
 
 import java.time.LocalDateTime;
 
 public class CakeOrderDTO {
-    private int cakeId;
+    private Long cakeId;
     private String cakeName;
     private LocalDateTime dueDate;
-    private Recipe cakeRecipe;
+    private UserRecipe cakeRecipe;
     private double cakeMultiplier;
-    private Recipe fillingRecipe;
+    private UserRecipe fillingRecipe;
     private double fillingMultiplier;
-    private Recipe frostingRecipe;
+    private UserRecipe frostingRecipe;
     private double frostingMultiplier;
     private String dietaryRestriction;
     private String decorationNotes;
@@ -22,10 +23,10 @@ public class CakeOrderDTO {
     public CakeOrderDTO() {
     }
 
-    public CakeOrderDTO(int cakeId, String cakeName, LocalDateTime dueDate,
-                        Recipe cakeRecipe, double cakeMultiplier,
-                        Recipe fillingRecipe, double fillingMultiplier,
-                        Recipe frostingRecipe, double frostingMultiplier,
+    public CakeOrderDTO(Long cakeId, String cakeName, LocalDateTime dueDate,
+                        UserRecipe cakeRecipe, double cakeMultiplier,
+                        UserRecipe fillingRecipe, double fillingMultiplier,
+                        UserRecipe frostingRecipe, double frostingMultiplier,
                         String dietaryRestriction, String decorationNotes) {
         this.cakeId = cakeId;
         this.cakeName = cakeName;
@@ -40,11 +41,11 @@ public class CakeOrderDTO {
         this.decorationNotes = decorationNotes;
     }
 
-    public int getCakeId() {
+    public Long getCakeId() {
         return cakeId;
     }
 
-    public void setCakeId(int cakeId) {
+    public void setCakeId(Long cakeId) {
         this.cakeId = cakeId;
     }
 
@@ -64,11 +65,11 @@ public class CakeOrderDTO {
         this.dueDate = dueDate;
     }
 
-    public Recipe getCakeRecipe() {
+    public UserRecipe getCakeRecipe() {
         return cakeRecipe;
     }
 
-    public void setCakeRecipe(Recipe cakeRecipe) {
+    public void setCakeRecipe(UserRecipe cakeRecipe) {
         this.cakeRecipe = cakeRecipe;
     }
 
@@ -80,11 +81,11 @@ public class CakeOrderDTO {
         this.cakeMultiplier = cakeMultiplier;
     }
 
-    public Recipe getFillingRecipe() {
+    public UserRecipe getFillingRecipe() {
         return fillingRecipe;
     }
 
-    public void setFillingRecipe(Recipe fillingRecipe) {
+    public void setFillingRecipe(UserRecipe fillingRecipe) {
         this.fillingRecipe = fillingRecipe;
     }
 
@@ -96,11 +97,11 @@ public class CakeOrderDTO {
         this.fillingMultiplier = fillingMultiplier;
     }
 
-    public Recipe getFrostingRecipe() {
+    public UserRecipe getFrostingRecipe() {
         return frostingRecipe;
     }
 
-    public void setFrostingRecipe(Recipe frostingRecipe) {
+    public void setFrostingRecipe(UserRecipe frostingRecipe) {
         this.frostingRecipe = frostingRecipe;
     }
 
@@ -129,7 +130,8 @@ public class CakeOrderDTO {
     }
 
     public String getFlavorSummary() {
-        return cakeRecipe.getRecipeName() + " - " + fillingRecipe.getRecipeName() + " - " + frostingRecipe.getRecipeName();
+        return cakeRecipe.getUserRecipeName() + " - "
+                + fillingRecipe.getUserRecipeName() + " - "
+                + frostingRecipe.getUserRecipeName();
     }
-
 }

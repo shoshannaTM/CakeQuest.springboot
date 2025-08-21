@@ -4,19 +4,21 @@ import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 public class CakeTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
-    private int taskId;
+    private Long taskId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = LAZY)
     @JoinColumn(name = "cake_id", nullable = false) // FK → cake_order(cake_id)
     private CakeOrder cakeOrder;
 
@@ -27,13 +29,13 @@ public class CakeTask {
     @Column(name = "task_type", nullable = false)
     private TaskType taskType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "id")
     private ShoppingList shoppingList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_recipe_id")
+    private UserRecipe userRecipe;
 
     @Column(name = "dietary_restriction", columnDefinition = "TEXT", nullable = true)
     private String dietaryRestriction;
@@ -63,13 +65,13 @@ public class CakeTask {
     }
 
     public CakeTask(User user, CakeOrder cakeOrder, String name,
-                    TaskType taskType, Recipe recipe,
+                    TaskType taskType, UserRecipe userRecipe,
                     String dietaryRestriction, LocalDateTime dueDate, Boolean completed) {
         this.user = user;
         this.cakeOrder = cakeOrder;
         this.name = name;
         this.taskType = taskType;
-        this.recipe = recipe;
+        this.userRecipe = userRecipe;
         this.dietaryRestriction = dietaryRestriction;
         this.dueDate = dueDate;
         this.completed = completed;
@@ -100,11 +102,11 @@ public class CakeTask {
         this.completed = completed;
     }
 
-    public int getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
@@ -140,12 +142,12 @@ public class CakeTask {
         this.taskType = taskType;
     }
 
-    public Recipe getRecipe() {
-        return recipe;
+    public UserRecipe getUserRecipe() {
+        return userRecipe;
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    public void setUserRecipe(UserRecipe userRecipe) {
+        this.userRecipe = userRecipe;
     }
 
     public String getDietaryRestriction() {

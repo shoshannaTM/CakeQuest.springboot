@@ -7,10 +7,5 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Integer> {
-
-    //return a list of recipe ingredients from the recipe whose id is passed
-    @Query("SELECT ri FROM RecipeIngredient ri JOIN FETCH ri.ingredient WHERE ri.recipe.recipeId = :recipeId")
-    List<RecipeIngredient> findRecipeIngredientsByRecipeId(@Param("recipeId") Integer recipeId);
-
+public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
 }

@@ -3,11 +3,7 @@ package com.cakeplanner.cake_planner.Model.Services;
 import com.cakeplanner.cake_planner.Model.DTO.CakeOrderDTO;
 import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cakeplanner.cake_planner.Model.Repositories.*;
 import org.springframework.stereotype.Service;
 
 
@@ -16,39 +12,58 @@ import java.util.*;
 
 @Service
 public class CakeOrderService {
+    private final RecipeRepository recipeRepository;
+    private final UserRecipeRepository userRecipeRepository;
+    private final CakeTaskRepository cakeTaskRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final IngredientRepository ingredientRepository;
+    private final UserRecipeIngredientRepository userRecipeIngredientRepository;
+    private final CakeOrderRepository cakeOrderRepository;
+    private final SpoonacularService spoonacularService;
 
-    @Autowired
-    CakeOrderRepository cakeOrderRepository;
+    public CakeOrderService(RecipeRepository recipeRepository,
+                            UserRecipeRepository userRecipeRepository,
+                            CakeTaskRepository cakeTaskRepository,
+                            RecipeIngredientRepository recipeIngredientRepository,
+                            IngredientRepository ingredientRepository,
+                            UserRecipeIngredientRepository userRecipeIngredientRepository,
+                            CakeOrderRepository cakeOrderRepository, SpoonacularService spoonacularService) {
+        this.recipeRepository = recipeRepository;
+        this.userRecipeRepository = userRecipeRepository;
+        this.cakeTaskRepository = cakeTaskRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.userRecipeIngredientRepository = userRecipeIngredientRepository;
+        this.cakeOrderRepository = cakeOrderRepository;
+        this.spoonacularService = spoonacularService;
+    }
 
-    @Autowired
-    CakeTaskRepository cakeTaskRepository;
-
-    @Autowired
-    RecipeIngredientRepository recipeIngredientRepository;
-
-    @Autowired
-    RecipeRepository recipeRepository;
-
-    @Autowired
-    SpoonacularService spoonacularService;
-
-    public void createCakeOrderFromForm(String cakeName, LocalDateTime dueDate, int cakeRecipeId,
-                                        double cakeMultiplier, int fillingRecipeId, double fillingMultiplier,
-                                        int frostingRecipeId, double frostingMultiplier, String dietaryRestriction,
+    public void createCakeOrderFromForm(String cakeName, LocalDateTime dueDate, Long cakeRecipeId,
+                                        double cakeMultiplier, Long fillingRecipeId, double fillingMultiplier,
+                                        Long frostingRecipeId, double frostingMultiplier, String dietaryRestriction,
                                         String decorationNotes, User user){
-        Recipe cakeRecipe = recipeRepository.findRecipeByRecipeId(cakeRecipeId);
-        Recipe fillingRecipe = recipeRepository.findRecipeByRecipeId(fillingRecipeId);
-        Recipe frostingRecipe = recipeRepository.findRecipeByRecipeId(frostingRecipeId);
-        CakeOrder cakeOrder = new CakeOrder(user, cakeName, dueDate, cakeRecipe, cakeMultiplier, fillingRecipe, fillingMultiplier,
-                frostingRecipe, frostingMultiplier, dietaryRestriction, decorationNotes);
-        save(cakeOrder);
+        Optional<UserRecipe> cakeRecipeOptional = userRecipeRepository.findByUserRecipeId(cakeRecipeId);
+        Optional<UserRecipe> fillingRecipeOptional = userRecipeRepository.findByUserRecipeId(fillingRecipeId);
+        Optional<UserRecipe> frostingRecipeOptional = userRecipeRepository.findByUserRecipeId(frostingRecipeId);
+
+        if(cakeRecipeOptional.isPresent() && fillingRecipeOptional.isPresent() && frostingRecipeOptional.isPresent()) {
+            UserRecipe cakeRecipe = cakeRecipeOptional.get();
+            UserRecipe fillingRecipe = fillingRecipeOptional.get();
+            UserRecipe frostingRecipe = frostingRecipeOptional.get();
+
+            CakeOrder cakeOrder = new CakeOrder(user, cakeName,dueDate, cakeRecipe, fillingRecipe, frostingRecipe,
+                    cakeMultiplier, fillingMultiplier, frostingMultiplier, dietaryRestriction, decorationNotes);
+
+            save(cakeOrder);
+        }
     }
 
     public void save(CakeOrder cakeOrder) {
-        buildShoppingList(recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getCakeRecipe().getRecipeId()),
-                          recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFillingRecipe().getRecipeId()),
-                          recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFrostingRecipe().getRecipeId()),
-                          cakeOrder);
+        buildShoppingList(
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getCakeRecipe().getUserRecipeId()),
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getFillingRecipe().getUserRecipeId()),
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getFrostingRecipe().getUserRecipeId()),
+                cakeOrder);
         cakeOrderRepository.save(cakeOrder);
 
         List<CakeTask> cakeTasks = new ArrayList<>();
@@ -64,9 +79,9 @@ public class CakeOrderService {
         }
     }
 
-    public void buildShoppingList(List<RecipeIngredient> cakeIngredients,
-                                        List<RecipeIngredient> fillingIngredients,
-                                        List<RecipeIngredient> frostingIngredients,
+    public void buildShoppingList(List<UserRecipeIngredient> cakeIngredients,
+                                        List<UserRecipeIngredient> fillingIngredients,
+                                        List<UserRecipeIngredient> frostingIngredients,
                                         CakeOrder cakeOrder) {
 
         Map<String, ShoppingListItem> itemMap = new HashMap<>();
@@ -80,22 +95,22 @@ public class CakeOrderService {
         }
 
             // Add entire cake recipe to map
-            for (RecipeIngredient ri : cakeIngredients) {
-                String name = ri.getIngredient().getIngredientName().toLowerCase();
-                double multiplied = ri.getQuantity() * cakeOrder.getCakeMultiplier();
-                ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
+            for (UserRecipeIngredient uri : cakeIngredients) {
+                String name = uri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = uri.getQuantity() * cakeOrder.getCakeMultiplier();
+                ShoppingListItem listItem = new ShoppingListItem(name, multiplied, uri.getUnit(), shoppingList);
                 itemMap.put(name, listItem);
             }
 
             // Check map for filling recipe ingredients
-            for (RecipeIngredient ri : fillingIngredients) {
-                String name = ri.getIngredient().getIngredientName().toLowerCase();
-                double multiplied = ri.getQuantity() * cakeOrder.getFillingMultiplier();
+            for (UserRecipeIngredient uri : fillingIngredients) {
+                String name = uri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = uri.getQuantity() * cakeOrder.getFillingMultiplier();
 
                 if (itemMap.containsKey(name)) {
                     ShoppingListItem existingListItem = itemMap.get(name);
                     String unitA = existingListItem.getUnit();
-                    String unitB = ri.getUnit();
+                    String unitB = uri.getUnit();
 
                     if (unitB.equalsIgnoreCase(unitA)) {
                         double newAmount = existingListItem.getAmount() + multiplied;
@@ -110,20 +125,20 @@ public class CakeOrderService {
                         itemMap.put(name, existingListItem);
                     }
                 } else {
-                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
+                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, uri.getUnit(), shoppingList);
                     itemMap.put(name, listItem);
                 }
             }
 
             // Check map for frosting recipe ingredients
-            for (RecipeIngredient ri : frostingIngredients) {
-                String name = ri.getIngredient().getIngredientName().toLowerCase();
-                double multiplied = ri.getQuantity() * cakeOrder.getFrostingMultiplier();
+            for (UserRecipeIngredient uri : frostingIngredients) {
+                String name = uri.getIngredient().getIngredientName().toLowerCase();
+                double multiplied = uri.getQuantity() * cakeOrder.getFrostingMultiplier();
 
                 if (itemMap.containsKey(name)) {
                     ShoppingListItem existingListItem = itemMap.get(name);
                     String unitA = existingListItem.getUnit();
-                    String unitB = ri.getUnit();
+                    String unitB = uri.getUnit();
 
                     if (unitB.equalsIgnoreCase(unitA)) {
                         double newAmount = existingListItem.getAmount() + multiplied;
@@ -131,14 +146,14 @@ public class CakeOrderService {
                         itemMap.put(name, existingListItem);
                     } else {
                         double conversionRate = spoonacularService.getConversionRate(
-                                name, unitB, unitA); // convert ri unit to match existing
+                                name, unitB, unitA); // convert uri unit to match existing
                         double normalizedAmount = multiplied * conversionRate;
                         double newAmount = existingListItem.getAmount() + normalizedAmount;
                         existingListItem.setAmount(newAmount);
                         itemMap.put(name, existingListItem);
                     }
                 } else {
-                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, ri.getUnit(), shoppingList);
+                    ShoppingListItem listItem = new ShoppingListItem(name, multiplied, uri.getUnit(), shoppingList);
                     itemMap.put(name, listItem);
                 }
             }
@@ -156,7 +171,7 @@ public class CakeOrderService {
         return cakeDTOs;
     }
 
-    public CakeOrderDTO cakeOrderIdToDTO(int id){
+    public CakeOrderDTO cakeOrderIdToDTO(Long id){
         Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(id);
 
         if (cakeOrderOptional.isEmpty()) {
@@ -220,7 +235,7 @@ public class CakeOrderService {
         return decorate;
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         cakeOrderRepository.deleteById(id);
     }
 }

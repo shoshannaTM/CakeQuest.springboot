@@ -37,9 +37,9 @@
                 <label for="cakeRecipe">What flavor cake?</label>
                 <select class="custom-select" id="cakeRecipe" name="cakeRecipeId">
                     <option disabled selected>Select a cake flavor... </option>
-                    <option th:each="recipe : ${cakeRecipes}"
-                            th:value="${recipe.recipeId}"
-                            th:text="${recipe.recipeName}">
+                    <option th:each="userRecipe : ${cakeRecipes}"
+                            th:value="${userRecipe.userRecipeId}"
+                            th:text="${userRecipe.userRecipeName}">
                     </option>
                     <option>None</option>
                 </select>
@@ -63,9 +63,9 @@
                 <label for="fillingFlavor">What flavor filling?</label>
                 <select class="custom-select" id="fillingFlavor" name="fillingRecipeId">
                     <option disabled selected>Select a filling flavor... </option>
-                    <option th:each="recipe : ${fillingRecipes}"
-                            th:value="${recipe.recipeId}"
-                            th:text="${recipe.recipeName}">
+                    <option th:each="userRecipe : ${fillingRecipes}"
+                            th:value="${userRecipe.userRecipeId}"
+                            th:text="${userRecipe.userRecipeName}">
                     </option>
                     <option>None</option>
                 </select>
@@ -89,9 +89,9 @@
                 <label for="frostingFlavor">What flavor frosting?</label>
                 <select class="custom-select" id="frostingFlavor" name="frostingRecipeId">
                     <option disabled selected>Select a frosting flavor... </option>
-                    <option th:each="recipe : ${frostingRecipes}"
-                            th:value="${recipe.recipeId}"
-                            th:text="${recipe.recipeName}">
+                    <option th:each="userRecipe : ${frostingRecipes}"
+                            th:value="${userRecipe.userRecipeId}"
+                            th:text="${userRecipe.userRecipeName}">
                     </option>
                     <option>None</option>
                 </select>

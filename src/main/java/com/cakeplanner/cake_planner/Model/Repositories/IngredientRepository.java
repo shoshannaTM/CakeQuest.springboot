@@ -9,11 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
-    //use optional, because this is to check whether ingredient exists, so high likelihood of retuning null
+public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     Optional<Ingredient> findByIngredientNameIgnoreCase(String ingredientName);
-
-    @Query("SELECT ri.ingredient FROM RecipeIngredient ri WHERE ri.recipe.recipeId = :recipeId")
-    List<Ingredient> findIngredientsByRecipeId(@Param("recipeId") Integer recipeId);
 
 }

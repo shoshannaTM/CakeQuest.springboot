@@ -2,10 +2,7 @@ package com.cakeplanner.cake_planner.Model.Services;
 
 import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.ShoppingListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.cakeplanner.cake_planner.Model.Repositories.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,26 +12,23 @@ import java.util.*;
 @Service
 @Transactional
 public class ShoppingService {
-    @Autowired
-    RecipeService recipeService;
+    private final CakeTaskRepository cakeTaskRepository;
+    private final CakeOrderRepository cakeOrderRepository;
+    private final SpoonacularService spoonacularService;
+    private final ShoppingListRepository shoppingListRepository;
 
-    @Autowired
-    CakeTaskService cakeTaskService;
-
-    @Autowired
-    CakeOrderRepository cakeOrderRepository;
-
-    @Autowired
-    CakeTaskRepository cakeTaskRepository;
-
-    @Autowired
-    ShoppingListRepository shoppingListRepository;
-
-    @Autowired
-    private SpoonacularService spoonacularService;
+    public ShoppingService(CakeTaskRepository cakeTaskRepository,
+                           CakeOrderRepository cakeOrderRepository,
+                           SpoonacularService spoonacularService,
+                           ShoppingListRepository shoppingListRepository) {
+        this.cakeTaskRepository = cakeTaskRepository;
+        this.cakeOrderRepository = cakeOrderRepository;
+        this.spoonacularService = spoonacularService;
+        this.shoppingListRepository = shoppingListRepository;
+    }
 
 
-    public void idsToShoppingList(List<Integer> cakeIds, User user){
+    public void idsToShoppingList(List<Long> cakeIds, User user){
         if (cakeIds == null || cakeIds.isEmpty()) return;
 
         List<ShoppingList> lists = new ArrayList<>();
@@ -43,7 +37,7 @@ public class ShoppingService {
         String dietaryRestrictions = "";
         String listName = "";
         //get all shopping lists
-        for(Integer cakeId : cakeIds){
+        for(Long cakeId : cakeIds){
             Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(cakeId);
             if(cakeOrderOptional.isEmpty()){
                 continue;

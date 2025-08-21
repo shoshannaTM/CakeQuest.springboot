@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CakeTaskRepository extends JpaRepository<CakeTask, Integer> {
+public interface CakeTaskRepository extends JpaRepository<CakeTask, Long> {
     List<CakeTask> findAllByUser(User user);
 
     List<CakeTask> findAllByCakeOrder(CakeOrder cakeOrder);

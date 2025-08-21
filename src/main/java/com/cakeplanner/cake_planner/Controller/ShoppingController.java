@@ -21,7 +21,7 @@ public class ShoppingController {
     }
 
     @PostMapping("/shopping/custom_list")
-    public String showUpdateForm(@RequestParam(value = "selectedCakeIds", required = false) List<Integer> selectedCakeIds,
+    public String showUpdateForm(@RequestParam(value = "selectedCakeIds", required = false) List<Long> selectedCakeIds,
                                  RedirectAttributes redirectAttributes,
                                  @ModelAttribute("user") User user) {
         if(selectedCakeIds.isEmpty()){

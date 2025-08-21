@@ -10,7 +10,7 @@ import java.util.List;
 public class ShoppingList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
    @OneToOne(mappedBy = "shoppingList")
     private CakeOrder cakeOrder;
@@ -26,11 +26,11 @@ public class ShoppingList {
         this.items = (items != null) ? items : new ArrayList<>();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

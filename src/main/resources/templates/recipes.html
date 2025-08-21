@@ -56,9 +56,9 @@
             <div th:replace="fragments/arrowCard :: arrowCard(
             ${recipe.recipeName},
             ${recipe.recipeType},
-            'Saved',
-            'N/A',
-            ${'/recipes/' + recipe.recipeId})"></div>
+            '',
+            '',
+            ${'/recipes/' + recipe.userRecipeId})"></div>
         </div>
     </div>
 

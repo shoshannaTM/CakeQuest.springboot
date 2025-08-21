@@ -1,93 +1,68 @@
 package com.cakeplanner.cake_planner.Model.Entities;
 
-import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "recipe")
+import static jakarta.persistence.FetchType.LAZY;
 
+@Entity
+@Table(name = "recipe", indexes = {
+        @Index(name="unique_recipe_url", columnList="recipe_url", unique = true)
+})
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id")
-    private int recipeId;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "recipe_type", nullable = false)
-    private RecipeType recipeType;
-
-    @Column(name = "recipe_name", nullable = false)
-    private String recipeName;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String instructions;
+    @Column(name = "base_recipe_id")
+    private Long baseRecipeId;
 
     @Column(name = "recipe_url", nullable = false)
     private String recipeUrl;
 
-    @OneToMany(
-            mappedBy = "recipe",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true
-    )
-    private java.util.Set<RecipeIngredient> recipeIngredients = new java.util.HashSet<>();
+    @Column(name = "base_recipe_name", nullable = false)
+    private String baseRecipeName;
 
-    @OneToMany(
-            mappedBy = "recipe",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true
-    )
-    private java.util.Set<UserRecipe> userRecipes = new java.util.HashSet<>();
+    @Column(name = "base_recipe_instructions", columnDefinition = "TEXT")
+    private String baseRecipeInstructions;
+
+
+    @OneToMany(mappedBy = "recipe",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = LAZY)
+    private List<RecipeIngredient> baseRecipeIngredients;
 
     public Recipe() {
     }
 
-    public Recipe(int recipeId, RecipeType recipeType, String recipeName, String instructions, String recipeUrl) {
-        this.recipeId = recipeId;
-        this.recipeType = recipeType;
-        this.recipeName = recipeName;
-        this.instructions = instructions;
+    public Recipe(String recipeUrl, String baseRecipeName,
+                  String baseRecipeInstructions,
+                  List<RecipeIngredient> baseRecipeIngredients) {
         this.recipeUrl = recipeUrl;
+        this.baseRecipeName = baseRecipeName;
+        this.baseRecipeInstructions = baseRecipeInstructions;
+        this.baseRecipeIngredients = baseRecipeIngredients;
     }
 
-    public Recipe(RecipeType recipeType, String recipeName, String instructions, String recipeUrl) {
-        this.recipeType = recipeType;
-        this.recipeName = recipeName;
-        this.instructions = instructions;
+    public Recipe(Long baseRecipeId, String recipeUrl,
+                  String baseRecipeName, String baseRecipeInstructions,
+                  List<RecipeIngredient> baseRecipeIngredients) {
+        this.baseRecipeId = baseRecipeId;
         this.recipeUrl = recipeUrl;
+        this.baseRecipeName = baseRecipeName;
+        this.baseRecipeInstructions = baseRecipeInstructions;
+        this.baseRecipeIngredients = baseRecipeIngredients;
     }
 
-    public int getRecipeId() {
-        return recipeId;
+    public Long getBaseRecipeId() {
+        return baseRecipeId;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
-    }
-
-    public RecipeType getRecipeType() {
-        return recipeType;
-    }
-
-    public void setRecipeType(RecipeType recipeType) {
-        this.recipeType = recipeType;
-    }
-
-    public String getRecipeName() {
-        return recipeName;
-    }
-
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
+    public void setBaseRecipeId(Long baseRecipeId) {
+        this.baseRecipeId = baseRecipeId;
     }
 
     public String getRecipeUrl() {
@@ -98,19 +73,27 @@ public class Recipe {
         this.recipeUrl = recipeUrl;
     }
 
-    public Set<RecipeIngredient> getRecipeIngredients() {
-        return recipeIngredients;
+    public String getBaseRecipeName() {
+        return baseRecipeName;
     }
 
-    public void setRecipeIngredients(Set<RecipeIngredient> recipeIngredients) {
-        this.recipeIngredients = recipeIngredients;
+    public void setBaseRecipeName(String baseRecipeName) {
+        this.baseRecipeName = baseRecipeName;
     }
 
-    public Set<UserRecipe> getUserRecipes() {
-        return userRecipes;
+    public String getBaseRecipeInstructions() {
+        return baseRecipeInstructions;
     }
 
-    public void setUserRecipes(Set<UserRecipe> userRecipes) {
-        this.userRecipes = userRecipes;
+    public void setBaseRecipeInstructions(String baseRecipeInstructions) {
+        this.baseRecipeInstructions = baseRecipeInstructions;
+    }
+
+    public List<RecipeIngredient> getBaseRecipeIngredients() {
+        return baseRecipeIngredients;
+    }
+
+    public void setBaseRecipeIngredients(List<RecipeIngredient> baseRecipeIngredients) {
+        this.baseRecipeIngredients = baseRecipeIngredients;
     }
 }

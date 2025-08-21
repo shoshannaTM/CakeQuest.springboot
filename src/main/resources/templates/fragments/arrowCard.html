@@ -6,7 +6,11 @@
       <div class="card-header">
         <h3 th:text="${title}">Card Title</h3>
         <p class="subtitle" th:text="${subtitle}">Subtitle</p>
-        <p class="date" th:text="${datePrefix + ': ' + dateValue}">Saved/Due: MM/DD/YYYY</p>
+        <p class="date"
+           th:if="${dateValue != null and !#strings.isEmpty(dateValue)}"
+           th:text="${datePrefix + ': ' + dateValue}">
+          Saved/Due: MM/DD/YYYY
+        </p>
       </div>
     </div>
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditRecipeDTO {
-    private int recipeId;
+    private Long userRecipeId;
     private String recipeName;
     private List<IngredientDTO> ingredients = new ArrayList<>();
     private List<String> instructions = new ArrayList<>();
@@ -15,19 +15,19 @@ public class EditRecipeDTO {
     public EditRecipeDTO() {
     }
 
-    public EditRecipeDTO(int recipeId, String recipeName, List<IngredientDTO> ingredients, List<String> instructions) {
-        this.recipeId = recipeId;
+    public EditRecipeDTO(Long userRecipeId, String recipeName, List<IngredientDTO> ingredients, List<String> instructions) {
+        this.userRecipeId = userRecipeId;
         this.recipeName = recipeName;
         this.ingredients = ingredients;
         this.instructions = instructions;
     }
 
-    public int getRecipeId() {
-        return recipeId;
+    public Long getUserRecipeId() {
+        return userRecipeId;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setUserRecipeId(Long userRecipeId) {
+        this.userRecipeId = userRecipeId;
     }
 
     public String getRecipeName() {

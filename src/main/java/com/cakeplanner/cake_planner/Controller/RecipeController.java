@@ -18,13 +18,14 @@ public class RecipeController {
     private final RecipeService recipeService;
 
     public RecipeController(RecipeService recipeService) {
+
         this.recipeService = recipeService;
     }
 
     @GetMapping("/recipes/{recipeId}")
-    public String showRecipeDetails(@PathVariable Integer recipeId,
+    public String showRecipeDetails(@PathVariable Long recipeId,
                                     Model model) {
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("mode", "read");
         model.addAttribute("backUrl", "/recipes");
@@ -44,21 +45,21 @@ public class RecipeController {
                                   @ModelAttribute("user") User user) throws IOException {
         EditRecipeDTO form = recipeService.processRecipeForEdit(recipeUrl, recipeType, user);
 
-        return "redirect:/recipes/edit/" + form.getRecipeId() + "?mode=scrape";
+        return "redirect:/recipes/edit/" + form.getUserRecipeId() + "?mode=scrape";
     }
 
     @GetMapping("/recipes/edit/{id}")
-    public String editRecipe(@PathVariable Integer id,
+    public String editRecipe(@PathVariable Long id,
                              @RequestParam(value = "mode", required = false) String mode,
                              @ModelAttribute("form") EditRecipeDTO form,
                              Model model) {
-        if (form == null || form.getRecipeId() == 0) {
-            RecipeDTO recipe = recipeService.recipeToDTO(id);
+        if (form == null || form.getUserRecipeId() == null) {
+            RecipeDTO recipeDTO = recipeService.userRecipeToDTO(id);
             form = new EditRecipeDTO(
-                    recipe.getRecipeId(),
-                    recipe.getRecipeName(),
-                    recipe.getIngredients(),
-                    recipeService.instructionsFromString(recipe.getInstructions())
+                    recipeDTO.getUserRecipeId(),
+                    recipeDTO.getRecipeName(),
+                    recipeDTO.getIngredients(),
+                    recipeService.instructionsFromString(recipeDTO.getInstructions())
             );
         }
 
@@ -73,7 +74,7 @@ public class RecipeController {
                                 RedirectAttributes redirectAttributes) {
         form.getIngredients().add(new IngredientDTO("", 0.0, ""));
         redirectAttributes.addFlashAttribute("form", form);
-        return "redirect:/recipes/edit/" + form.getRecipeId();
+        return "redirect:/recipes/edit/" + form.getUserRecipeId();
     }
 
 
@@ -81,20 +82,20 @@ public class RecipeController {
     public String addStep(@ModelAttribute("form") EditRecipeDTO form, RedirectAttributes redirectAttributes) {
         form.getInstructions().add("");
         redirectAttributes.addFlashAttribute("form", form);
-        return "redirect:/recipes/edit/" + form.getRecipeId();
+        return "redirect:/recipes/edit/" + form.getUserRecipeId();
     }
 
     @PostMapping(value = "/recipe/edit", params = "save")
     public String saveRecipe(@ModelAttribute("form") EditRecipeDTO form,
                              RedirectAttributes redirectAttributes) {
-        recipeService.updateRecipeFromEditForm(form);
+        recipeService.updateUserRecipeFromEditForm(form);
         redirectAttributes.addFlashAttribute("message", "Recipe updated and saved!");
-        return "redirect:/recipes/" + form.getRecipeId();
+        return "redirect:/recipes/" + form.getUserRecipeId();
     }
 
 
     @PostMapping("/recipe/delete/{id}")
-    public String deleteRecipe(@PathVariable("id") Integer recipeId,
+    public String deleteRecipe(@PathVariable("id") Long recipeId,
                                 RedirectAttributes redirectAttributes,
                                 @ModelAttribute("user") User user) {
         recipeService.removeFromUserRecipes(recipeId, user);

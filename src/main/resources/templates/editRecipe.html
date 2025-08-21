@@ -16,13 +16,13 @@
     <div class="mb-4 text-center">
     <h1>Edit Recipe</h1>
       </div>
-      <p class="subtitle" th:if="${mode == 'scrape'}">
+      <p class="edit-note" th:if="${mode == 'scrape'}">
         Recipe scraping isn’t always perfect. Review and fix anything before saving.
       </p>
   </div>
 
   <form th:action="@{/recipe/edit}" th:object="${form}" method="post">
-    <input type="hidden" th:field="*{recipeId}"/>
+    <input type="hidden" th:field="*{userRecipeId}"/>
 
       <div class="mb-3">
         <h3 class="section-title">Recipe Title</h3>

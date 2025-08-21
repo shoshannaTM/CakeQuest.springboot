@@ -39,19 +39,19 @@ public class CakeController {
         List<UserRecipe> userFillingRecipes = recipeService.usersRecipesByType(user, RecipeType.FILLING);
         List<UserRecipe> userFrostingRecipes = recipeService.usersRecipesByType(user, RecipeType.FROSTING);
 
-        List<Recipe> cakeRecipes = new ArrayList<>();
+        List<UserRecipe> cakeRecipes = new ArrayList<>();
         for (UserRecipe ur : userCakeRecipes) {
-            cakeRecipes.add(ur.getRecipe());
+            cakeRecipes.add(ur);
         }
 
-        List<Recipe> fillingRecipes = new ArrayList<>();
+        List<UserRecipe> fillingRecipes = new ArrayList<>();
         for (UserRecipe ur : userFillingRecipes) {
-            fillingRecipes.add(ur.getRecipe());
+            fillingRecipes.add(ur);
         }
 
-        List<Recipe> frostingRecipes = new ArrayList<>();
+        List<UserRecipe> frostingRecipes = new ArrayList<>();
         for (UserRecipe ur : userFrostingRecipes) {
-            frostingRecipes.add(ur.getRecipe());
+            frostingRecipes.add(ur);
         }
 
         String min = LocalDateTime.now().format(formatter);
@@ -68,11 +68,11 @@ public class CakeController {
     @PostMapping("/cakeForm")
     public String createCake(@RequestParam("cakeName") String cakeName,
                              @RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dueDate,
-                             @RequestParam("cakeRecipeId") int cakeRecipeId,
+                             @RequestParam("cakeRecipeId") Long cakeRecipeId,
                              @RequestParam("cakeMultiplier") double cakeMultiplier,
-                             @RequestParam("fillingRecipeId") int fillingRecipeId,
+                             @RequestParam("fillingRecipeId") Long fillingRecipeId,
                              @RequestParam("fillingMultiplier") double fillingMultiplier,
-                             @RequestParam("frostingRecipeId") int frostingRecipeId,
+                             @RequestParam("frostingRecipeId") Long frostingRecipeId,
                              @RequestParam("frostingMultiplier") double frostingMultiplier,
                              @RequestParam(value = "dietaryRestriction", required = false) String dietaryRestriction,
                              @RequestParam(value = "decorationNotes", required = false) String decorationNotes,
@@ -85,7 +85,7 @@ public class CakeController {
     }
 
     @GetMapping("/cakes/{id}")
-    public String viewCakeDetails(@PathVariable int id,
+    public String viewCakeDetails(@PathVariable Long id,
                                   Model model) {
         CakeOrderDTO cakeOrderDTO = cakeOrderService.cakeOrderIdToDTO(id);
         List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForCake(id);
@@ -107,7 +107,7 @@ public class CakeController {
     }
 
     @GetMapping("/task/SHOP_PANTRY/{id}")
-    public String getPantryTask(@PathVariable int id,
+    public String getPantryTask(@PathVariable Long id,
                                 @RequestParam(value = "backUrl", required = false) String backUrl,
                                 Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
@@ -118,7 +118,7 @@ public class CakeController {
     }
 
     @PostMapping("/task/SHOP_PANTRY/{id}")
-    public String postPantryTask(@PathVariable int id,
+    public String postPantryTask(@PathVariable Long id,
                                  @RequestParam( required = false) Map<String, String> pantry,
                                  @RequestParam(value = "backUrl", required = false) String backUrl,
                                  RedirectAttributes redirectAttributes) {
@@ -134,7 +134,7 @@ public class CakeController {
     }
 
     @GetMapping("/task/SHOP_STORE/{id}")
-    public String getStoreTask(@PathVariable int id,
+    public String getStoreTask(@PathVariable Long id,
                                @RequestParam(value = "backUrl", required = false) String backUrl,
                                Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
@@ -145,7 +145,7 @@ public class CakeController {
     }
 
     @PostMapping("/task/SHOP_STORE/{id}")
-    public String postStoreShopping(@PathVariable int id,
+    public String postStoreShopping(@PathVariable Long id,
                                     @RequestParam(value = "backUrl", required = false) String backUrl,
                                     RedirectAttributes redirectAttributes,
                                     Model model){
@@ -158,12 +158,12 @@ public class CakeController {
     }
 
     @GetMapping("/task/BAKE/{id}")
-    public String getBakeTask(@PathVariable int id,
+    public String getBakeTask(@PathVariable Long id,
                               @RequestParam(value = "backUrl", required = false) String backUrl,
                               Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-        int recipeId = ctDTO.getRecipeId();
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        Long recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         double cakeMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
 
         model.addAttribute("recipe", recipeDTO);
@@ -175,15 +175,15 @@ public class CakeController {
     }
 
     @PostMapping("/task/BAKE/{id}")
-    public String postBakeTask(@PathVariable int id,
+    public String postBakeTask(@PathVariable Long id,
                                @RequestParam(value = "backUrl", required = false) String backUrl,
                                RedirectAttributes redirectAttributes,
                                Model model){
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
 
-        int recipeId = ctDTO.getRecipeId();
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        Long recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         double cakeMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
 
         model.addAttribute("recipe", recipeDTO);
@@ -196,12 +196,12 @@ public class CakeController {
     }
 
     @GetMapping("/task/MAKE_FILLING/{id}")
-    public String getMakeFillingTask(@PathVariable int id,
+    public String getMakeFillingTask(@PathVariable Long id,
                                         @RequestParam(value = "backUrl", required = false) String backUrl,
                                         Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-        int recipeId = ctDTO.getRecipeId();
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        Long recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         double fillingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", fillingMultiplier);
@@ -212,14 +212,14 @@ public class CakeController {
     }
 
     @PostMapping("/task/MAKE_FILLING/{id}")
-    public String postMakeFillingTask(@PathVariable int id,
+    public String postMakeFillingTask(@PathVariable Long id,
                                         @RequestParam(value = "backUrl", required = false) String backUrl,
                                         RedirectAttributes redirectAttributes,
                                         Model model){
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-        int recipeId = ctDTO.getRecipeId();
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        Long recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         double fillingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", fillingMultiplier);
@@ -231,12 +231,12 @@ public class CakeController {
     }
 
     @GetMapping("/task/MAKE_FROSTING/{id}")
-    public String getMakeFrostingTask(@PathVariable int id,
+    public String getMakeFrostingTask(@PathVariable Long id,
                                        @RequestParam(value = "backUrl", required = false) String backUrl,
                                       Model model){
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-        int recipeId = ctDTO.getRecipeId();
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        Long recipeId = ctDTO.getRecipeId();
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         double frostingMultiplier = cakeTaskService.getMultiplier(id, ctDTO.getTaskType());
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", frostingMultiplier);
@@ -247,15 +247,15 @@ public class CakeController {
     }
 
      @PostMapping("/task/MAKE_FROSTING/{id}")
-    public String postMakeFrostingTask(@PathVariable int id,
+    public String postMakeFrostingTask(@PathVariable Long id,
                                         @RequestParam(value = "backUrl", required = false) String backUrl,
                                         RedirectAttributes redirectAttributes,
                                         Model model){
         Boolean completed = cakeTaskService.toggleTaskComplete(id);
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
-        int recipeId = ctDTO.getRecipeId();
+        Long recipeId = ctDTO.getRecipeId();
         double frostingMultiplier = cakeTaskService.getMultiplier(id,ctDTO.getTaskType());
-        RecipeDTO recipeDTO = recipeService.recipeToDTO(recipeId);
+        RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("multiplier", frostingMultiplier);
         model.addAttribute("mode", "task");
@@ -266,7 +266,7 @@ public class CakeController {
     }
 
     @GetMapping("/task/DECORATE/{id}")
-    public String getDecorate(@PathVariable int id,
+    public String getDecorate(@PathVariable Long id,
                               @RequestParam(value = "backUrl", required = false) String backUrl,
                               Model model) {
         CakeTaskDTO ctDTO = cakeTaskService.getCakeTaskDTObyId(id);
@@ -277,7 +277,7 @@ public class CakeController {
     }
 
     @PostMapping("/task/DECORATE/{id}")
-    public String postDecorate(@PathVariable int id,
+    public String postDecorate(@PathVariable Long id,
                                @RequestParam(value = "backUrl", required = false) String backUrl,
                                RedirectAttributes redirectAttributes,
                                Model model){
@@ -290,7 +290,7 @@ public class CakeController {
     }
 
     @PostMapping("cake/delete/{id}")
-    public String postDelete(@PathVariable int id,
+    public String postDelete(@PathVariable Long id,
                              @RequestParam(value = "backUrl", required = false) String backUrl,
                              RedirectAttributes redirectAttributes,
                              Model model){

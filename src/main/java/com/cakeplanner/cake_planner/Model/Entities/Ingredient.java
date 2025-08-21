@@ -3,12 +3,13 @@ package com.cakeplanner.cake_planner.Model.Entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ingredient")
+@Table(name = "ingredient",
+        uniqueConstraints = @UniqueConstraint(name="unique_ingredient_name", columnNames="ingredient_name"))
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
-    private int ingredientId;
+    private Long ingredientId;
 
     @Column(name = "ingredient_name", nullable = false)
     private String ingredientName;
@@ -20,11 +21,11 @@ public class Ingredient {
         this.ingredientName = ingredientName;
     }
 
-    public int getIngredientId() {
+    public Long getIngredientId() {
         return ingredientId;
     }
 
-    public void setIngredientId(int ingredientId) {
+    public void setIngredientId(Long ingredientId) {
         this.ingredientId = ingredientId;
     }
 

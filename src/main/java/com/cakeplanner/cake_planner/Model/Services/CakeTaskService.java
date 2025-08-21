@@ -7,9 +7,7 @@ import com.cakeplanner.cake_planner.Model.Entities.CakeTask;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Entities.ShoppingListItem;
 import com.cakeplanner.cake_planner.Model.Entities.User;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeOrderRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.CakeTaskRepository;
-import com.cakeplanner.cake_planner.Model.Repositories.RecipeIngredientRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +16,24 @@ import java.util.*;
 
 @Service
 public class CakeTaskService {
+    private final CakeOrderService cakeOrderService;
+    private final CakeTaskRepository cakeTaskRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
+    private final UserRecipeIngredientRepository userRecipeIngredientRepository;
+    private final CakeOrderRepository cakeOrderRepository;
 
-    @Autowired
-    CakeTaskRepository cakeTaskRepository;
+    public CakeTaskService(CakeOrderService cakeOrderService,
+                            CakeTaskRepository cakeTaskRepository,
+                            RecipeIngredientRepository recipeIngredientRepository,
+                            UserRecipeIngredientRepository userRecipeIngredientRepository,
+                            CakeOrderRepository cakeOrderRepository) {
+        this.cakeOrderService = cakeOrderService;
+        this.cakeTaskRepository = cakeTaskRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
+        this.userRecipeIngredientRepository = userRecipeIngredientRepository;
+        this.cakeOrderRepository = cakeOrderRepository;
+    }
 
-    @Autowired
-    CakeOrderRepository cakeOrderRepository;
-
-    @Autowired
-    CakeOrderService cakeOrderService;
-
-    @Autowired
-    RecipeIngredientRepository recipeIngredientRepository;
 
     public CakeTaskDTO shoppingTaskToDTO(CakeTask task){
             CakeTaskDTO dto = new CakeTaskDTO(
@@ -45,7 +49,7 @@ public class CakeTaskService {
     }
 
     public CakeTaskDTO recipeTaskToDTO(CakeTask task){
-        Integer recipeId = (task.getRecipe() != null) ? task.getRecipe().getRecipeId() : null;
+        Long recipeId = (task.getUserRecipe() != null) ? task.getUserRecipe().getUserRecipeId() : null;
         CakeTaskDTO dto = new CakeTaskDTO(
                 task.getTaskId(),
                 task.getName(),
@@ -72,7 +76,7 @@ public class CakeTaskService {
         return dto;
     }
 
-    public CakeTaskDTO getCakeTaskDTObyId(int taskId){
+    public CakeTaskDTO getCakeTaskDTObyId(Long taskId){
         Optional<CakeTask> taskOptional = cakeTaskRepository.findById(taskId);
         if (taskOptional.isEmpty()) {
             return new CakeTaskDTO();
@@ -184,7 +188,7 @@ public class CakeTaskService {
         return progressInt;
     }
 
-    public List<CakeTaskDTO> getCakeTaskDTOsForCake(int id) {
+    public List<CakeTaskDTO> getCakeTaskDTOsForCake(Long id) {
         Optional<CakeOrder> cakeOrderOptional = cakeOrderRepository.findById(id);
 
         if (cakeOrderOptional.isEmpty()) {
@@ -209,7 +213,7 @@ public class CakeTaskService {
         return cakeTaskDTOs;
     }
 
-    public Boolean toggleTaskComplete(int taskId) {
+    public Boolean toggleTaskComplete(Long taskId) {
         Optional<CakeTask> cakeTaskOptional = cakeTaskRepository.findById(taskId);
 
         if (cakeTaskOptional.isPresent()) {
@@ -221,7 +225,7 @@ public class CakeTaskService {
         return null;
     }
 
-    public void resetPantryList(int taskId){
+    public void resetPantryList(Long taskId){
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
         if (optionalTask.isEmpty()){
             return;
@@ -230,16 +234,15 @@ public class CakeTaskService {
         CakeOrder cakeOrder = task.getCakeOrder();
 
         cakeOrderService.buildShoppingList(
-                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getCakeRecipe().getRecipeId()),
-                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFillingRecipe().getRecipeId()),
-                recipeIngredientRepository.findRecipeIngredientsByRecipeId(cakeOrder.getFrostingRecipe().getRecipeId()),
-                cakeOrder
-        );
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getCakeRecipe().getUserRecipeId()),
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getFillingRecipe().getUserRecipeId()),
+                userRecipeIngredientRepository.findAllByUserRecipe_UserRecipeId(cakeOrder.getFrostingRecipe().getUserRecipeId()),
+                cakeOrder);
         task.setShoppingList(cakeOrder.getShoppingList());
         cakeTaskRepository.save(task);
     }
 
-    public void processPantryList(int taskId, Map<String, String> pantryData) {
+    public void processPantryList(Long taskId, Map<String, String> pantryData) {
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
         if (optionalTask.isEmpty()){
             return;
@@ -261,7 +264,7 @@ public class CakeTaskService {
         cakeTaskRepository.save(task);
     }
 
-    public double getMultiplier(int taskId, TaskType taskType){
+    public double getMultiplier(Long taskId, TaskType taskType){
         Optional<CakeTask> optionalTask = cakeTaskRepository.findById(taskId);
         if (optionalTask.isEmpty()){
             return -1;

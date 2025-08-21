@@ -5,52 +5,35 @@ import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import java.util.List;
 
 public class RecipeDTO {
+    private Long userRecipeId;
     private String recipeName;
-    private String recipeUrl;
-    private String instructions;
     private RecipeType recipeType;
-    private int recipeId;
     private List<IngredientDTO> ingredients;
+    private String instructions;
 
-
-    public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients, int recipeId) {
+    public RecipeDTO(Long userRecipeId, String recipeName, RecipeType recipeType,
+                     List<IngredientDTO> ingredients, String instructions) {
+        this.userRecipeId = userRecipeId;
         this.recipeName = recipeName;
-        this.recipeUrl = recipeUrl;
-        this.instructions = instructions;
         this.recipeType = recipeType;
         this.ingredients = ingredients;
-        this.recipeId = recipeId;
+        this.instructions = instructions;
     }
 
-    public RecipeDTO(String recipeName, String recipeUrl, String instructions, RecipeType recipeType, List<IngredientDTO> ingredients) {
-        this.recipeName = recipeName;
-        this.recipeUrl = recipeUrl;
-        this.instructions = instructions;
-        this.recipeType = recipeType;
-        this.ingredients = ingredients;
+    public Long getUserRecipeId() {
+        return userRecipeId;
     }
+
+    public void setUserRecipeId(Long userRecipeId) {
+        this.userRecipeId = userRecipeId;
+    }
+
     public String getRecipeName() {
         return recipeName;
     }
 
     public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
-    }
-
-    public String getRecipeUrl() {
-        return recipeUrl;
-    }
-
-    public void setRecipeUrl(String recipeUrl) {
-        this.recipeUrl = recipeUrl;
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
     }
 
     public RecipeType getRecipeType() {
@@ -69,11 +52,11 @@ public class RecipeDTO {
         this.ingredients = ingredients;
     }
 
-    public int getRecipeId() {
-        return recipeId;
+    public String getInstructions() {
+        return instructions;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 }

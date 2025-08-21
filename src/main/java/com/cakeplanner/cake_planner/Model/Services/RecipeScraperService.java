@@ -5,7 +5,9 @@ import com.cakeplanner.cake_planner.Model.DTO.RecipeDTO;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
+import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
 import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
+import jakarta.transaction.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,18 +20,24 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // Uses jsoup to scrape recipe from URL once recipeService certifies that recipe doesn't already exist
-// Calls Spoonacular to process ingredients. Returns IngredientDTO to recipeService to add to RecipeDTO
+// Calls Spoonacular to process ingredients. Returns Recipe.
 
 @Service
 public class RecipeScraperService {
-    @Autowired
-    private IngredientRepository ingredientRepository;
+        private final IngredientRepository ingredientRepository;
+        private final SpoonacularService spoonacularService;
 
-    @Autowired
-    private SpoonacularService spoonacularService;
-    public RecipeDTO scrapeRecipe(String url, RecipeType recipeType) throws IOException {
+        public RecipeScraperService(IngredientRepository ingredientRepository,
+                                    SpoonacularService spoonacularService) {
+            this.ingredientRepository = ingredientRepository;
+            this.spoonacularService = spoonacularService;
+        }
+
+        @Transactional
+        public Recipe scrapeRecipe(String url) throws IOException {
         //get document from url
         Document document = Jsoup.connect(url).ignoreHttpErrors(true).get();
 
@@ -39,19 +47,115 @@ public class RecipeScraperService {
 
         JSONObject jsonObject = filterRecipeData(scripts);
 
-        RecipeDTO recipeDTO = null;
+        Recipe recipe = new Recipe();
         if (jsonObject != null) {
-            List<IngredientDTO> ingredientDTO = extractIngredientsList(jsonObject);
+            List<RecipeIngredient> ingredients = extractIngredients(jsonObject, recipe);
             String instructions = extractInstructions(jsonObject);
             String recipeName = jsonObject.optString("name", "No Name Found");
 
-            recipeDTO = new RecipeDTO(recipeName, url, instructions, recipeType, ingredientDTO);
+            recipe.setRecipeUrl(url);
+            recipe.setBaseRecipeName(recipeName);
+            recipe.setBaseRecipeInstructions(instructions);
+            recipe.setBaseRecipeIngredients(ingredients);
         } else {
             System.out.println("Json object null");
         }
-        return recipeDTO;
+        return recipe;
     }
 
+    public List<RecipeIngredient> extractIngredients(JSONObject jsonObject, Recipe recipe){
+        JSONArray ingredients = jsonObject.optJSONArray("recipeIngredient");
+        List<String> ingredientList = new ArrayList<>();
+
+        if (ingredients != null) {
+            //System.out.println("Ingredients:");
+            for (int i = 0; i < ingredients.length(); i++) {
+                String ingredient = ingredients.getString(i);
+                ingredientList.add(ingredient);
+                //System.out.println(" • " + ingredients.getString(i));
+            }
+        } else{
+            System.out.println("Ingredients not found");
+        }
+        String parsedIngredients = spoonacularService.parseIngredients(ingredientList);
+        //System.out.println(parsedIngredients);
+        // System.out.println("--------------------");
+        List<RecipeIngredient> recipeIngredients = stringToRecipeIngredientList(parsedIngredients, recipe);
+        return recipeIngredients;
+    }
+
+    public List<RecipeIngredient> stringToRecipeIngredientList(String parsedIngredients, Recipe recipe){
+        List<RecipeIngredient> simplifiedList = new ArrayList<>();
+        JSONArray ingredientsArray = new JSONArray(parsedIngredients);
+
+        for(int i = 0; i < ingredientsArray.length(); i++) {
+            JSONObject ingredientObj = ingredientsArray.getJSONObject(i);
+            // Extract fields
+            String name = ingredientObj.optString("name");
+            double amount = ingredientObj.optDouble("amount");
+            String unit = ingredientObj.optString("unit");
+
+            if (name.isEmpty() || Double.isNaN(amount) || amount <= 0) {
+                  continue;
+            }
+
+            Optional<Ingredient> optionalIngredient = ingredientRepository.findByIngredientNameIgnoreCase(name);
+
+            Ingredient ingredient;
+            if (optionalIngredient.isPresent()) {
+                ingredient = optionalIngredient.get();
+            } else {
+                ingredient = ingredientRepository.save(new Ingredient(name));
+            }
+
+            simplifiedList.add(new RecipeIngredient(recipe, ingredient, amount, unit));
+
+            // Print or process as needed
+            //System.out.println("Ingredient: " + name);
+            //System.out.println("Amount: " + amount);
+            //System.out.println("Unit: " + unit);
+            //System.out.println("-----");
+            // Optional: Save to DB or add to list for later
+        }
+        //System.out.println(simplifiedList);
+        return simplifiedList;
+    }
+
+    public String extractInstructions(JSONObject jsonObject) {
+        Object instructionsRaw = jsonObject.opt("recipeInstructions");
+        String allSteps = "";
+        //if the instructions are held in an array, cast the object to json array to traverse it
+        if (instructionsRaw instanceof JSONArray) {
+            JSONArray instructions = (JSONArray) instructionsRaw;
+            //for every item in the array, add it to a string, steps separated by "|"
+            for (int i = 0; i < instructions.length(); i++) {
+                Object step = instructions.get(i);
+                // If it's a one dimensional array, parse out the steps in the array and print
+                if (step instanceof JSONObject) {
+                    JSONObject stepObj = (JSONObject) step;
+                    // check for nested array using item list element, then print those if they exist
+                    if (stepObj.has("itemListElement")) {
+                        JSONArray subSteps = stepObj.getJSONArray("itemListElement");
+                        for (int j = 0; j < subSteps.length(); j++) {
+                            JSONObject subStep = subSteps.getJSONObject(j);
+                            allSteps = allSteps + "|" + subStep.optString("text");
+                        }
+                        //if just a normal step, not array, print as a string
+                    } else {
+                        // Normal step
+                        allSteps = allSteps + "|"  + stepObj.optString("text");
+                    }
+                    //this is to catch unexpected format
+                } else {
+                    allSteps = allSteps + "|" + step.toString();
+                }
+
+            }
+        } else {
+            System.out.println("instructions not found");
+        }
+        return allSteps;
+    }
 
     public JSONObject filterRecipeData(Elements scripts) {
         for (Element script : scripts) {
@@ -109,97 +213,4 @@ public class RecipeScraperService {
 
         return false;
     }
-
-    public List<IngredientDTO> extractIngredientsList(JSONObject jsonObject){
-        JSONArray ingredients = jsonObject.optJSONArray("recipeIngredient");
-        List<String> ingredientList = new ArrayList<>();
-
-        if (ingredients != null) {
-            //System.out.println("Ingredients:");
-            for (int i = 0; i < ingredients.length(); i++) {
-                String ingredient = ingredients.getString(i);
-                ingredientList.add(ingredient);
-                //System.out.println(" • " + ingredients.getString(i));
-            }
-        } else{
-            System.out.println("Ingredients not found");
-        }
-        String parsedIngredients = spoonacularService.parseIngredients(ingredientList);
-        //System.out.println(parsedIngredients);
-        // System.out.println("--------------------");
-        List<IngredientDTO> recipeIngredients = simplifyIngredientInfo(parsedIngredients);
-        return recipeIngredients;
-    }
-
-    public List<IngredientDTO> simplifyIngredientInfo(String parsedIngredients){
-            List<IngredientDTO> simplifiedList = new ArrayList<>();
-            JSONArray ingredientsArray = new JSONArray(parsedIngredients);
-
-            for(int i = 0; i < ingredientsArray.length(); i++){
-                JSONObject ingredientObj = ingredientsArray.getJSONObject(i);
-                // Extract fields
-                String name = ingredientObj.optString("name");
-                double amount = ingredientObj.optDouble("amount");
-                String unit = ingredientObj.optString("unit");
-
-                IngredientDTO ingredientDTO = new IngredientDTO(name, amount,unit);
-                simplifiedList.add(ingredientDTO);
-                // Print or process as needed
-                //System.out.println("Ingredient: " + name);
-                //System.out.println("Amount: " + amount);
-                //System.out.println("Unit: " + unit);
-                //System.out.println("-----");
-                // Optional: Save to DB or add to list for later
-            }
-            System.out.println(simplifiedList);
-            return simplifiedList;
-    }
-    //FIXME this checks the ingredients table to see if this ingredient already exists, needs to be implemented still
-    public void addIngredient(String ingredientName){
-            if(ingredientRepository.findByIngredientNameIgnoreCase(ingredientName).isEmpty()){
-                Ingredient ingredient = new Ingredient();
-                ingredient.setIngredientName(ingredientName);
-                ingredientRepository.save(ingredient);
-        } else {
-                System.out.println("ingredient found, not added");
-            }
-
-    }
-
-    public String extractInstructions(JSONObject jsonObject) {
-        Object instructionsRaw = jsonObject.opt("recipeInstructions");
-        String allSteps = "";
-        //if the instructions are held in an array, cast the object to json array to traverse it
-        if (instructionsRaw instanceof JSONArray) {
-            JSONArray instructions = (JSONArray) instructionsRaw;
-            //for every item in the array, add it to a string, steps separated by "|"
-            for (int i = 0; i < instructions.length(); i++) {
-                Object step = instructions.get(i);
-                // If it's a one dimensional array, parse out the steps in the array and print
-                if (step instanceof JSONObject) {
-                    JSONObject stepObj = (JSONObject) step;
-                    // check for nested array using item list element, then print those if they exist
-                    if (stepObj.has("itemListElement")) {
-                        JSONArray subSteps = stepObj.getJSONArray("itemListElement");
-                        for (int j = 0; j < subSteps.length(); j++) {
-                            JSONObject subStep = subSteps.getJSONObject(j);
-                            allSteps = allSteps + "|" + subStep.optString("text");
-                        }
-                        //if just a normal step, not array, print as a string
-                    } else {
-                        // Normal step
-                        allSteps = allSteps + "|"  + stepObj.optString("text");
-                    }
-                    //this is to catch unexpected format
-                } else {
-                    allSteps = allSteps + "|" + step.toString();
-                }
-
-            }
-        } else {
-            System.out.println("instructions not found");
-        }
-        return allSteps;
-    }
-
 }

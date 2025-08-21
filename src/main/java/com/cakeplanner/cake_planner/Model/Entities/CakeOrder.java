@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "cake_order")
 public class CakeOrder {
@@ -14,9 +16,9 @@ public class CakeOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cake_id")
-    private int cakeId;
+    private Long cakeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -26,23 +28,23 @@ public class CakeOrder {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "cake_recipe_id")
-    private Recipe cakeRecipe;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "cake_user_recipe_id")
+    private UserRecipe cakeRecipe;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "filling_user_recipe_id")
+    private UserRecipe fillingRecipe;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "frosting_user_recipe_id")
+    private UserRecipe frostingRecipe;
 
     @Column(name = "cake_multiplier")
     private double cakeMultiplier;
 
-    @ManyToOne
-    @JoinColumn(name = "filling_recipe_id")
-    private Recipe fillingRecipe;
-
     @Column(name = "filling_multiplier")
     private double fillingMultiplier;
-
-    @ManyToOne
-    @JoinColumn(name = "frosting_recipe_id")
-    private Recipe frostingRecipe;
 
     @Column(name = "frosting_multiplier")
     private double frostingMultiplier;
@@ -63,31 +65,77 @@ public class CakeOrder {
             orphanRemoval = true
     )
     private java.util.Set<CakeTask> tasks = new java.util.HashSet<>();
+
     public CakeOrder() {
     }
 
     public CakeOrder(User user, String cakeName, LocalDateTime dueDate,
-                     Recipe cakeRecipe, double cakeMultiplier, Recipe fillingRecipe,
-                     double fillingMultiplier, Recipe frostingRecipe, double frostingMultiplier,
+                     UserRecipe cakeRecipe, UserRecipe fillingRecipe,
+                     UserRecipe frostingRecipe, double cakeMultiplier,
+                     double fillingMultiplier, double frostingMultiplier,
+                     String dietaryRestriction, String decorationNotes,
+                     ShoppingList shoppingList, Set<CakeTask> tasks) {
+        this.user = user;
+        this.cakeName = cakeName;
+        this.dueDate = dueDate;
+        this.cakeRecipe = cakeRecipe;
+        this.fillingRecipe = fillingRecipe;
+        this.frostingRecipe = frostingRecipe;
+        this.cakeMultiplier = cakeMultiplier;
+        this.fillingMultiplier = fillingMultiplier;
+        this.frostingMultiplier = frostingMultiplier;
+        this.dietaryRestriction = dietaryRestriction;
+        this.decorationNotes = decorationNotes;
+        this.shoppingList = shoppingList;
+        this.tasks = tasks;
+    }
+
+    public CakeOrder(Long cakeId, User user, String cakeName,
+                     LocalDateTime dueDate, UserRecipe cakeRecipe,
+                     UserRecipe fillingRecipe, UserRecipe frostingRecipe,
+                     double cakeMultiplier, double fillingMultiplier,
+                     double frostingMultiplier, String dietaryRestriction,
+                     String decorationNotes, ShoppingList shoppingList,
+                     Set<CakeTask> tasks) {
+        this.cakeId = cakeId;
+        this.user = user;
+        this.cakeName = cakeName;
+        this.dueDate = dueDate;
+        this.cakeRecipe = cakeRecipe;
+        this.fillingRecipe = fillingRecipe;
+        this.frostingRecipe = frostingRecipe;
+        this.cakeMultiplier = cakeMultiplier;
+        this.fillingMultiplier = fillingMultiplier;
+        this.frostingMultiplier = frostingMultiplier;
+        this.dietaryRestriction = dietaryRestriction;
+        this.decorationNotes = decorationNotes;
+        this.shoppingList = shoppingList;
+        this.tasks = tasks;
+    }
+
+    public CakeOrder(User user, String cakeName, LocalDateTime dueDate,
+                     UserRecipe cakeRecipe, UserRecipe fillingRecipe,
+                     UserRecipe frostingRecipe, double cakeMultiplier,
+                     double fillingMultiplier, double frostingMultiplier,
                      String dietaryRestriction, String decorationNotes) {
         this.user = user;
         this.cakeName = cakeName;
         this.dueDate = dueDate;
         this.cakeRecipe = cakeRecipe;
-        this.cakeMultiplier = cakeMultiplier;
         this.fillingRecipe = fillingRecipe;
-        this.fillingMultiplier = fillingMultiplier;
         this.frostingRecipe = frostingRecipe;
+        this.cakeMultiplier = cakeMultiplier;
+        this.fillingMultiplier = fillingMultiplier;
         this.frostingMultiplier = frostingMultiplier;
         this.dietaryRestriction = dietaryRestriction;
         this.decorationNotes = decorationNotes;
     }
 
-    public int getCakeId() {
+    public Long getCakeId() {
         return cakeId;
     }
 
-    public void setCakeId(int cakeId) {
+    public void setCakeId(Long cakeId) {
         this.cakeId = cakeId;
     }
 
@@ -115,12 +163,28 @@ public class CakeOrder {
         this.dueDate = dueDate;
     }
 
-    public Recipe getCakeRecipe() {
+    public UserRecipe getCakeRecipe() {
         return cakeRecipe;
     }
 
-    public void setCakeRecipe(Recipe cakeRecipe) {
+    public void setCakeRecipe(UserRecipe cakeRecipe) {
         this.cakeRecipe = cakeRecipe;
+    }
+
+    public UserRecipe getFillingRecipe() {
+        return fillingRecipe;
+    }
+
+    public void setFillingRecipe(UserRecipe fillingRecipe) {
+        this.fillingRecipe = fillingRecipe;
+    }
+
+    public UserRecipe getFrostingRecipe() {
+        return frostingRecipe;
+    }
+
+    public void setFrostingRecipe(UserRecipe frostingRecipe) {
+        this.frostingRecipe = frostingRecipe;
     }
 
     public double getCakeMultiplier() {
@@ -131,28 +195,12 @@ public class CakeOrder {
         this.cakeMultiplier = cakeMultiplier;
     }
 
-    public Recipe getFillingRecipe() {
-        return fillingRecipe;
-    }
-
-    public void setFillingRecipe(Recipe fillingRecipe) {
-        this.fillingRecipe = fillingRecipe;
-    }
-
     public double getFillingMultiplier() {
         return fillingMultiplier;
     }
 
     public void setFillingMultiplier(double fillingMultiplier) {
         this.fillingMultiplier = fillingMultiplier;
-    }
-
-    public Recipe getFrostingRecipe() {
-        return frostingRecipe;
-    }
-
-    public void setFrostingRecipe(Recipe frostingRecipe) {
-        this.frostingRecipe = frostingRecipe;
     }
 
     public double getFrostingMultiplier() {
@@ -179,9 +227,13 @@ public class CakeOrder {
         this.decorationNotes = decorationNotes;
     }
 
-    public ShoppingList getShoppingList() {return shoppingList;}
+    public ShoppingList getShoppingList() {
+        return shoppingList;
+    }
 
-    public void setShoppingList(ShoppingList shoppingList) {this.shoppingList = shoppingList;}
+    public void setShoppingList(ShoppingList shoppingList) {
+        this.shoppingList = shoppingList;
+    }
 
     public Set<CakeTask> getTasks() {
         return tasks;

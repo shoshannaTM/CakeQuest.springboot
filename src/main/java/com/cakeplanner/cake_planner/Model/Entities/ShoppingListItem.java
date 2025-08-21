@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 public class ShoppingListItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "item_name")
     private String name;
@@ -29,11 +29,11 @@ public class ShoppingListItem {
         this.shoppingList = shoppingList;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

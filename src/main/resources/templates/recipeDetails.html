@@ -11,7 +11,7 @@
 <main layout:fragment="content">
     <div class="heading">
         <div class="back-link">
-        <a class="link" th:href="@{/recipes}"><i class="fa-solid fa-chevron-left"></i></a>
+        <a class="link" th:href="@{${backUrl}}"><i class="fa-solid fa-chevron-left"></i></a>
         </div>
 
         <div class="title">
@@ -59,17 +59,14 @@
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and task.completed}">
             <button type="submit" name="reopen" value="true" class="btn">Reopen Task</button>
         </div>
-        <div class="shopping-btn-wrapper center">
-            <a class="link" th:href="@{${backUrl}}">← Back</a>
-        </div>
     </form>
     </div>
     <div th:if="${mode == 'read'}">
         <div class="shopping-btn-wrapper center">
-            <a th:href="@{/recipes/edit/{id}(id=${recipe.recipeId})}" class="btn">Edit Recipe</a>
+            <a th:href="@{/recipes/edit/{id}(id=${recipe.userRecipeId})}" class="btn">Edit Recipe</a>
         </div>
 
-        <form th:action="@{/recipe/delete/{id}(id=${recipe.recipeId})}" method="post">
+        <form th:action="@{/recipe/delete/{id}(id=${recipe.userRecipeId})}" method="post">
             <div class="shopping-btn-wrapper center">
             <button type="submit" class="btn-link"
                     onclick="return confirm('Delete this recipe? This cannot be undone.')">

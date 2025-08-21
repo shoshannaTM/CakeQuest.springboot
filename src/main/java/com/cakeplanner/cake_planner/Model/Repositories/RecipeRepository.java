@@ -1,8 +1,6 @@
 package com.cakeplanner.cake_planner.Model.Repositories;
 
-import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
-import com.cakeplanner.cake_planner.Model.Entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,16 +8,19 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
-    Optional<Recipe> findRecipeByRecipeUrl(String recipeUrl);
-    @Query("SELECT r.recipeId FROM Recipe r WHERE r.recipeUrl = :recipeUrl")
-    Integer findRecipeIdByRecipeUrl(@Param("recipeUrl") String recipeUrl);
+public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
-    Recipe findRecipeByRecipeId(Integer recipeId);
+    Optional<Recipe> findByRecipeUrl(String recipeUrl);
 
-    List<Recipe> findAll();
+   /* @Query("select r.baseRecipeId from Recipe r where r.recipeUrl = :recipeUrl")
+    Long findRecipeIdByRecipeUrl(@Param("recipeUrl") String recipeUrl);
 
-    List<Recipe> findByRecipeType(RecipeType type);
+    //Recipe findBaseRecipeByBaseRecipeId(@Param("baseRecipeId") Long baseRecipeId);
 
-    List<Recipe> findByRecipeNameContainingIgnoreCase(String query);
+    @Query("""
+        select r
+        from Recipe r
+        where lower(r.baseRecipeName) like lower(concat('%', :query, '%'))
+    """)
+    List<Recipe> findByRecipeNameContainingIgnoreCase(@Param("query") String query);*/
 }

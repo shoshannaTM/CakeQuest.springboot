@@ -622,6 +622,14 @@ input[type="checkbox"] {
   color: #666;
 }
 
+.edit-note{
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: center;
+  margin: 0.25rem 0;
+  color: #666;
+}
+
 .date {
   color: #999;
 }

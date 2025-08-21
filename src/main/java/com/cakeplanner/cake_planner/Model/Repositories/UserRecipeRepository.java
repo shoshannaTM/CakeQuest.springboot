@@ -4,17 +4,25 @@ import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.User;
 import com.cakeplanner.cake_planner.Model.Entities.UserRecipe;
-import com.cakeplanner.cake_planner.Model.Entities.UserRecipeId;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRecipeRepository extends JpaRepository<UserRecipe, UserRecipeId> {
+public interface UserRecipeRepository extends JpaRepository<UserRecipe, Long> {
 
-    boolean existsByUserAndRecipe(User user, Recipe recipe);
-    void deleteByUserAndRecipe(User user, Recipe recipe);
     List<UserRecipe> findByUser(User user);
-    List<UserRecipe> findByUserAndRecipe_RecipeNameContainingIgnoreCase(User user, String name);
-    List<UserRecipe> findByUserAndRecipe_RecipeType(User user, RecipeType type);
+
+    List<UserRecipe> findByUserAndUserRecipeNameContainingIgnoreCase(User user, String name);
+
+    List<UserRecipe> findByUserAndRecipeType(User user, RecipeType type);
+
+    Optional<UserRecipe> findByUserAndBaseRecipe(User user, Recipe baseRecipe);
+
+    Optional<UserRecipe> findByUserRecipeId(Long userRecipeId);
+
+    void deleteByUserAndUserRecipeId(User user, Long userRecipeId);
+
+    boolean existsByUserAndUserRecipeId(User user, Long userRecipeId);
 }
+
