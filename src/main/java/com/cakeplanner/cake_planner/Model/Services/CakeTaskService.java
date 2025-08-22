@@ -11,6 +11,8 @@ import com.cakeplanner.cake_planner.Model.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -111,6 +113,16 @@ public class CakeTaskService {
             }
         }
         return cakeTaskDTOs;
+    }
+
+    public List<CakeTaskDTO> getUpcomingTasks(List<CakeTaskDTO> usersTasks){
+        List<CakeTaskDTO> upcomingTasks = new ArrayList<>();
+        for(CakeTaskDTO ct : usersTasks){
+            if(!ct.getCompleted() && ct.getDueDate().isBefore(LocalDateTime.now().plusDays(1))){
+                upcomingTasks.add(ct);
+            }
+        }
+        return upcomingTasks;
     }
 
     public List<CakeTaskDTO> getIncompleteTasks(List<CakeTaskDTO> usersTasks){
@@ -283,7 +295,7 @@ public class CakeTaskService {
         }
     }
 
-    public List<CakeTaskDTO> getIncompleteShoppingTasksForUser(User user) {
+  /*  public List<CakeTaskDTO> getIncompleteShoppingTasksForUser(User user) {
         // Get all CakeTaskDTOs for the user
         List<CakeTaskDTO> allTaskDTOs = getCakeTaskDTOsForUser(user);
 
@@ -299,4 +311,25 @@ public class CakeTaskService {
         return incompleteShoppingTasks;
     }
 
+    public Map<CakeTaskDTO, Boolean> taskActive(List<CakeTaskDTO> cakeTasks) {
+        Map<CakeTaskDTO, Boolean> availableTasks = new HashMap<>();
+        for (CakeTaskDTO ct : cakeTasks) {
+            Boolean taskAvailable = true;
+            if (ct.getTaskType() == TaskType.SHOP_STORE) {
+                CakeOrder co = cakeTaskRepository.findCakeOrderByTaskId(ct.getTaskId());
+                taskAvailable = shoppingTaskAvailable(co);
+            }
+            availableTasks.put(ct, taskAvailable);
+        }
+        return availableTasks;
+    }
+
+    public Boolean shoppingTaskAvailable(CakeOrder co){
+        boolean storeShoppingReady;
+
+        CakeTask pantry = cakeTaskRepository.findByCakeOrderAndTaskType(co, TaskType.SHOP_PANTRY);
+        storeShoppingReady = pantry.getCompleted();
+
+        return storeShoppingReady;
+    }*/
 }

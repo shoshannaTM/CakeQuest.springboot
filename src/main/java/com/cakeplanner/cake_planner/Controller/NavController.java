@@ -32,8 +32,6 @@ public class NavController {
     @GetMapping("/")
     public String cakes(@ModelAttribute("user") User user,
                         Model model) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy @ HH:mm");
-
         List<CakeOrderDTO> cakes = cakeOrderService.getCakeDTOs(user);
 
         String backUrl = "?backUrl=/";
@@ -47,7 +45,7 @@ public class NavController {
 
         List<CakeTaskDTO> tasks = cakeTaskService.getCakeTaskDTOsForUser(user);
 
-        List<CakeTaskDTO> toDoTasks = cakeTaskService.getIncompleteTasks(tasks);
+        List<CakeTaskDTO> toDoTasks = cakeTaskService.getUpcomingTasks(tasks);
         toDoTasks.sort(Comparator.comparing(CakeTaskDTO::getDueDate));
 
         model.addAttribute("toDoTasks", toDoTasks);

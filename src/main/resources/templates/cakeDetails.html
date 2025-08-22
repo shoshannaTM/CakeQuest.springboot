@@ -14,7 +14,7 @@
                 <a class="link" th:href="@{/}"><i class="fa-solid fa-chevron-left"></i></a>
             </div>
         <div class="title">
-            <h1 th:text="${cakeOrder != null} ? ${cakeOrder.cakeName} : 'Cake Details'"></h1>
+            <h1 th:text="${cakeOrder != null ? cakeOrder.cakeName : 'Cake Details'}"></h1>
         </div>
         </div>
         <div class="info">
@@ -24,8 +24,9 @@
                 <div th:replace="~{fragments/arrowCard :: arrowCard(
                                  ${task.name},
                                  '',
-                                 'Task Due',
-                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 'Suggested Due',
+                                 ${task.dueDate},
+                                 ${task.completed},
                                  ${'/task/' + task.taskType + '/' + task.taskId + backUrl}
                                  )}"></div>
             </div>
@@ -37,7 +38,8 @@
                                  ${task.name},
                                  '',
                                  'Task Due',
-                                 ${task.dueDate != null ? #temporals.format(task.dueDate, 'MM/dd/yyyy @ HH:mm') : 'TBD'},
+                                 ${task.dueDate},
+                                 ${task.completed},
                                  ${'/task/' + task.taskType + '/' + task.taskId + backUrl}
                                  )}"></div>
             </div>

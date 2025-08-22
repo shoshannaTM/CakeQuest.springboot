@@ -1,4 +1,4 @@
-<div th:fragment="arrowCard(title, subtitle, datePrefix, dateValue, arrowLink)" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="arrowCard(title, subtitle, datePrefix, dateValue, completed, arrowLink)" xmlns:th="http://www.thymeleaf.org">
 
   <a th:href="@{${arrowLink}}" aria-label="View Details" class="cardLink">
   <div class="card arrow-card flex-row">
@@ -6,11 +6,23 @@
       <div class="card-header">
         <h3 th:text="${title}">Card Title</h3>
         <p class="subtitle" th:text="${subtitle}">Subtitle</p>
-        <p class="date"
-           th:if="${dateValue != null and !#strings.isEmpty(dateValue)}"
-           th:text="${datePrefix + ': ' + dateValue}">
-          Saved/Due: MM/DD/YYYY
-        </p>
+
+        <div th:if="${dateValue != null}">
+          <p class="date"
+             th:text="${datePrefix + ': ' + #temporals.format(dateValue, 'MM/dd/yyyy hh:mm a')}">
+          </p>
+
+       <!--   <span class="badge rounded-pill bg-warning text-dark"
+                  th:if="${(completed == null or completed == false) and dateValue.isBefore(T(java.time.LocalDateTime).now())}"
+                th:text="${'Past Due'}">
+          </span> -->
+
+          <span class="badge rounded-pill bg-success"
+                  th:if="${completed == true}"
+                th:text="${'Task Complete'}">
+          </span>
+        </div>
+
       </div>
     </div>
 
