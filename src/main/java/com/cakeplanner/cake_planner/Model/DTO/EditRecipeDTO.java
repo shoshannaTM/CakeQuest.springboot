@@ -8,6 +8,7 @@ import java.util.List;
 public class EditRecipeDTO {
     private Long userRecipeId;
     private String recipeName;
+    private RecipeType RecipeType;
     private List<IngredientDTO> ingredients = new ArrayList<>();
     private List<String> instructions = new ArrayList<>();
 
@@ -15,9 +16,21 @@ public class EditRecipeDTO {
     public EditRecipeDTO() {
     }
 
-    public EditRecipeDTO(Long userRecipeId, String recipeName, List<IngredientDTO> ingredients, List<String> instructions) {
+    public EditRecipeDTO(Long userRecipeId, String recipeName,
+                         RecipeType recipeType, List<IngredientDTO> ingredients,
+                         List<String> instructions) {
         this.userRecipeId = userRecipeId;
         this.recipeName = recipeName;
+        RecipeType = recipeType;
+        this.ingredients = ingredients;
+        this.instructions = instructions;
+    }
+
+    public EditRecipeDTO(String recipeName, RecipeType recipeType,
+                         List<IngredientDTO> ingredients,
+                         List<String> instructions) {
+        this.recipeName = recipeName;
+        RecipeType = recipeType;
         this.ingredients = ingredients;
         this.instructions = instructions;
     }
@@ -36,6 +49,14 @@ public class EditRecipeDTO {
 
     public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
+    }
+
+    public com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType getRecipeType() {
+        return RecipeType;
+    }
+
+    public void setRecipeType(com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType recipeType) {
+        RecipeType = recipeType;
     }
 
     public List<IngredientDTO> getIngredients() {

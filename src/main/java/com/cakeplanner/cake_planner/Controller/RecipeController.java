@@ -24,8 +24,15 @@ public class RecipeController {
 
     @GetMapping("/recipes/{recipeId}")
     public String showRecipeDetails(@PathVariable Long recipeId,
+                                    RedirectAttributes redirectAttributes,
                                     Model model) {
         RecipeDTO recipeDTO = recipeService.userRecipeToDTO(recipeId);
+
+        if (recipeDTO == null) {
+            redirectAttributes.addFlashAttribute("message", "Recipe not found.");
+            return "redirect:/recipes";
+        }
+
         model.addAttribute("recipe", recipeDTO);
         model.addAttribute("mode", "read");
         model.addAttribute("backUrl", "/recipes");
@@ -42,28 +49,69 @@ public class RecipeController {
     @PostMapping("/recipes/new")
     public String handleNewRecipe(@RequestParam("recipeUrl") String recipeUrl,
                                   @RequestParam("recipeType") RecipeType recipeType,
-                                  @ModelAttribute("user") User user) throws IOException {
+                                  @ModelAttribute("user") User user,
+                                  RedirectAttributes redirectAttributes) throws IOException {
         EditRecipeDTO form = recipeService.processRecipeForEdit(recipeUrl, recipeType, user);
+
+        if (form.getUserRecipeId() == null) {
+            if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
+            if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
+            redirectAttributes.addFlashAttribute("form", form);
+            redirectAttributes.addFlashAttribute("mode", "scrapeFail");
+            return "redirect:/recipes/manual";
+        }
 
         return "redirect:/recipes/edit/" + form.getUserRecipeId() + "?mode=scrape";
     }
+
+    @GetMapping("/recipes/manual")
+    public String editRecipeManual(@RequestParam(value = "mode", required = false) String mode,
+                                   @ModelAttribute("user") User user,
+                                   @ModelAttribute("form") EditRecipeDTO flashedForm,
+                                   Model model) {
+        EditRecipeDTO form = flashedForm;
+
+        if (form == null || form.getUserRecipeId() == null) {
+            // Only create a new draft if no flashed form came in
+            form = recipeService.emptyUserRecipeForManual(user);
+        }
+
+        if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
+        if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
+
+        model.addAttribute("form", form);
+        model.addAttribute("recipeTypes", RecipeType.values());
+        model.addAttribute("mode", (mode != null ? mode : "manual"));
+        model.addAttribute("backUrl", "/recipes");
+        return "editRecipe";
+    }
+
 
     @GetMapping("/recipes/edit/{id}")
     public String editRecipe(@PathVariable Long id,
                              @RequestParam(value = "mode", required = false) String mode,
                              @ModelAttribute("form") EditRecipeDTO form,
+                             RedirectAttributes redirectAttributes,
                              Model model) {
         if (form == null || form.getUserRecipeId() == null) {
             RecipeDTO recipeDTO = recipeService.userRecipeToDTO(id);
+                if (recipeDTO == null) {
+                    redirectAttributes.addFlashAttribute("message", "Recipe not found.");
+                    return "redirect:/recipes";
+        }
             form = new EditRecipeDTO(
                     recipeDTO.getUserRecipeId(),
                     recipeDTO.getRecipeName(),
+                    recipeDTO.getRecipeType(),
                     recipeDTO.getIngredients(),
                     recipeService.instructionsFromString(recipeDTO.getInstructions())
             );
         }
+    if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
+    if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
 
         model.addAttribute("form", form);
+        model.addAttribute("recipeTypes", RecipeType.values());
         model.addAttribute("mode", mode);
         model.addAttribute("backUrl", "/recipes");
         return "editRecipe";
@@ -72,6 +120,7 @@ public class RecipeController {
     @PostMapping(value = "/recipe/edit", params = "addIngredient")
     public String addIngredient(@ModelAttribute("form") EditRecipeDTO form,
                                 RedirectAttributes redirectAttributes) {
+    if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
         form.getIngredients().add(new IngredientDTO("", 0.0, ""));
         redirectAttributes.addFlashAttribute("form", form);
         return "redirect:/recipes/edit/" + form.getUserRecipeId();
@@ -80,6 +129,7 @@ public class RecipeController {
 
     @PostMapping(value = "/recipe/edit", params = "addStep")
     public String addStep(@ModelAttribute("form") EditRecipeDTO form, RedirectAttributes redirectAttributes) {
+    if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
         form.getInstructions().add("");
         redirectAttributes.addFlashAttribute("form", form);
         return "redirect:/recipes/edit/" + form.getUserRecipeId();

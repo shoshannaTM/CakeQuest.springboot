@@ -19,6 +19,12 @@
             <div class="alert alert-success" role="alert" th:if="${message}" th:text="${message}"></div>
             <div th:if="${mode == 'task'}">
                 <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
+
+                <div th:if="${task.dietaryRestriction != null and !#strings.isEmpty(task.dietaryRestriction)}">
+                    <i class="fa-solid fa-star star-icon"></i>
+                    <span th:text="${'Don''t forget! This cake needs to be ' + task.dietaryRestriction + ', check each ingredient.'}"></span>
+                    <i class="fa-solid fa-star star-icon"></i>
+                </div>
             </div>
         </div>
         </div>

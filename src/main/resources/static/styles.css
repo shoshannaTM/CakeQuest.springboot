@@ -665,6 +665,12 @@ input[type="checkbox"] {
   font-size: 0.75rem;
   color: #666;
 }
+/* star Icon */
+  .star-icon {
+    color: #FCBF28;
+    padding: 5px;
+    align: center;
+  }
 
 /* Arrow Icon */
 .fa-arrow-right {

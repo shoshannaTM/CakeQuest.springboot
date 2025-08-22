@@ -19,6 +19,9 @@
       <p class="edit-note" th:if="${mode == 'scrape'}">
         Recipe scraping isn’t always perfect. Review and fix anything before saving.
       </p>
+    <p class="edit-note" th:if="${mode == 'scrapeFail'}">
+      We couldn’t load that URL. Please enter the recipe manually.
+    </p>
   </div>
 
   <form th:action="@{/recipe/edit}" th:object="${form}" method="post">
@@ -28,6 +31,21 @@
         <h3 class="section-title">Recipe Title</h3>
         <input class="form-control" type="text" th:field="*{recipeName}" placeholder="Recipe name"/>
       </div>
+
+    <div class="mb-3">
+      <h3 class="section-title">Recipe Type</h3>
+      <select class="custom-select" id="recipeTypeSelect" th:field="*{recipeType}" required>
+        <option value="" disabled
+                th:selected="${form.recipeType == null}">
+          Select Type
+        </option>
+        <option th:each="type : ${recipeTypes}"
+                th:value="${type}"
+                th:text="${type}">
+        </option>
+      </select>
+      <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+    </div>
 
       <div class="mb-3">
     <h3 class="section-title">Ingredients</h3>

@@ -54,9 +54,17 @@ public class RecipeService {
         } else {
             try {
                 Recipe scraped = recipeScraperService.scrapeRecipe(recipeUrl);
+
+                boolean hasName = scraped.getBaseRecipeName() != null && !scraped.getBaseRecipeName().isBlank();
+                boolean hasIngredients = scraped.getBaseRecipeIngredients() != null && !scraped.getBaseRecipeIngredients().isEmpty();
+
+                if (!hasName && !hasIngredients) {
+                    return new EditRecipeDTO(null, "", null, new ArrayList<>(), new ArrayList<>());
+                }
+
                 recipe = recipeRepository.save(scraped);
-            } catch (IOException e) {
-                return new EditRecipeDTO(null, "", List.of(), List.of());
+            } catch (Exception e) {
+                return new EditRecipeDTO(null, "", null, new ArrayList<>(), new ArrayList<>());
             }
         }
 
@@ -68,15 +76,16 @@ public class RecipeService {
             userRecipe = optionalUR.get();
         } else {
             UserRecipe ur = new UserRecipe();
+
+            List<RecipeIngredient> recipeIngredients = recipe.getBaseRecipeIngredients();
+            List<UserRecipeIngredient> urIngredients = recipeIngToUserRecipeIng(recipeIngredients != null
+                    ? recipeIngredients : List.of(), ur);
+
             ur.setUser(user);
             ur.setBaseRecipe(recipe);
             ur.setRecipeType(recipeType);
             ur.setUserRecipeName(recipe.getBaseRecipeName());
             ur.setUserRecipeInstructions(recipe.getBaseRecipeInstructions());
-
-            List<RecipeIngredient> recipeIngredients = recipe.getBaseRecipeIngredients();
-            List<UserRecipeIngredient> urIngredients = recipeIngToUserRecipeIng(recipeIngredients != null
-                                                                        ? recipeIngredients : List.of(), ur);
             ur.setUserRecipeIngredients(urIngredients);
 
             userRecipe = userRecipeRepository.save(ur);
@@ -87,7 +96,7 @@ public class RecipeService {
         List<String> instructionsList = instructionsFromString(userRecipe.getUserRecipeInstructions());
 
         return new EditRecipeDTO(userRecipe.getUserRecipeId(), userRecipe.getUserRecipeName(),
-                                ingredientDTOList, instructionsList);
+                                userRecipe.getRecipeType(), ingredientDTOList, instructionsList);
     }
 
     public List<UserRecipeIngredient> recipeIngToUserRecipeIng(List<RecipeIngredient> recipeIngredients, UserRecipe userRecipe){
@@ -220,11 +229,24 @@ public class RecipeService {
         rebuildShoppingListsForOrdersThatUse(ur);
     }
 
+    public EditRecipeDTO emptyUserRecipeForManual(User user){
+        UserRecipe userRecipe = new UserRecipe();
+        userRecipe.setUser(user);
+        userRecipeRepository.save(userRecipe);
+        EditRecipeDTO form = new EditRecipeDTO(userRecipe.getUserRecipeId(),
+                "", null, new java.util.ArrayList<>(), new java.util.ArrayList<>());
+
+        return form;
+    }
+
     private void applyHeaderChanges(UserRecipe ur, EditRecipeDTO form) {
         if (form.getRecipeName() != null) {
             ur.setUserRecipeName(form.getRecipeName().trim());
         }
         ur.setUserRecipeInstructions(safeString(form.instructionsToString()));
+        if (form.getRecipeType() != null) {
+             ur.setRecipeType(form.getRecipeType());
+        }
     }
     private void replaceIngredients(UserRecipe ur, List<IngredientDTO> editedIngredients) {
         // Clear existing

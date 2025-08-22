@@ -24,6 +24,13 @@
             <p th:if="${!task.completed}" class="tagline">
                 Shop your pantry first! Input the amount you already have — if you have none, input 0.
             </p>
+            <div th:if="${task.dietaryRestriction != null and !#strings.isEmpty(task.dietaryRestriction)}">
+                <i class="fa-solid fa-star star-icon"></i>
+                <span th:text="${'Don''t forget! This cake needs to be ' + task.dietaryRestriction + ', check each ingredient.'}"></span>
+                <i class="fa-solid fa-star star-icon"></i>
+            </div>
+
+            </div>
         </div>
      </div>
         <div class="pantry-cards" th:if="${!task.completed}">
