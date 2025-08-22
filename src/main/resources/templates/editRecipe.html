@@ -16,12 +16,7 @@
     <div class="mb-4 text-center">
     <h1>Edit Recipe</h1>
       </div>
-      <p class="edit-note" th:if="${mode == 'scrape'}">
-        Recipe scraping isn’t always perfect. Review and fix anything before saving.
-      </p>
-    <p class="edit-note" th:if="${mode == 'scrapeFail'}">
-      We couldn’t load that URL. Please enter the recipe manually.
-    </p>
+      <p class="edit-note" th:if="${message != null}" th:text="${message}"></p>
   </div>
 
   <form th:action="@{/recipe/edit}" th:object="${form}" method="post">

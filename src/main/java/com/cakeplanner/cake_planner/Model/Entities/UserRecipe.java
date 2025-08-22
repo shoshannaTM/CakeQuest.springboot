@@ -21,17 +21,17 @@ public class UserRecipe {
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "base_recipe_id", nullable = false)
+    @JoinColumn(name = "base_recipe_id")
     private Recipe baseRecipe;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "recipe_type", nullable = false)
+    @Column(name = "recipe_type")
     private RecipeType recipeType;
 
-    @Column(name = "user_recipe_name", nullable = false)
+    @Column(name = "user_recipe_name")
     private String userRecipeName;
 
-    @Column(name = "user_recipe_instructions", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "user_recipe_instructions", columnDefinition = "TEXT")
     private String userRecipeInstructions;
 
     @OneToMany(mappedBy = "userRecipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = LAZY)

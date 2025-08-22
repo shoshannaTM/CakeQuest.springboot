@@ -57,7 +57,8 @@ public class RecipeController {
             if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
             if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
             redirectAttributes.addFlashAttribute("form", form);
-            redirectAttributes.addFlashAttribute("mode", "scrapeFail");
+            redirectAttributes.addFlashAttribute("message",
+                    "Recipe scraping isn’t always perfect. Review and fix anything before saving.");
             return "redirect:/recipes/manual";
         }
 
@@ -66,6 +67,7 @@ public class RecipeController {
 
     @GetMapping("/recipes/manual")
     public String editRecipeManual(@RequestParam(value = "mode", required = false) String mode,
+                                   @RequestParam(value = "message", required = false) String message,
                                    @ModelAttribute("user") User user,
                                    @ModelAttribute("form") EditRecipeDTO flashedForm,
                                    Model model) {
@@ -81,7 +83,7 @@ public class RecipeController {
 
         model.addAttribute("form", form);
         model.addAttribute("recipeTypes", RecipeType.values());
-        model.addAttribute("mode", (mode != null ? mode : "manual"));
+        model.addAttribute("message", "We couldn’t load that URL. Please enter the recipe manually.");
         model.addAttribute("backUrl", "/recipes");
         return "editRecipe";
     }
@@ -112,7 +114,8 @@ public class RecipeController {
 
         model.addAttribute("form", form);
         model.addAttribute("recipeTypes", RecipeType.values());
-        model.addAttribute("mode", mode);
+        model.addAttribute("message",
+                "Recipe scraping isn’t always perfect. Review and update anything before saving.");
         model.addAttribute("backUrl", "/recipes");
         return "editRecipe";
     }
