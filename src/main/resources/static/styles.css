@@ -89,10 +89,6 @@ main {
   justify-content: center;
 }
 
-.saveBtn{
-    justify-self: center;
-}
-
 .userFormPage .btn,
 .cakeFormPage .btn {
     width: 200px;
@@ -134,7 +130,7 @@ input[type="checkbox"] {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .ingredient-inputs {
@@ -149,7 +145,7 @@ input[type="checkbox"] {
   width: 100%; /* or fixed width if preferred */
 }
 
-.custom-select {
+/*.custom-select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -161,9 +157,26 @@ input[type="checkbox"] {
   font-size: 1rem;
   color: #585C5F;
   display: block;
+}*/
+
+.custom-select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 30px;
+  background-color: #fff;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  width: 100%;
+  font-size: 1rem;
+  color: #585C5F;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25rem;
 }
 
-/* use FA icon instead of browser drop down arrow */
+
+/* use FA icon instead of browser drop down arrow
 .custom-select-icon {
     position: absolute;
     right: 1rem;
@@ -171,7 +184,7 @@ input[type="checkbox"] {
     pointer-events: none;
     color: #666;
     font-size: 0.9rem;
-}
+}*/
 
 /* Profile Icon */
 .profile-icon {
@@ -408,14 +421,19 @@ input[type="checkbox"] {
 
 .title {
     text-align: center;
+    margin-bottom: 2rem;
 }
 
+.title-home {
+    display: grid;
+    text-align: center;
+    margin-bottom: 2rem;
+
+}
 /* ----------------------------------
    New Cake Form
 ---------------------------------- */
-.title {
-    margin-bottom: 2rem;
-}
+
 
 /* ----------------------------------
    Cake Info
@@ -769,6 +787,7 @@ Mobile
   .input-row {
     flex-direction: column;
     align-items: flex-start;
+    flex-wrap: nowrap;
     gap: 0.25rem;
   }
 
@@ -790,3 +809,42 @@ Mobile
     margin-bottom: 0.25rem;
   }
 }
+/* ===== iOS/Safari robustness add-ons ===== */
+.centered-content{
+  display: grid;
+  place-items: center;
+  text-align: center;
+  min-height: calc(100vh - 120px);
+}
+
+.saveBtn{
+    display: flex;
+    justify-content: center;
+}
+
+/* 1) Flex gap fallbacks (older iOS) */
+.flex-row > * + *,
+.nav-links > * + *,
+.nav-left-wrapper > * + *,
+.btn-add-edit > * + * { margin-left: 0.75rem; }
+.login-btn > * + * { margin-top: 0.5rem; }
+
+/* 2) Replace nonstandard text-wrap-mode */
+.ingredient-card-label { white-space: nowrap; }
+
+
+
+/* 3) justify-self fixes for flex children */
+
+.pantry-card { margin-inline: auto; }/* center block */
+
+/* 4) fit-content fallback */
+.btn-outline-secondary { display: inline-block; width: auto; }
+
+
+/* 6) Safe-area for fixed bottom nav */
+.bottom-nav { padding-bottom: calc(0.5rem + env(safe-area-inset-bottom)); }
+body { padding-bottom: 60px; } /* reserve space so content isn't hidden */
+
+/* 7) Clean up invalid property */
+.star-icon { display: inline-flex; align-items: center; justify-content: center; }

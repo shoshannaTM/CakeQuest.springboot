@@ -17,7 +17,7 @@
 
             <div class="title">
                 <h1>New Cake Project</h1>
-                <small class="form-text text-muted">Missing a recipe? Add it on the <a href="/recipes">Recipes</a> page.</small>
+                <small class="form-text text-muted">Missing a recipe? Add it on the <a class="btn-link" href="/recipes">Recipes</a> page.</small>
             </div>
     </div>
         <form th:action="@{/cakeForm}" method="post">
@@ -43,7 +43,6 @@
                     </option>
                     <option>None</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
                 <label for="cakeMultiplier">How many batches of this cake recipe do you need?</label>
@@ -57,7 +56,6 @@
                     <option>3.5</option>
                     <option>4</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
                 <label for="fillingFlavor">What flavor filling?</label>
@@ -69,7 +67,6 @@
                     </option>
                     <option>None</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
                 <label for="fillingMultiplier">How many batches of this filling recipe do you need?</label>
@@ -83,7 +80,6 @@
                     <option>3.5</option>
                     <option>4</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
                 <label for="frostingFlavor">What flavor frosting?</label>
@@ -95,7 +91,7 @@
                     </option>
                     <option>None</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
+                <!-- <i class="fa-solid fa-chevron-down custom-select-icon"></i> -->
             </div>
             <div class="mb-3">
                 <label for="frostingMultiplier">How many batches of this frosting recipe do you need?</label>
@@ -109,7 +105,6 @@
                     <option>3.5</option>
                     <option>4</option>
                 </select>
-                <i class="fa-solid fa-chevron-down custom-select-icon"></i>
             </div>
             <div class="mb-3">
                 <label for="dietaryRestriction" class="form-label">Any dietary restrictions? (Optional)</label>
