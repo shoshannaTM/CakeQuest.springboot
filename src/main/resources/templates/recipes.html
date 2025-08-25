@@ -53,13 +53,14 @@
 
     <div class="recipe-list-grid">
         <div th:each="recipe : ${recipes}">
-            <div th:replace="fragments/arrowCard :: arrowCard(
-            ${recipe.recipeName},
-            ${recipe.recipeType},
-            '',
-            ${null},
-            ${false},
-            ${'/recipes/' + recipe.userRecipeId})"></div>
+            <div th:replace="~{fragments/arrowCard :: arrowCard(
+                                    ${recipe.recipeName},
+                                    ${recipe.recipeType},
+                                    '',
+                                    null,
+                                    false,
+                                    @{/recipes/{id}(id=${recipe.userRecipeId})}
+                                    )}"></div>
         </div>
     </div>
 
