@@ -44,7 +44,7 @@
         </div>
         <div class="pantry-cards" th:if="${task.completed}">
             <div th:each="item : ${task.shoppingList.items}">
-                <div th:replace="~{fragments/pantryVOCard :: pantryVOCard(
+                <div th:replace="~{fragments/pantryVOcard :: pantryVOcard(
               ${item.name},
               ${item.amount},
               ${item.unit}
