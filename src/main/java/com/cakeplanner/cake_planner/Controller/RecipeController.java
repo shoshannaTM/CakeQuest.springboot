@@ -51,19 +51,26 @@ public class RecipeController {
                                   @RequestParam("recipeType") RecipeType recipeType,
                                   @ModelAttribute("user") User user,
                                   RedirectAttributes redirectAttributes) throws IOException {
+
         EditRecipeDTO form = recipeService.processRecipeForEdit(recipeUrl, recipeType, user);
 
-        if (form.getUserRecipeId() == null) {
-            if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
-            if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
-            redirectAttributes.addFlashAttribute("form", form);
+        boolean manual = (form.getRecipeName() == null || form.getRecipeName().isBlank())
+                && (form.getIngredients() == null || form.getIngredients().isEmpty())
+                && (form.getInstructions() == null || form.getInstructions().isEmpty());
+
+        redirectAttributes.addFlashAttribute("form", form);
+
+        if (manual) {
             redirectAttributes.addFlashAttribute("message",
-                    "Recipe scraping isn’t always perfect. Review and fix anything before saving.");
-            return "redirect:/recipes/manual";
+                    "We couldn’t load that URL. Please enter the recipe manually.");
+            return "redirect:/recipes/edit/" + form.getUserRecipeId() + "?mode=manual";
         }
 
+        redirectAttributes.addFlashAttribute("message",
+                "Recipe scraping isn’t always perfect. Review and fix anything before saving.");
         return "redirect:/recipes/edit/" + form.getUserRecipeId() + "?mode=scrape";
     }
+
 
     @GetMapping("/recipes/manual")
     public String editRecipeManual(@RequestParam(value = "mode", required = false) String mode,
@@ -75,7 +82,7 @@ public class RecipeController {
 
         if (form == null || form.getUserRecipeId() == null) {
             // Only create a new draft if no flashed form came in
-            form = recipeService.emptyUserRecipeForManual(user);
+            form = recipeService.emptyUserRecipeForManual(user, null);
         }
 
         if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
@@ -112,10 +119,13 @@ public class RecipeController {
     if (form.getIngredients() == null) form.setIngredients(new java.util.ArrayList<>());
     if (form.getInstructions() == null) form.setInstructions(new java.util.ArrayList<>());
 
+    String message = "manual".equalsIgnoreCase(mode)
+            ? "We couldn’t load that URL. Please enter the recipe manually."
+            : "Recipe scraping isn’t always perfect. Review and update anything before saving.";
+
         model.addAttribute("form", form);
         model.addAttribute("recipeTypes", RecipeType.values());
-        model.addAttribute("message",
-                "Recipe scraping isn’t always perfect. Review and update anything before saving.");
+        model.addAttribute("message", message);
         model.addAttribute("backUrl", "/recipes");
         return "editRecipe";
     }

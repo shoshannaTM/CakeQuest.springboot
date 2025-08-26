@@ -7,6 +7,7 @@ import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Repositories.*;
+import org.springframework.lang.Nullable;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,33 +20,33 @@ import java.util.*;
 @Service
 public class RecipeService {
     private final RecipeScraperService recipeScraperService;
+    private final RecipeTransactionService recipeTransactionService;
     private final CakeOrderService cakeOrderService;
     private final RecipeRepository recipeRepository;
     private final UserRecipeRepository userRecipeRepository;
     private final CakeTaskRepository cakeTaskRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
     private final IngredientRepository ingredientRepository;
     private final CakeOrderRepository cakeOrderRepository;
 
     public RecipeService(RecipeScraperService recipeScraperService,
+                         RecipeTransactionService recipeTransactionService,
                          CakeOrderService cakeOrderService,
                          RecipeRepository recipeRepository,
                          UserRecipeRepository userRecipeRepository,
                          CakeTaskRepository cakeTaskRepository,
-                         RecipeIngredientRepository recipeIngredientRepository,
                          IngredientRepository ingredientRepository,
                          CakeOrderRepository cakeOrderRepository) {
         this.recipeScraperService = recipeScraperService;
+        this.recipeTransactionService = recipeTransactionService;
         this.cakeOrderService = cakeOrderService;
         this.recipeRepository = recipeRepository;
         this.userRecipeRepository = userRecipeRepository;
         this.cakeTaskRepository = cakeTaskRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
         this.cakeOrderRepository = cakeOrderRepository;
     }
-    @Transactional
-    public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeType, User user) throws IOException {
+
+public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeType, User user) {
         Optional<Recipe> optionalRecipe = recipeRepository.findByRecipeUrl(recipeUrl);
         Recipe recipe;
 
@@ -59,55 +60,28 @@ public class RecipeService {
                 boolean hasIngredients = scraped.getBaseRecipeIngredients() != null && !scraped.getBaseRecipeIngredients().isEmpty();
 
                 if (!hasName && !hasIngredients) {
-                    return new EditRecipeDTO(null, "", null, new ArrayList<>(), new ArrayList<>());
+
+                return recipeTransactionService.emptyUserRecipeForManual(user, recipeType);
                 }
 
-                recipe = recipeRepository.save(scraped);
+                recipe = recipeTransactionService.saveBaseRecipe(scraped);
+
             } catch (Exception e) {
-                return new EditRecipeDTO(null, "", null, new ArrayList<>(), new ArrayList<>());
+
+                return recipeTransactionService.emptyUserRecipeForManual(user, recipeType);
             }
         }
 
-        Optional<UserRecipe> optionalUR = userRecipeRepository.findByUserAndBaseRecipe(user, recipe);
+        UserRecipe userRecipe = recipeTransactionService.getOrCreateUserRecipe(user, recipe, recipeType);
 
-        UserRecipe userRecipe;
-
-        if (optionalUR.isPresent()) {
-            userRecipe = optionalUR.get();
-        } else {
-            UserRecipe ur = new UserRecipe();
-
-            List<RecipeIngredient> recipeIngredients = recipe.getBaseRecipeIngredients();
-            List<UserRecipeIngredient> urIngredients = recipeIngToUserRecipeIng(recipeIngredients != null
-                    ? recipeIngredients : List.of(), ur);
-
-            ur.setUser(user);
-            ur.setBaseRecipe(recipe);
-            ur.setRecipeType(recipeType);
-            ur.setUserRecipeName(recipe.getBaseRecipeName());
-            ur.setUserRecipeInstructions(recipe.getBaseRecipeInstructions());
-            ur.setUserRecipeIngredients(urIngredients);
-
-            userRecipe = userRecipeRepository.save(ur);
-        }
-
-
-        List<IngredientDTO> ingredientDTOList = userRecipeIngredientsToDTO(userRecipe.getUserRecipeIngredients());
+        List<IngredientDTO> ingredientDTOList = recipeTransactionService.userRecipeIngredientsToDTO(userRecipe.getUserRecipeIngredients());
         List<String> instructionsList = instructionsFromString(userRecipe.getUserRecipeInstructions());
 
         return new EditRecipeDTO(userRecipe.getUserRecipeId(), userRecipe.getUserRecipeName(),
                                 userRecipe.getRecipeType(), ingredientDTOList, instructionsList);
     }
 
-    public List<UserRecipeIngredient> recipeIngToUserRecipeIng(List<RecipeIngredient> recipeIngredients, UserRecipe userRecipe){
-        List<UserRecipeIngredient> userIng = new ArrayList<>();
-        for(RecipeIngredient ri : recipeIngredients){
-            UserRecipeIngredient uri = new UserRecipeIngredient(userRecipe, ri.getIngredient(),
-                    ri.getQuantity(), ri.getUnit());
-            userIng.add(uri);
-        }
-        return userIng;
-    }
+
 
     public List<String> instructionsFromString(String instructionsString) {
         if (instructionsString == null || instructionsString.isBlank()) return List.of();
@@ -131,26 +105,11 @@ public class RecipeService {
         UserRecipe ur = optionalUserRecipe.get();
 
         List<UserRecipeIngredient> userRecipeIngredients = ur.getUserRecipeIngredients();
-        List<IngredientDTO> ingredientDTOList = userRecipeIngredientsToDTO(userRecipeIngredients);
+        List<IngredientDTO> ingredientDTOList = recipeTransactionService.userRecipeIngredientsToDTO(userRecipeIngredients);
 
         RecipeDTO recipeDTO = new RecipeDTO(ur.getUserRecipeId(), ur.getUserRecipeName(), ur.getRecipeType(),
                                                 ingredientDTOList, ur.getUserRecipeInstructions());
         return recipeDTO;
-    }
-
-    public List<IngredientDTO> userRecipeIngredientsToDTO(List<UserRecipeIngredient> userRecipeIngredients) {
-        if (userRecipeIngredients == null) return List.of();
-
-        List<IngredientDTO> dtoList = new ArrayList<>();
-        for (UserRecipeIngredient uri: userRecipeIngredients) {
-            IngredientDTO dto = new IngredientDTO(
-                    uri.getIngredient().getIngredientName(),
-                    uri.getQuantity(),
-                    uri.getUnit()
-            );
-            dtoList.add(dto);
-        }
-        return dtoList;
     }
 
     public List<UserRecipeIngredient> ingredientDTOToUserRecipeIngredient(List<IngredientDTO> ingredientDTOS,
@@ -229,14 +188,23 @@ public class RecipeService {
         rebuildShoppingListsForOrdersThatUse(ur);
     }
 
-    public EditRecipeDTO emptyUserRecipeForManual(User user){
-        UserRecipe userRecipe = new UserRecipe();
-        userRecipe.setUser(user);
-        userRecipeRepository.save(userRecipe);
-        EditRecipeDTO form = new EditRecipeDTO(userRecipe.getUserRecipeId(),
-                "", null, new java.util.ArrayList<>(), new java.util.ArrayList<>());
+    public EditRecipeDTO emptyUserRecipeForManual(User user, @Nullable RecipeType recipeType) {
+        UserRecipe ur = new UserRecipe();
+        ur.setUser(user);
+        ur.setRecipeType(recipeType);
+        ur.setUserRecipeName("");
+        ur.setUserRecipeInstructions("");
+        ur.setUserRecipeIngredients(new ArrayList<>());
 
-        return form;
+        ur = userRecipeRepository.saveAndFlush(ur);
+
+        return new EditRecipeDTO(
+                ur.getUserRecipeId(),
+                ur.getUserRecipeName(),
+                ur.getRecipeType(),
+                new ArrayList<>(),
+                new ArrayList<>()
+        );
     }
 
     private void applyHeaderChanges(UserRecipe ur, EditRecipeDTO form) {

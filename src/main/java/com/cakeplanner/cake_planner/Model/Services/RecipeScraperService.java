@@ -58,7 +58,7 @@ public class RecipeScraperService {
             recipe.setBaseRecipeInstructions(instructions);
             recipe.setBaseRecipeIngredients(ingredients);
         } else {
-            System.out.println("Json object null");
+            // no recipe schema found,return an “empty” Recipe
         }
         return recipe;
     }
