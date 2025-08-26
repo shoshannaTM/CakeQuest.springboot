@@ -428,7 +428,6 @@ input[type="checkbox"] {
     display: grid;
     text-align: center;
     margin-bottom: 2rem;
-
 }
 /* ----------------------------------
    New Cake Form
@@ -734,7 +733,7 @@ Mobile
     background-color: #fff;
     border-top: 1px solid #eee;
     padding: 0.5rem 0;
-    height: 50px;
+    height: 70px;
     z-index: 1000;
   }
 
