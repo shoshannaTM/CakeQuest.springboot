@@ -78,6 +78,7 @@ public class CakeController {
                              @RequestParam(value = "decorationNotes", required = false) String decorationNotes,
                              @ModelAttribute("user") User user,
                              Model model) {
+
        cakeOrderService.createCakeOrderFromForm(cakeName, dueDate, cakeRecipeId, cakeMultiplier,
                                                 fillingRecipeId, fillingMultiplier, frostingRecipeId,
                                                 frostingMultiplier, dietaryRestriction, decorationNotes, user);

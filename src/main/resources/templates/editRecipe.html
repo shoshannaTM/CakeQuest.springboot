@@ -11,7 +11,7 @@
 <main layout:fragment="content">
   <div class="heading">
     <div class="back-link">
-      <a class="link" th:href="@{${backUrl}}"><i class="fa-solid fa-chevron-left"></i></a>
+      <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
     </div>
     <div class="mb-4 text-center">
     <h1>Edit Recipe</h1>
@@ -24,7 +24,7 @@
 
       <div class="mb-3">
         <h3 class="section-title">Recipe Title</h3>
-        <input class="form-control" type="text" th:field="*{recipeName}" placeholder="Recipe name"/>
+        <input class="form-control" type="text" th:field="*{recipeName}" placeholder="Recipe name" required/>
       </div>
 
     <div class="mb-3">
@@ -109,8 +109,13 @@
         <button class="btn-add-edit" type="submit" name="addStep">+ Add Step</button>
       </div>
 
-      <div class="d-flex justify-content-center align-items-center gap-3 mt-3">
+      <div class="shopping-btn-wrapper center">
         <button class="btn" type="submit" name="save">Save</button>
+      </div>
+
+      <div th:if="${mode == 'scrape' or mode == 'manual'}" class="shopping-btn-wrapper center">
+        <button class="btn-link" type="submit" name="discard"
+                onclick="return confirm('Discard this recipe? This cannot be undone.')">Discard</button>
       </div>
     </form>
 </main>

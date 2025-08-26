@@ -7,9 +7,8 @@ import com.cakeplanner.cake_planner.Model.Entities.*;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.TaskType;
 import com.cakeplanner.cake_planner.Model.Entities.Enums.RecipeType;
 import com.cakeplanner.cake_planner.Model.Repositories.*;
-import org.springframework.lang.Nullable;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -81,7 +80,9 @@ public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeTyp
                                 userRecipe.getRecipeType(), ingredientDTOList, instructionsList);
     }
 
-
+    public EditRecipeDTO manualInputForm(User user){
+       return recipeTransactionService.emptyUserRecipeForManual(user,null);
+    }
 
     public List<String> instructionsFromString(String instructionsString) {
         if (instructionsString == null || instructionsString.isBlank()) return List.of();
@@ -188,25 +189,6 @@ public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeTyp
         rebuildShoppingListsForOrdersThatUse(ur);
     }
 
-    public EditRecipeDTO emptyUserRecipeForManual(User user, @Nullable RecipeType recipeType) {
-        UserRecipe ur = new UserRecipe();
-        ur.setUser(user);
-        ur.setRecipeType(recipeType);
-        ur.setUserRecipeName("");
-        ur.setUserRecipeInstructions("");
-        ur.setUserRecipeIngredients(new ArrayList<>());
-
-        ur = userRecipeRepository.saveAndFlush(ur);
-
-        return new EditRecipeDTO(
-                ur.getUserRecipeId(),
-                ur.getUserRecipeName(),
-                ur.getRecipeType(),
-                new ArrayList<>(),
-                new ArrayList<>()
-        );
-    }
-
     private void applyHeaderChanges(UserRecipe ur, EditRecipeDTO form) {
         if (form.getRecipeName() != null) {
             ur.setUserRecipeName(form.getRecipeName().trim());
@@ -295,11 +277,5 @@ public EditRecipeDTO processRecipeForEdit(String recipeUrl, RecipeType recipeTyp
                 cakeTaskRepository.saveAll(shopTasks);
             }
         }
-    }
-
-    @Transactional
-    public void removeFromUserRecipes(Long userRecipeId, User user) {
-        if(userRecipeRepository.existsByUserAndUserRecipeId(user, userRecipeId))
-        userRecipeRepository.deleteByUserAndUserRecipeId(user, userRecipeId);
     }
 }

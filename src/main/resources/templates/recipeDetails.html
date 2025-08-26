@@ -11,11 +11,15 @@
 <main layout:fragment="content">
     <div class="heading">
         <div class="back-link">
-        <a class="link" th:href="@{${backUrl}}"><i class="fa-solid fa-chevron-left"></i></a>
+        <a class="link" th:href="${backUrl}"><i class="fa-solid fa-chevron-left"></i></a>
         </div>
 
         <div class="title">
-        <h1 th:text="${recipe.recipeName}">Recipe Name</h1>
+        <h1 th:text="${recipe != null ? recipe.recipeName : (task != null ? task.name + ' (recipe deleted)' : 'Recipe deleted')}">
+        Recipe Name
+            </h1>
+            <div class="alert alert-danger" role="alert" th:if="${alert != null and !#strings.isEmpty(alert)}" th:text="${alert}">
+            </div>
             <div class="alert alert-success" role="alert" th:if="${message}" th:text="${message}"></div>
             <div th:if="${mode == 'task'}">
                 <p class="complete" th:if="${task.completed}">This task has been marked complete! </p>
@@ -31,6 +35,7 @@
     </div>
 
 
+    <th:block th:if="${recipe != null}">
     <div class="container">
         <div class="info">
             <h2 class="recipe-section-title">Ingredients</h2>
@@ -56,6 +61,8 @@
         </div>
     </div>
 
+
+
     <div th:if="${mode == 'task'}">
         <form th:action="@{/task/{type}/{id}(type=${task.taskType}, id=${task.taskId})}" method="post">
         <input type="hidden" name="backUrl" th:value="${backUrl}" />
@@ -67,7 +74,9 @@
         </div>
     </form>
     </div>
-    <div th:if="${mode == 'read'}">
+    </th:block>
+
+    <th:block th:if="${mode == 'read' and recipe != null}">
         <div class="shopping-btn-wrapper center">
             <a th:href="@{/recipes/edit/{id}(id=${recipe.userRecipeId})}" class="btn">Edit Recipe</a>
         </div>
@@ -80,9 +89,7 @@
             </button>
                 </div>
         </form>
-    </div>
-
-
+    </th:block>
 </main>
 </body>
 </html>

@@ -35,13 +35,13 @@
             </div>
             <div class="mb-3">
                 <label for="cakeRecipe">What flavor cake?</label>
-                <select class="custom-select" id="cakeRecipe" name="cakeRecipeId">
+                <select class="custom-select" id="cakeRecipe" name="cakeRecipeId" required>
                     <option disabled selected>Select a cake flavor... </option>
                     <option th:each="userRecipe : ${cakeRecipes}"
                             th:value="${userRecipe.userRecipeId}"
                             th:text="${userRecipe.userRecipeName}">
                     </option>
-                    <option>None</option>
+                  <!--  <option>None</option> -->
                 </select>
             </div>
             <div class="mb-3">
@@ -59,13 +59,13 @@
             </div>
             <div class="mb-3">
                 <label for="fillingFlavor">What flavor filling?</label>
-                <select class="custom-select" id="fillingFlavor" name="fillingRecipeId">
+                <select class="custom-select" id="fillingFlavor" name="fillingRecipeId" required>
                     <option disabled selected>Select a filling flavor... </option>
                     <option th:each="userRecipe : ${fillingRecipes}"
                             th:value="${userRecipe.userRecipeId}"
                             th:text="${userRecipe.userRecipeName}">
                     </option>
-                    <option>None</option>
+                    <!--  <option>None</option> -->
                 </select>
             </div>
             <div class="mb-3">
@@ -83,15 +83,14 @@
             </div>
             <div class="mb-3">
                 <label for="frostingFlavor">What flavor frosting?</label>
-                <select class="custom-select" id="frostingFlavor" name="frostingRecipeId">
+                <select class="custom-select" id="frostingFlavor" name="frostingRecipeId" required>
                     <option disabled selected>Select a frosting flavor... </option>
                     <option th:each="userRecipe : ${frostingRecipes}"
                             th:value="${userRecipe.userRecipeId}"
                             th:text="${userRecipe.userRecipeName}">
                     </option>
-                    <option>None</option>
+                    <!--  <option>None</option> -->
                 </select>
-                <!-- <i class="fa-solid fa-chevron-down custom-select-icon"></i> -->
             </div>
             <div class="mb-3">
                 <label for="frostingMultiplier">How many batches of this frosting recipe do you need?</label>

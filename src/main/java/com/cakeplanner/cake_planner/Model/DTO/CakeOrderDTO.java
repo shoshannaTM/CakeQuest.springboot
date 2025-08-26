@@ -130,8 +130,13 @@ public class CakeOrderDTO {
     }
 
     public String getFlavorSummary() {
-        return cakeRecipe.getUserRecipeName() + " - "
-                + fillingRecipe.getUserRecipeName() + " - "
-                + frostingRecipe.getUserRecipeName();
+        String cake     = (cakeRecipe     != null && cakeRecipe.getUserRecipeName()     != null)
+                ? cakeRecipe.getUserRecipeName()     : "(deleted cake)";
+        String filling  = (fillingRecipe  != null && fillingRecipe.getUserRecipeName()  != null)
+                ? fillingRecipe.getUserRecipeName()  : "(deleted filling)";
+        String frosting = (frostingRecipe != null && frostingRecipe.getUserRecipeName() != null)
+                ? frostingRecipe.getUserRecipeName() : "(deleted frosting)";
+
+        return cake + " - " + filling + " - " + frosting;
     }
 }

@@ -21,7 +21,7 @@
             <p class="complete" th:if="${task.completed}">
                 This task has been marked complete! Time to head to the store.
             </p>
-            <p th:if="${!task.completed}" class="tagline">
+        <p class="tagline" th:if="${!task.completed}">
                 Shop your pantry first! Input the amount you already have — if you have none, input 0.
             </p>
             <div th:if="${task.dietaryRestriction != null and !#strings.isEmpty(task.dietaryRestriction)}">
@@ -32,25 +32,31 @@
 
             </div>
         </div>
-     </div>
-        <div class="pantry-cards" th:if="${!task.completed}">
-            <div th:each="item : ${task.shoppingList.items}">
+
+    <div class="pantry-cards"
+         th:if="${task.shoppingList != null and !task.completed}">
+      <th:block th:each="item : ${task.shoppingList.items}">
+
                 <div th:replace="~{fragments/pantryCard :: pantryCard(
               ${item.name},
               ${'Total Needed: ' + item.amount + ' ' + item.unit},
               ${item.unit}
-         )}"></div>
-            </div>
+                 )}"></div>
+            </th:block>
         </div>
-        <div class="pantry-cards" th:if="${task.completed}">
-            <div th:each="item : ${task.shoppingList.items}">
-                <div th:replace="~{fragments/pantryVOcard :: pantryVOcard(
-              ${item.name},
-              ${item.amount},
-              ${item.unit}
-         )}"></div>
+
+    <div class="pantry-cards"
+         th:if="${task.shoppingList != null and task.completed}">
+      <th:block th:each="item : ${task.shoppingList.items}">
+        <div th:replace="~{fragments/pantryVOcard :: pantryVOcard(
+            ${item.name},
+            ${item.amount},
+            ${item.unit}
+        )}"></div>
+      </th:block>
             </div>
-        </div>
+
+
         <div class="shopping-btn-wrapper center" th:if="${mode == 'task' and !task.completed}">
             <button type="submit" class="btn">Mark Task As Complete</button>
         </div>

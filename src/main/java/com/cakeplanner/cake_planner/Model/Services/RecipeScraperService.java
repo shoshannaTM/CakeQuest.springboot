@@ -7,6 +7,7 @@ import com.cakeplanner.cake_planner.Model.Entities.Ingredient;
 import com.cakeplanner.cake_planner.Model.Entities.Recipe;
 import com.cakeplanner.cake_planner.Model.Entities.RecipeIngredient;
 import com.cakeplanner.cake_planner.Model.Repositories.IngredientRepository;
+import com.cakeplanner.cake_planner.Model.Repositories.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,13 +31,16 @@ public class RecipeScraperService {
         private final IngredientRepository ingredientRepository;
         private final SpoonacularService spoonacularService;
 
+        private final RecipeRepository recipeRepository;
+
         public RecipeScraperService(IngredientRepository ingredientRepository,
-                                    SpoonacularService spoonacularService) {
+                                    SpoonacularService spoonacularService,
+                                    RecipeRepository recipeRepository) {
             this.ingredientRepository = ingredientRepository;
             this.spoonacularService = spoonacularService;
+            this.recipeRepository = recipeRepository;
         }
 
-        @Transactional
         public Recipe scrapeRecipe(String url) throws IOException {
         //get document from url
         Document document = Jsoup.connect(url).ignoreHttpErrors(true).get();
