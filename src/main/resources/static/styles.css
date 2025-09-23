@@ -1,53 +1,76 @@
 /* ----------------------------------
-   Global Styles
+Revised Styles
 ---------------------------------- */
 
-/* Reset & Typography */
+/* Design Tokens */
+:root{
+    --color-primary:#e26d8f;
+    --color-primary-hover:#cc5a7d;
+    --color-border:#dee2e6;
+    --color-text:#333;
+    --color-text-muted-lighter:#666;
+    --color-text-muted-darker:#999;
+    --color-page-background:#fff8f9;
+
+    --radius-card:12px;
+    --radius-pill:999px;
+
+    --space-0:0;
+    --space-1:.25rem;
+    --space-2:.5rem;
+    --space-3:.75rem;
+    --space-4:1rem;
+    --space-6:1.5rem;
+    --space-8:2rem;
+}
+
+/* Typography */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-  background-color: #fff8f9;
-  color: #333;
+    margin: 0;
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background-color: var(--color-page-background);
+    color: var(--color-text);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Georgia', serif;
-  margin-bottom: 0;
+    font-family: 'Georgia', serif;
+    margin-bottom: 0;
 }
 
 p {
-  margin: 0.5rem 0;
+    margin: 0.5rem 0;
 }
 
 main {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem 50px;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem 50px;
 }
 
-/* Utility */
-.text-center {
-  text-align: center;
-}
+.text-muted { color: var(--color-text-muted-darker); }
 
-.text-muted {
-  color: #999;
-}
+.text-center { text-align: center; }
 
+/*do I need both section titles? FIXME*/
 .section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 2rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2rem;
 }
+
+.recipe-section-title{
+    margin-bottom: .75rem;
+}
+
 
 /* Buttons */
 .btn {
-  background-color: #e26d8f;
+  background-color: var(--color-primary);
   color: white;
   padding: 0.5rem 1.5rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
   font-weight: bold;
   border: none;
   cursor: pointer;
@@ -63,7 +86,9 @@ main {
 }
 
 .btn-add-edit{
-  display:inline-flex; align-items:center; gap:8px;
+  display:inline-flex;
+   align-items:center;
+    gap:8px;
   border:1px dashed #e26d8f;
   color:#c44e68;
   background:#fff;
@@ -74,11 +99,6 @@ main {
   margin-top: 12px;
 }
 .btn-add-edit:hover{ background:#fff0f4; }
-
-
-.search {
-  margin-top: 0;
-}
 
 .shopping-btn-wrapper {
   margin-top: 1rem;
@@ -100,6 +120,20 @@ main {
     gap: 0.5rem;
     margin-top: 2rem;
 }
+
+
+/* ----------------------------------
+   Global Styles
+---------------------------------- */
+
+/* Buttons */
+
+
+
+.search {
+  margin-top: 0;
+}
+
 
 /* Forms & Inputs */
 .alert {
@@ -489,9 +523,7 @@ input[type="checkbox"] {
     margin-bottom:1.5rem;
 }
 
-.recipe-section-title{
-    margin-bottom: .75rem;
-}
+
 /* ----------------------------------
    Edit Page
 ---------------------------------- */
