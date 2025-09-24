@@ -62,8 +62,25 @@ main {
     margin-bottom: .75rem;
 }
 
+.btn{
+  display:inline-flex; align-items:center; gap:var(--space-3);
+  padding: .5rem 1.5rem; border:0; border-radius:var(--radius-pill);
+  font-weight:700; cursor:pointer; text-decoration:none; width: 15rem;
+  justify-content: center; margin:.25rem;
+}
 
-/* Buttons */
+.btn--primary{ background:var(--color-primary); color:#fff; }
+.btn--primary:hover{ background:var(--color-primary-hover); }
+.btn--outline{ background:#fff; border:1px solid var(--color-border); }
+.btn--dashed{ background:#fff; border:1px dashed var(--color-primary); color:#c44e68; }
+.btn--dashed:hover{ background:#fff0f4; }
+.btn--link{ background:transparent; color:var(--color-primary); }
+.btn--link:hover{ color:var(--color-primary-hover); }
+.btn--block{ width:100%; }
+
+/* Item Alignment */
+.items--centered{ display: flex; justify-content: center;}
+/* Buttons
 .btn {
   background-color: var(--color-primary);
   color: white;
@@ -120,7 +137,7 @@ main {
     gap: 0.5rem;
     margin-top: 2rem;
 }
-
+*/
 
 /* ----------------------------------
    Global Styles

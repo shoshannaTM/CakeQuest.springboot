@@ -41,8 +41,8 @@
      th:if="${@environment.getProperty('app.debug-auth','false') == 'true'}"
      th:text="${#httpServletRequest.session.getAttribute('LOGIN_ERROR_DETAIL')}"></p>
 
-    <div class="saveBtn">
-      <button type="submit" class="btn">Log In</button>
+    <div class="items--centered">
+      <button type="submit" class="btn btn--primary">Log In</button>
     </div>
   </form>
 </div>
